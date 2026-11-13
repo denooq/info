@@ -4,7 +4,6 @@
 /dist/
 /release/
 /coverage/
-/public/assets-app/
 /.env
 /.env.*
 !/config/.env.example
