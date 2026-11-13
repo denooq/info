@@ -67,6 +67,7 @@ final class Validator
                 $usedLines[$line] = true;
             }
             $this->links($prefix.'packageIds', $g['packageIds'], $packageIds);
+            if (array_diff($g['packageIds'], $d['declaration']['shipmentPackageIds'])) $this->error($prefix.'packageIds', 'PACKAGE_SHIPMENT', 'Выбранные места товара должны также входить в грузовые места поставки.');
             if ($g['ratesDate'] !== $d['declaration']['calculationDate']) $this->error($prefix.'ratesDate', 'RATE_DATE', 'Дата ставок должна совпадать с датой расчёта.');
             if (($g['statisticalBasisConfirmed'] ?? null) !== true) $this->error($prefix.'statisticalBasisConfirmed', 'STAT_CONFIRM', 'Подтвердите корректировки статистической стоимости.');
         }

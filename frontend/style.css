@@ -86,6 +86,14 @@ main:has(.review-page), main:has(.calculation-page) { max-width: 1480px; }
 .reference-options label, .reference-line { display: flex; align-items: flex-start; gap: 8px; margin: 5px 0 10px; font-size: 13px; line-height: 1.4; overflow-wrap: anywhere; }
 input[type=checkbox] { accent-color: #245cf2; width: 16px; height: 16px; flex-shrink: 0; }
 .package-row { display: grid; grid-template-columns: minmax(160px,1fr) 120px auto auto; gap: 12px; margin-bottom: 16px; align-items: center; }
+.package-add { margin: 6px 0; text-align: left; font-size: 12px; }
+.package-create { padding: 10px; margin: 6px 0 12px; border: 1px solid #e4e4e4; background: #fafafa; font-size: 12px; min-width: 0; }
+.package-create > label { display: block; margin-bottom: 8px; }
+.package-create > label input { display: block; width: 100%; min-width: 0; height: 26px; margin-top: 4px; padding: 3px 7px; border: 1px solid #dedede; font-size: 12px; }
+.package-create fieldset { min-width: 0; padding: 0; border: 0; margin: 8px 0; }
+.package-create .package-goods-option { display: flex; align-items: flex-start; gap: 6px; margin: 5px 0; overflow-wrap: anywhere; }
+.package-create p { font-size: 11px; line-height: 1.4; }
+.package-create .footer-buttons { flex-wrap: wrap; gap: 8px; }
 .group-actions { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
 .group-actions select { border: 1px solid #ddd; padding: 10px; }
 .goods-title { display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 600; }

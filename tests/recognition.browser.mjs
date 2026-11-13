@@ -19,7 +19,7 @@ test('recognition keeps polling after one file fails and shows completed files i
         const completed = Math.min(polls++, 2);
         const documents = [0, 1, 2].map(index => ({ id: `doc-${index}`, name: `file-${index}.pdf`, mime: 'application/pdf', size: 1024, pages: 1, status: index === 0 ? 'error' : index <= completed ? 'recognized' : 'recognizing' }));
         return route.fulfill({ json: {
-          phase: 'recognizing', error: failure, documents,
+          dataRevision: 0, phase: 'recognizing', error: failure, documents,
           jobs: documents.map(document => ({ id: document.id, kind: 'ocr', status: document.status === 'error' ? 'failed' : document.status === 'recognized' ? 'done' : 'running' })),
           limits: { max_file_bytes: 10485760, max_files: 20 },
         } });

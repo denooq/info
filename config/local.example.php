@@ -5,7 +5,7 @@ declare(strict_types=1);
 return [
     'mistral_api_key' => '', // Or set MISTRAL_API_KEY on the backend.
     'runtime_dir' => sys_get_temp_dir() . '/customs-mvp',
-    'session_ttl' => 7200,
+    'session_ttl' => 7200, // Idle timeout; successful user actions renew it, polling and workers do not.
     'max_files' => 20,
     'max_file_bytes' => 10 * 1024 * 1024,
     'max_session_bytes' => 50 * 1024 * 1024,

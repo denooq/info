@@ -47,7 +47,7 @@ final class SessionStore
 
     public function fromToken(?string $token): array
     {
-        if ($token === null || !preg_match('/^[a-f0-9]{64}$/D', $token)) throw new ApiError('SESSION_REQUIRED', 'Начните новую загрузку документов.', 401);
+        if ($token === null || !preg_match('/^[a-f0-9]{64}$/D', $token)) throw new ApiError('SESSION_REQUIRED', 'Браузер не передал cookie текущей сессии. Проверьте подключение к прежней сессии.', 401);
         return $this->read(hash('sha256', $token));
     }
 
@@ -59,7 +59,7 @@ final class SessionStore
         finally { flock($handle, LOCK_UN); fclose($handle); }
     }
 
-    public function mutate(string $id, ?int $expectedRevision, callable $change, bool $dataChange = true): array
+    public function mutate(string $id, ?int $expectedRevision, callable $change, bool $dataChange = true, bool $userActivity = false): array
     {
         $handle = $this->lock($id, LOCK_EX);
         try {
@@ -71,6 +71,8 @@ final class SessionStore
             if (!is_array($changed)) throw new \LogicException('Mutation must return session state');
             foreach (['id','createdAt','expiresAt','csrfToken'] as $immutable) $changed[$immutable] = $state[$immutable];
             if ($this->now() >= $state['expiresAt']) throw new ApiError('SESSION_EXPIRED', 'Срок сессии истёк. Загрузите документы заново.', 410);
+            // Only an authenticated user action renews the idle timeout. Workers and polling do not.
+            if ($userActivity) $changed['expiresAt'] = max($state['expiresAt'], $this->now() + $this->config->get('session_ttl'));
             if ($dataChange) {
                 $changed['dataRevision'] = $state['dataRevision'] + 1;
                 $changed['calculation'] = null;

@@ -11,18 +11,18 @@ final class Uploads
 {
     public function __construct(private readonly Config $config, private readonly SessionStore $store) {}
 
-    public function receive(string $sessionId, array $upload, int $revision): array
+    public function receive(string $sessionId, array $upload, int $revision, bool $userActivity = false): array
     {
         if (($upload['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK) {
             $limit = in_array($upload['error'] ?? null, [UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE], true);
             throw new ApiError($limit ? 'FILE_LIMIT' : 'UPLOAD_FAILED', $limit ? 'Превышен лимит загрузки PHP/приложения.' : 'Не удалось загрузить файл целиком.');
         }
         if (!is_string($upload['tmp_name'] ?? null) || !is_uploaded_file($upload['tmp_name']) || !is_string($upload['name'] ?? null)) throw new ApiError('UPLOAD_FAILED', 'Неверная загрузка файла.');
-        return $this->addFromPath($sessionId, $upload['tmp_name'], $upload['name'], $revision);
+        return $this->addFromPath($sessionId, $upload['tmp_name'], $upload['name'], $revision, $userActivity);
     }
 
     /** Local tests and HTTP receive() supply a local path; never expose this method with a client path. */
-    public function addFromPath(string $sessionId, string $sourcePath, string $name, int $revision): array
+    public function addFromPath(string $sessionId, string $sourcePath, string $name, int $revision, bool $userActivity = false): array
     {
         $name = preg_replace('/[\x00-\x1F\x7F]/u', '', basename(str_replace('\\', '/', $name))) ?: 'document';
         if (mb_strlen($name) > 240) throw new ApiError('FILE_NAME', 'Слишком длинное имя файла.');
@@ -52,7 +52,7 @@ final class Uploads
                 $state['documents'][$id] = ['id' => $id, 'name' => $name, 'mime' => $info['mime'], 'size' => $info['size'], 'pages' => $info['pages'], 'hash' => $info['hash'], 'storageName' => basename($destination), 'extension' => $info['extension'], 'status' => 'pending', 'error' => null];
                 $state['phase'] = 'uploading';
                 return $state;
-            });
+            },true,$userActivity);
             $committed = true;
             return $state;
         } finally {
@@ -61,7 +61,7 @@ final class Uploads
         }
     }
 
-    public function remove(string $sessionId, string $documentId, int $revision): array
+    public function remove(string $sessionId, string $documentId, int $revision, bool $userActivity = false): array
     {
         $filename = null;
         $state = $this->store->mutate($sessionId, $revision, function (array $state) use ($documentId, &$filename): array {
@@ -76,7 +76,7 @@ final class Uploads
             }
             $state['phase'] = 'uploading';
             return $state;
-        });
+        },true,$userActivity);
         if (is_string($filename) && preg_match('/^[a-f0-9]{32}\.(pdf|jpg|png|xlsx)$/D', $filename)) @unlink($this->store->directory($sessionId) . '/documents/' . $filename);
         return $state;
     }

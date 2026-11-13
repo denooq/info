@@ -20,12 +20,29 @@ final class Entities
             if (count($d[$collection]) >= 200) throw new ApiError('ENTITY_LIMIT','Достигнут лимит строк раздела.');
             $id = $scope.'-'.bin2hex(random_bytes(8));
             $row = $scope === 'package' ? ['id'=>$id,'label'=>'','quantity'=>null,'kind'=>null] : ['id'=>$id,...$model->row($scope)];
+            $createPackage = $scope === 'package' && (array_key_exists('label',$request) || array_key_exists('quantity',$request) || array_key_exists('goodsIds',$request));
+            $packageGoods = [];
+            if ($createPackage) {
+                $row = array_replace($row,$this->packageValues($request));
+                $packageGoods = $request['goodsIds'] ?? [];
+                if (!is_array($packageGoods) || count($packageGoods)>200 || array_filter($packageGoods,fn($value)=>!is_string($value)) || array_diff($packageGoods,array_column($d['goods'],'id'))) throw new ApiError('PACKAGE_GOODS','Выберите существующие товары для грузовых мест.',422);
+            }
             if ($scope === 'goods') {
                 $line = 'manual-'.bin2hex(random_bytes(8));
                 $d['sourceLines'][$line] = ['id'=>$line,'origin'=>'manual','quote'=>'Строка, добавленная вручную'];
                 $row['sourceLineIds'] = [$line];
             }
             $d[$collection][] = $row;
+            if ($createPackage) {
+                $d['declaration']['shipmentPackageIds']=array_values(array_unique([...$d['declaration']['shipmentPackageIds'],$id]));
+                $addresses=['declaration/_/shipmentPackageIds'];
+                foreach ($d['goods'] as &$goods) if (in_array($goods['id'],$packageGoods,true)) {
+                    $goods['packageIds']=array_values(array_unique([...$goods['packageIds'],$id]));
+                    $addresses[]='goods/'.$goods['id'].'/packageIds';
+                }
+                unset($goods);
+                foreach ($addresses as $address) $d['fieldStates'][$address]=['status'=>'manual','candidateId'=>null,'evidenceIds'=>[],'conflict'=>false,'needsReview'=>false,'reviewedCandidateIds'=>array_keys(array_filter($state['candidates'],fn($candidate)=>$candidate['address']===$address))];
+            }
         } elseif ($action === 'remove') {
             $id = $request['id'] ?? '';
             if (!in_array($id,array_column($d[$collection],'id'),true)) throw new ApiError('ENTITY_UNKNOWN','Строка не найдена.');
@@ -41,9 +58,7 @@ final class Entities
             foreach ($d['entityAliases'] as $key=>$v) if ($v===$id) unset($d['entityAliases'][$key]);
         } elseif ($scope === 'package' && $action === 'update') {
             foreach ($d['packages'] as &$p) if ($p['id']===($request['id']??'')) {
-                $label=$request['label']??''; $quantity=$request['quantity']??null;
-                if (!is_string($label)||mb_strlen($label)>200||!is_int($quantity)||$quantity<1||$quantity>1000000) throw new ApiError('PACKAGE_VALUE','Нужны название группы мест и положительное целое количество.');
-                $p['label']=trim($label); $p['quantity']=$quantity; $p['kind']=$request['kind']??null;
+                $p=array_replace($p,$this->packageValues($request));
                 return $state;
             }
             throw new ApiError('ENTITY_UNKNOWN','Группа грузовых мест не найдена.');
@@ -102,5 +117,11 @@ final class Entities
             foreach ($d['entityAliases'] as $key=>$id) if (in_array($id,$ids,true)) $d['entityAliases'][$key]=$merged['id'];
         } else throw new ApiError('ENTITY_ACTION','Неизвестное действие со строкой.');
         return $state;
+    }
+    private function packageValues(array $request): array
+    {
+        $label=$request['label']??''; $quantity=$request['quantity']??null;
+        if (!is_string($label) || trim($label)==='' || mb_strlen($label)>200 || !is_int($quantity) || $quantity<1 || $quantity>1000000) throw new ApiError('PACKAGE_VALUE','Укажите название и целое количество мест от 1 до 1 000 000.',422);
+        return ['label'=>trim($label),'quantity'=>$quantity,'kind'=>$request['kind']??null];
     }
 }

@@ -45,3 +45,14 @@ test('public session view excludes storage paths, access secret and worker inter
     truth(!isset($view['documents'][0]['storagePath']));
     truth(!isset($view['jobs'][0]['leaseOwner']));
 });
+
+test('authenticated activity renews idle expiry while polling and workers do not revive an expired session',function():void {
+    $now=1000; $store=sessionFixture(function()use(&$now):int{return $now;},['session_ttl'=>60]);
+    $created=$store->create(); $id=$created['state']['id'];
+    $now=1050; same(1060,$store->read($id)['expiresAt']);
+    $saved=$store->mutate($id,0,function($state){$state['draft']['declaration']['deliveryPlace']='Сохранённое место';return $state;},true,true);
+    same(1110,$saved['expiresAt']);same(1,$saved['dataRevision']);
+    $now=1080; $worker=$store->mutate($id,null,fn($state)=>$state,false);same(1110,$worker['expiresAt']);
+    same('Сохранённое место',$store->fromToken($created['token'])['draft']['declaration']['deliveryPlace']);
+    $now=1110; errorCode('SESSION_EXPIRED',fn()=>$store->mutate($id,null,fn($state)=>$state,false,true));
+});

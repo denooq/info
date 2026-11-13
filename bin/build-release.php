@@ -17,7 +17,7 @@ foreach($paths as $part){
         $files[$relative]=$entry->getPathname();
     }
 }
-foreach(['README.md','composer.json','composer.lock','config/local.example.php','bin/worker.php','bin/cleanup.php','bin/check-platform.php','docs/ps-kz-xs.md','docs/xsd-status.md','docs/review-and-calculation.md','docs/xml-profiles.md','docs/pdf-format.md','docs/document-ai-evaluation.md','docs/tnved-selection.md','docs/acceptance.md'] as $relative){
+foreach(['README.md','composer.json','composer.lock','config/local.example.php','bin/worker.php','bin/cleanup.php','bin/check-platform.php','docs/ps-kz-xs.md','docs/sessions-and-uploads.md','docs/xsd-status.md','docs/review-and-calculation.md','docs/xml-profiles.md','docs/pdf-format.md','docs/document-ai-evaluation.md','docs/tnved-selection.md','docs/acceptance.md'] as $relative){
     if(!is_file($root.'/'.$relative))throw new RuntimeException('Missing release documentation');
     $files[$relative]=$root.'/'.$relative;
 }
