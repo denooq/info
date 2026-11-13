@@ -3,10 +3,27 @@ declare(strict_types=1);
 
 use Customs\AI\MistralClient;
 use Customs\AI\Ocr;
+use Customs\AI\OcrRequestBody;
 use Customs\Config;
 use Customs\Documents\Uploads;
 use Customs\Jobs\Queue;
 use Customs\Storage\SessionStore;
+
+test('streamed OCR body preserves binary bytes, JSON and content length at arbitrary boundaries', function (): void {
+    $path = tempnam(sys_get_temp_dir(), 'ocr-body-');
+    try {
+        foreach ([0, 1, 2, 3, 65_539] as $size) {
+            $bytes = $size === 0 ? '' : random_bytes($size);
+            file_put_contents($path, $bytes);
+            $stream = new OcrRequestBody($path, ['document' => ['type' => 'image_url', 'image_url' => 'data:image/png;base64,'], 'pages' => [0]]);
+            $body = '';
+            while (($chunk = $stream->read(101)) !== '') $body .= $chunk;
+            same(strlen($body), $stream->length);
+            same('data:image/png;base64,' . base64_encode($bytes), json_decode($body, true, 256, JSON_THROW_ON_ERROR)['document']['image_url']);
+            unset($stream);
+        }
+    } finally { unlink($path); }
+});
 
 test('server OCR request pins model and preserves page structure without image copies', function (): void {
     $calls=0;

@@ -31,6 +31,9 @@ test('units normalize deterministically and short HS codes are never padded', fu
 test('dates, decimal separators and spreadsheet provenance remain unambiguous', function (): void {
     $normalizer=new Normalizer();
     same('2026-10-09',$normalizer->date('09.10.2026'));
+    same('2026-10-09',$normalizer->date('«09» октября 2026 г.'));
+    same('2026-10-09',$normalizer->date('09.10.2026 г.'));
+    errorCode('DATE_INVALID',fn()=>$normalizer->date('31 февраля 2026 года'));
     errorCode('DATE_AMBIGUOUS',fn()=>$normalizer->date('10/09/2026'));
     errorCode('DATE_INVALID',fn()=>$normalizer->date('31.02.2026'));
     same('37454.4',$normalizer->value(['type'=>'decimal','unit'=>'USD'],'37 454,40',null,''));

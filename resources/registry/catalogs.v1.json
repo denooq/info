@@ -15,7 +15,10 @@
         "verifiedOn": "2026-11-12",
         "aliases": [
           "KAZAKHSTAN",
-          "КАЗАХСТАН"
+          "КАЗАХСТАН",
+          "REPUBLIC OF KAZAKHSTAN",
+          "THE REPUBLIC OF KAZAKHSTAN",
+          "РЕСПУБЛИКА КАЗАХСТАН"
         ]
       },
       {
@@ -27,7 +30,10 @@
         "aliases": [
           "CHINA",
           "КИТАЙ",
-          "中国"
+          "中国",
+          "PEOPLE'S REPUBLIC OF CHINA",
+          "PEOPLE’S REPUBLIC OF CHINA",
+          "КИТАЙСКАЯ НАРОДНАЯ РЕСПУБЛИКА"
         ]
       },
       {
@@ -567,6 +573,158 @@
         "status": "sample-observed",
         "verifiedOn": "2026-11-12"
       }
+    ],
+    "nomenclatureUnits": [
+      {
+        "code": "166",
+        "label": "Килограмм (кг)",
+        "source": "reference/TNVED/tnved.json",
+        "status": "supplied-reference"
+      },
+      {
+        "code": "163",
+        "label": "Грамм (г)",
+        "source": "reference/TNVED/tnved.json",
+        "status": "supplied-reference"
+      },
+      {
+        "code": "306",
+        "label": "Грамм делящихся изотопов (г Д/И)",
+        "source": "reference/TNVED/tnved.json",
+        "status": "supplied-reference"
+      },
+      {
+        "code": "055",
+        "label": "Квадратный метр (м²)",
+        "source": "reference/TNVED/tnved.json",
+        "status": "supplied-reference"
+      },
+      {
+        "code": "861",
+        "label": "Килограмм азота (кг N)",
+        "source": "reference/TNVED/tnved.json",
+        "status": "supplied-reference"
+      },
+      {
+        "code": "859",
+        "label": "Килограмм гидроксида калия (кг KOH)",
+        "source": "reference/TNVED/tnved.json",
+        "status": "supplied-reference"
+      },
+      {
+        "code": "863",
+        "label": "Килограмм гидроксида натрия (кг NaOH)",
+        "source": "reference/TNVED/tnved.json",
+        "status": "supplied-reference"
+      },
+      {
+        "code": "852",
+        "label": "Килограмм оксида калия (кг K2O)",
+        "source": "reference/TNVED/tnved.json",
+        "status": "supplied-reference"
+      },
+      {
+        "code": "841",
+        "label": "Килограмм пероксида водорода (кг H2O2)",
+        "source": "reference/TNVED/tnved.json",
+        "status": "supplied-reference"
+      },
+      {
+        "code": "865",
+        "label": "Килограмм пятиокиси фосфора (кг P2O5)",
+        "source": "reference/TNVED/tnved.json",
+        "status": "supplied-reference"
+      },
+      {
+        "code": "845",
+        "label": "Килограмм 90-процентного сухого вещества (кг 90% с/в)",
+        "source": "reference/TNVED/tnved.json",
+        "status": "supplied-reference"
+      },
+      {
+        "code": "867",
+        "label": "Килограмм урана (кг U)",
+        "source": "reference/TNVED/tnved.json",
+        "status": "supplied-reference"
+      },
+      {
+        "code": "113",
+        "label": "Кубический метр (м³)",
+        "source": "reference/TNVED/tnved.json",
+        "status": "supplied-reference"
+      },
+      {
+        "code": "305",
+        "label": "Кюри (Ки)",
+        "source": "reference/TNVED/tnved.json",
+        "status": "supplied-reference"
+      },
+      {
+        "code": "112",
+        "label": "Литр (л)",
+        "source": "reference/TNVED/tnved.json",
+        "status": "supplied-reference"
+      },
+      {
+        "code": "831",
+        "label": "Литр чистого (100%) спирта (л 100% спирта)",
+        "source": "reference/TNVED/tnved.json",
+        "status": "supplied-reference"
+      },
+      {
+        "code": "006",
+        "label": "Метр (м)",
+        "source": "reference/TNVED/tnved.json",
+        "status": "supplied-reference"
+      },
+      {
+        "code": "162",
+        "label": "Метрический карат (кар)",
+        "source": "reference/TNVED/tnved.json",
+        "status": "supplied-reference"
+      },
+      {
+        "code": "715",
+        "label": "Пара (пар)",
+        "source": "reference/TNVED/tnved.json",
+        "status": "supplied-reference"
+      },
+      {
+        "code": "797",
+        "label": "Сто штук (100 шт)",
+        "source": "reference/TNVED/tnved.json",
+        "status": "supplied-reference"
+      },
+      {
+        "code": "114",
+        "label": "Тысяча кубических метров (1000 м³)",
+        "source": "reference/TNVED/tnved.json",
+        "status": "supplied-reference"
+      },
+      {
+        "code": "798",
+        "label": "Тысяча штук (1000 шт)",
+        "source": "reference/TNVED/tnved.json",
+        "status": "supplied-reference"
+      },
+      {
+        "code": "796",
+        "label": "Штука (шт)",
+        "source": "reference/TNVED/tnved.json",
+        "status": "supplied-reference"
+      },
+      {
+        "code": "246",
+        "label": "1000 киловатт-часов (1000 кВт·ч)",
+        "source": "reference/TNVED/tnved.json",
+        "status": "supplied-reference"
+      },
+      {
+        "code": "130",
+        "label": "1000 литров (1000 л)",
+        "source": "reference/TNVED/tnved.json",
+        "status": "supplied-reference"
+      }
     ]
   },
   "fieldCatalogs": {
@@ -584,7 +742,7 @@
     "party.country": "countries",
     "goods.originCountry": "countries",
     "goods.packageKind": "packages",
-    "goods.additionalUnit": "units",
+    "goods.additionalUnit": "nomenclatureUnits",
     "goods.quotaUnit": "units",
     "goods.previousProcedure": "procedures",
     "goods.movementFeature": "movementFeatures",
@@ -605,6 +763,9 @@
     "keden.officeCode": "customsOffices",
     "keden.rateType": "kedenRateTypes",
     "keden.fillerType": "kedenFillerTypes",
-    "keden.filledBy": "kedenFilledBy"
+    "keden.filledBy": "kedenFilledBy",
+    "goods.secondaryAdditionalUnit": "nomenclatureUnits",
+    "goods.dutyUnitCode": "nomenclatureUnits",
+    "goods.dutyCurrency": "currencies"
   }
 }

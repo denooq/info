@@ -57,6 +57,7 @@ final class Draft
             $value = $candidate['value']; $evidenceIds = $candidate['evidenceIds']; $status = 'selected';
         } else $value = $this->manualValue($field, $value);
         $row =& $this->entity($state['draft'], $field['scope'], $entityId);
+        if ($field['scope'] === 'goods' && isset($row['_tariff']) && (in_array($field['key'], TariffDefaults::UNIT_FIELDS, true) || ($field['key'] === 'dutyQuantity' && (TariffDefaults::linkedQuantity($row) !== null || ($row['dutyQuantityBasis'] ?? '') === 'net_mass')))) throw new ApiError('FIELD_READ_ONLY', 'Единица задана кодом ТН ВЭД; связанное количество меняется через исходную массу или количество товара.', 422);
         $row[$field['key']] = $value;
         if ($fieldId === 'document.kind') {
             $row['dateRequired'] = true;
@@ -85,6 +86,7 @@ final class Draft
         if (!is_string($value) || mb_strlen($value) > 10000) throw new ApiError('FIELD_VALUE', 'Ожидается строковое значение допустимой длины.');
         if ($type === 'decimal') return (new Normalizer())->value($field, $value, ($field['unit'] ?? '') === 'kg' ? 'kg' : null, 'kg');
         if ($type === 'date') return (new Normalizer())->date($value);
+        if ($field['id'] === 'goods.commodityCode') return (new Normalizer())->value($field, $value, null, '');
         if ($type === 'enum' && isset($field['values']) && !in_array($value, $field['values'], true)) throw new ApiError('FIELD_VALUE', 'Неизвестный вариант значения.');
         return trim($value);
     }

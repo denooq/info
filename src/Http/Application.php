@@ -45,14 +45,21 @@ final class Application
                     if (!is_string($change['fieldId'] ?? null)) throw new ApiError('FIELD_UNKNOWN', 'Не указано поле изменения.');
                     $current = $draft->edit($current, $change['fieldId'], $change['entityId'] ?? null, $change['value'] ?? null, $change['candidateId'] ?? null);
                 }
-                return $current;
+                $goodsIds = [];
+                foreach ($body['changes'] as $change) if (in_array($change['fieldId'], ['goods.description', 'goods.commodityCode'], true) && isset($change['entityId'])) $goodsIds[] = $change['entityId'];
+                if ($goodsIds !== []) $current = (new \Customs\Domain\TnvedSuggestions())->apply($current, array_values(array_unique($goodsIds)));
+                return (new \Customs\Domain\TariffDefaults())->apply($current);
             });
             return $this->store->publicView($updated);
         }
         if ($method === 'POST' && $path === '/api/entities') {
             $body=$this->body();
             if (!is_int($body['revision']??null)) throw new ApiError('REVISION_REQUIRED','Нужна версия данных.');
-            return $this->store->publicView($this->store->mutate($state['id'],$body['revision'],fn(array $s):array=>(new \Customs\Domain\Entities(new \Customs\Domain\Registry()))->change($s,$body)));
+            return $this->store->publicView($this->store->mutate($state['id'],$body['revision'],function(array $s)use($body):array {
+                $s=(new \Customs\Domain\Entities(new \Customs\Domain\Registry()))->change($s,$body);
+                if (($body['scope']??null)==='goods') $s = (new \Customs\Domain\TnvedSuggestions())->apply($s);
+                return (new \Customs\Domain\TariffDefaults())->apply($s);
+            }));
         }
         if ($method === 'POST' && $path === '/api/validate') return (new \Customs\Domain\Validator(new \Customs\Domain\Registry()))->validate($state);
         if ($method === 'POST' && $path === '/api/calculate') {

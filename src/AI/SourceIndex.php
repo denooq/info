@@ -18,6 +18,19 @@ final class SourceIndex
         return trim(preg_replace('/[\s\x{00A0}\x{202F}\x{200B}]+/u', ' ', $text));
     }
 
+    /** A permit's product list does not establish the composition of a shipment. */
+    public function supportsNewGoods(string $documentId): bool
+    {
+        $document = $this->documents[$documentId] ?? [];
+        if (isset($document['allowsNewGoods'])) return (bool) $document['allowsNewGoods'];
+        $text = '';
+        foreach ($document['pages'] ?? [] as $page) foreach ($page['blocks'] as $block) $text .= "\n" . $block['text'];
+        $header = mb_substr($text, 0, 6000);
+        $permit = preg_match('/санитарно[\s\p{Pd}]*эпидемиолог|свидетельств\p{L}*\s+о\s+государственной\s+регистрации|сертификат\p{L}*\s+соответствия|certificate\s+of\s+conformity|не\s+подлеж\p{L}*\s+государственной\s+регистрации/ui', $header);
+        $shipment = preg_match('/commercial\s+invoice|packing\s+list|^\s*(?:invoice|инвойс|сч[её]т[\s-]*фактура|упаковочный\s+лист)\b/uim', $header);
+        return !$permit || (bool) $shipment;
+    }
+
     public function verify(array $citation): array
     {
         $document = $this->documents[$citation['documentId']] ?? null;

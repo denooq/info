@@ -64,7 +64,7 @@ final class Entities
             $new['sourceLineIds']=$lines;
             $row['sourceLineIds']=array_values(array_diff($row['sourceLineIds'],$lines));
             // No speculative allocation of totals: both groups require explicit input and confirmation.
-            foreach (['grossMass','netMass','invoiceValue','packageQuantity','groupConfirmed'] as $key) $row[$key]=null;
+            foreach (['grossMass','netMass','invoiceValue','packageQuantity','groupConfirmed','additionalQuantity','secondaryAdditionalQuantity','dutyQuantity','tariffConfirmed'] as $key) $row[$key]=null;
             $d['goods'][]=$new;
         } elseif ($scope === 'goods' && $action === 'merge') {
             $ids=$request['ids']??[];
@@ -72,21 +72,21 @@ final class Entities
             if (($request['confirmed']??false)!==true||!in_array($request['mode']??'', ['sum','same-item'],true)) throw new ApiError('GROUP_CONFIRM','Укажите, это отдельные строки для суммирования или повторные сведения об одном товаре.');
             $selected=array_values(array_filter($d['goods'],fn($g)=>in_array($g['id'],$ids,true)));
             $merged=$selected[0];
-            foreach (['commodityCode','originCountry','previousProcedure','movementFeature','preferenceDuty','preferenceVat','dutyRate','vatRate','prohibitionCodes'] as $key) {
+            foreach (['commodityCode','originCountry','previousProcedure','movementFeature','preferenceDuty','preferenceVat','vatRate','prohibitionCodes',...array_diff(TariffEngine::OPERANDS,['dutyQuantity'])] as $key) {
                 $values=[];
-                foreach ($selected as $g) if (!Conditions::missing($g[$key])) $values[json_encode($g[$key])]=true;
+                foreach ($selected as $g) if (!Conditions::missing($g[$key]??null)) $values[json_encode($g[$key])]=true;
                 if (count($values)>1) throw new ApiError('GROUP_INCOMPATIBLE','Не совпадают классификация, происхождение или меры: '.$this->registry->field('goods.'.$key)['label']);
             }
             foreach ($this->registry->fields() as $f) if ($f['scope']==='goods') {
                 $key=$f['key']; $values=array_column($selected,$key);
                 if (in_array($key,['sourceLineIds','packageIds'],true)) $merged[$key]=array_values(array_unique(array_merge(...$values)));
-                elseif (in_array($key,['grossMass','netMass','invoiceValue'],true)) {
+                elseif (in_array($key,['grossMass','netMass','invoiceValue','additionalQuantity','secondaryAdditionalQuantity','dutyQuantity'],true)) {
                     if ($request['mode']==='sum') $merged[$key]=in_array(null,$values,true)?null:(string)array_reduce($values,fn($s,$v)=>$s->plus($v),BigDecimal::zero());
                     elseif (count(array_unique(array_filter($values,fn($v)=>$v!==null)))>1) $merged[$key]=null;
                     else $merged[$key]=array_values(array_filter($values,fn($v)=>$v!==null))[0]??null;
-                } elseif ($merged[$key]===null) foreach ($values as $v) if ($v!==null) { $merged[$key]=$v; break; }
+                } elseif (($merged[$key]??null)===null) foreach ($values as $v) if ($v!==null) { $merged[$key]=$v; break; }
             }
-            $merged['groupConfirmed']=null; $merged['packageQuantity']=null;
+            $merged['groupConfirmed']=null; $merged['packageQuantity']=null; $merged['tariffConfirmed']=false;
             $d['goods']=array_values(array_filter($d['goods'],fn($g)=>!in_array($g['id'],$ids,true)));
             $d['goods'][]=$merged;
             foreach (['documents','costs'] as $list) foreach ($d[$list] as &$r) if (array_intersect($r['goodsIds'],$ids)) $r['goodsIds']=array_values(array_unique([...array_diff($r['goodsIds'],$ids),$merged['id']]));

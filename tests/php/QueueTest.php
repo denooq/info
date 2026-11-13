@@ -12,6 +12,69 @@ function queueFixture(?Closure $clock = null): array
     return [$config, $store, $session, new Queue($config, $store)];
 }
 
+test('one worker claims all documents, saves each completion, and retries only the failed request', function (): void {
+    $now = 1000;
+    [$config, $store, $session, $queue] = queueFixture(function () use (&$now): int { return $now; });
+    $id = $session['state']['id'];
+    $store->mutate($id, null, function (array $state): array {
+        for ($i = 0; $i < 20; $i++) $state['documents']['doc-' . $i] = ['id' => 'doc-' . $i, 'hash' => hash('sha256', (string) $i), 'status' => 'pending'];
+        return $state;
+    });
+    foreach ($store->read($id)['documents'] as $document) $queue->enqueue($id, 'ocr', $document['id']);
+    $calls = []; $batches = [];
+    $handlers = ['ocr' => [
+        'runBatch' => function (array $jobs, array $state, string $directory, callable $complete) use ($store, $queue, $id, &$calls, &$batches): void {
+            $batches[] = count($jobs);
+            same(count($jobs), count(array_filter($store->read($id)['jobs'], fn($job) => $job['status'] === 'running')));
+            same(['status' => 'busy', 'processed' => 0], $queue->tick([]));
+            foreach (array_reverse($jobs) as $job) {
+                $documentId = $job['documentId'];
+                $calls[$documentId] = ($calls[$documentId] ?? 0) + 1;
+                if ($documentId === 'doc-7' && $calls[$documentId] === 1) {
+                    $complete($job, null, new Customs\Http\ApiError('MISTRAL_RATE_LIMIT', 'Подождите.', 429, ['retryAfter' => 60]));
+                } else {
+                    $complete($job, ['documentId' => $documentId]);
+                    same('done', $store->read($id)['jobs'][$job['id']]['status']);
+                }
+                if ($documentId === 'doc-19') same('running', array_values($store->read($id)['jobs'])[0]['status']);
+            }
+        },
+        'apply' => function (array $state, array $payload): array {
+            $state['documents'][$payload['documentId']]['status'] = 'recognized';
+            return $state;
+        },
+    ]];
+    same(20, $queue->tick($handlers, 100)['processed']);
+    $state = $store->read($id);
+    same(19, count(array_filter($state['jobs'], fn($job) => $job['status'] === 'done')));
+    same(null, $state['error']);
+    same(0, $queue->tick($handlers, 100)['processed']);
+    $now = max(array_column($state['jobs'], 'nextAttemptAt'));
+    same(1, $queue->tick($handlers, 100)['processed']);
+    same([20, 1], $batches);
+    same(2, $calls['doc-7']);
+    foreach ($calls as $documentId => $count) if ($documentId !== 'doc-7') same(1, $count);
+    same(20, count(array_filter($store->read($id)['jobs'], fn($job) => $job['status'] === 'done')));
+});
+
+test('a long document does not crowd out the first chunks of other documents', function (): void {
+    [$config, $store, $session, $queue] = queueFixture(); $id = $session['state']['id'];
+    $store->mutate($id, null, function (array $state): array {
+        for ($i = 0; $i < 20; $i++) $state['documents']['doc-' . $i] = ['id' => 'doc-' . $i, 'hash' => hash('sha256', (string) $i), 'status' => 'pending'];
+        return $state;
+    });
+    $queue->enqueue($id, 'ocr', 'doc-0', false, 0);
+    $queue->enqueue($id, 'ocr', 'doc-0', false, 8);
+    for ($i = 1; $i < 20; $i++) $queue->enqueue($id, 'ocr', 'doc-' . $i);
+    $batches = [];
+    $handlers = ['ocr' => ['runBatch' => function (array $jobs, array $state, string $directory, callable $complete) use (&$batches): void {
+        $batches[] = array_column($jobs, 'chunkStart');
+        foreach ($jobs as $job) $complete($job, []);
+    }, 'apply' => fn(array $state): array => $state]];
+    same(21, $queue->tick($handlers, 100)['processed']);
+    same([array_fill(0, 20, 0), [8]], $batches);
+});
+
 test('duplicate starts and polling do not duplicate paid work', function (): void {
     [$config,$store,$session,$queue] = queueFixture(); $id = $session['state']['id'];
     $queue->enqueue($id, 'mapping'); $queue->enqueue($id, 'mapping');

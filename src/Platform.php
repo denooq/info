@@ -16,6 +16,9 @@ final class Platform
         foreach (self::EXTENSIONS as $extension) {
             if (!in_array($extension, $extensions, true)) $errors[] = ['code' => 'EXTENSION_MISSING', 'extension' => $extension];
         }
+        foreach (['curl_multi_init', 'curl_multi_exec', 'curl_multi_select', 'curl_multi_info_read'] as $function) {
+            if (!function_exists($function)) $errors[] = ['code' => 'CURL_MULTI_MISSING', 'function' => $function];
+        }
         $root = $config->get('runtime_dir');
         $probe = $root . '/.probe-' . bin2hex(random_bytes(8));
         $renamed = $probe . '.renamed';

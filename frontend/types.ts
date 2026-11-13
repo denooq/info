@@ -1,8 +1,8 @@
 export type Value = string | number | boolean | null | string[];
 export type Entity = { id: string; [key: string]: unknown };
-export type FieldState = { status: string; candidateId: string | null; evidenceIds: string[]; conflict?: boolean; needsReview?: boolean };
+export type FieldState = { status: string; candidateId: string | null; evidenceIds: string[]; conflict?: boolean; needsReview?: boolean; tnved?: { status: string; message: string; total?: number } };
 export type Candidate = { id: string; address: string; fieldId: string; entityId: string | null; value: Value; unit: string | null; valid: boolean; issues: string[]; evidenceIds: string[] };
-export type Evidence = { documentId: string; documentName: string; page?: number; sheet?: string; cell?: string; quote: string };
+export type Evidence = { documentId: string; documentName: string; page?: number; sheet?: string; cell?: string; quote: string; kind?: string; url?: string };
 export type Session = {
   createdAt: number; expiresAt: number; dataRevision: number; phase: string; csrfToken: string;
   draft: { declaration: Record<string, Value>; keden: Record<string, Value>; parties: Entity[]; goods: Entity[]; transports: Entity[]; documents: Entity[]; costs: Entity[]; rates: Entity[]; payments: Entity[]; sourceLines: Record<string, { id: string; quote?: string; origin: string; evidenceId?: string }>; packages: Entity[]; fieldStates: Record<string, FieldState> };

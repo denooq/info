@@ -59,7 +59,8 @@ final class Validator
         foreach ($d['goods'] as $g) {
             $prefix = 'goods/'.$g['id'].'/';
             if (($g['groupConfirmed'] ?? null) !== true) $this->error($prefix.'groupConfirmed', 'GROUP_CONFIRM', 'Подтвердите состав товара.');
-            if (($g['dutyFormula']??null)!=='advalorem' || ($g['exciseApplicable']??null)!==false) $this->error($prefix.'dutyFormula','PAYMENT_FORMULA_UNSUPPORTED','Поддерживается только адвалорная пошлина без акциза.');
+            if (!in_array($g['dutyFormula']??null, TariffEngine::FORMULAS, true) || ($g['exciseApplicable']??null)!==false) $this->error($prefix.'dutyFormula','PAYMENT_FORMULA_UNSUPPORTED','Выберите поддерживаемую формулу; расчёт акциза пока не поддерживается.');
+            $this->tariff($d, $g, $prefix);
             if ($g['netMass'] !== null && $g['grossMass'] !== null && BigDecimal::of($g['netMass'])->isGreaterThan($g['grossMass'])) $this->error($prefix.'netMass', 'MASS_ORDER', 'Нетто превышает брутто.');
             foreach ($g['sourceLineIds'] as $line) {
                 if (!isset($d['sourceLines'][$line]) || isset($usedLines[$line])) $this->error($prefix.'sourceLineIds', 'SOURCE_LINE', 'Строка источника отсутствует или включена в другой товар.');
@@ -77,7 +78,8 @@ final class Validator
         }
         foreach (['04021','03011'] as $kind) if (!in_array($kind, array_column($d['documents'], 'kind'), true)) $this->error('documents', 'DOCUMENT_REQUIRED', 'Добавьте документ вида '.$kind.' (инвойс / контракт).');
         $this->links('declaration/_/valuationDocumentIds', $d['declaration']['valuationDocumentIds'], $docIds);
-        $requiredCurrencies = array_unique(array_filter([$d['declaration']['invoiceCurrency'], 'USD', ...array_column($d['costs'], 'currency')]));
+        $dutyCurrencies = array_map(fn($g)=>($g['dutyFormula']??'advalorem')==='advalorem'?null:($g['dutyCurrency']??null), $d['goods']);
+        $requiredCurrencies = array_unique(array_filter([$d['declaration']['invoiceCurrency'], 'USD', ...array_column($d['costs'], 'currency'), ...$dutyCurrencies]));
         $currencies = [];
         foreach ($d['rates'] as $r) {
             $a = 'rate/'.$r['id'].'/';
@@ -119,6 +121,34 @@ final class Validator
     {
         $result = $this->validate($state);
         if (!$result['valid']) throw new ApiError('DECLARATION_INVALID','Заполните и проверьте обязательные данные.',422,$result);
+    }
+    private function tariff(array $draft, array $goods, string $prefix): void
+    {
+        $entry = $goods['_tariff'] ?? null;
+        if ($entry !== null) {
+            if ($entry['code'] !== ($goods['commodityCode'] ?? '') || $entry['version'] !== (new TariffCatalogue())->version()) $this->error($prefix.'commodityCode', 'TARIFF_STALE', 'Код или версия тарифа изменены. Обновите данные товара.');
+            foreach ([['additionalUnitRequired','additionalUnit',0], ['secondaryAdditionalUnitRequired','secondaryAdditionalUnit',1]] as [$flag,$unit,$index]) {
+                $expected = $entry['units']['additional_unit_codes'][$index] ?? null;
+                if (($goods[$flag]??false)!==($expected!==null) || ($goods[$unit]??null)!==$expected) $this->error($prefix.$unit, 'TARIFF_UNIT', 'Дополнительная единица должна соответствовать выбранному коду ТН ВЭД.');
+            }
+        }
+        if (($goods['tariffFromCatalogue'] ?? false) === true) {
+            if ($entry === null || ($goods['tariffConfirmed']??false)!==true || ($entry['contextHash']??'') !== TariffDefaults::contextHash($draft,$goods)) $this->error($prefix.'tariffConfirmed','TARIFF_CONFIRM','Проверьте применимость базовой ставки к дате, стране происхождения, льготам, исключениям Казахстана и сноскам; затем подтвердите её.');
+            $base = $entry === null ? [] : TariffEngine::parameters($entry['duty']['base_rule']);
+            $modified = false;
+            foreach ($base as $key=>$value) if (($goods[$key]??null)!==$value) $modified = true;
+            if ($modified && !in_array($draft['fieldStates'][$prefix.'rateBasis']['status']??'', ['manual','selected'], true)) $this->error($prefix.'rateBasis','TARIFF_BASIS','Ставка отличается от базовой ЕТТ. Укажите основание изменения вручную.');
+        } elseif ($entry !== null && ($draft['fieldStates'][$prefix.'rateBasis']['status']??'')==='reference') $this->error($prefix.'rateBasis','TARIFF_BASIS','Для ручной ставки укажите её основание.');
+        if (in_array($goods['dutyFormula']??'', TariffEngine::FORMULAS, true)) {
+            try {
+                TariffEngine::rule($goods);
+                if ($goods['dutyFormula'] !== 'advalorem') {
+                    $linked = TariffDefaults::linkedQuantity($goods);
+                    if ($linked !== null && ($goods['dutyQuantity']??null)!==null && !BigDecimal::of($linked)->isEqualTo($goods['dutyQuantity'])) $this->error($prefix.'dutyQuantity','TARIFF_QUANTITY','Количество пошлины должно совпадать с соответствующей массой или количеством товара.');
+                    if (($goods['dutyQuantityBasis']??'')==='net_mass' && ($goods['dutyUnitCode']??'')!=='166') $this->error($prefix.'dutyUnitCode','TARIFF_UNIT','Расчёт по нетто требует единицу кг (166).');
+                }
+            } catch (\Throwable $error) { $this->error($prefix.'dutyFormula','TARIFF_OPERANDS','Проверьте параметры ставки: '.$error->getMessage()); }
+        }
     }
     private function links(string $address, array $values, array $allowed): void { if (array_diff($values,$allowed)) $this->error($address,'LINK_INVALID','Выбрана ссылка на отсутствующую строку.'); }
     private function error(string $address, string $code, string $message): void { $this->errors[] = compact('address','code','message'); }

@@ -14,7 +14,10 @@ final class XmlProfiles
     {
         $d=$snapshot['data']['draft'];$unsupported=[];
         foreach(['container','specificationsApplicable','referenceApplicable','deferment','relatedParties','useRestrictions','valueConditions'] as $key)if($d['declaration'][$key]===true)$unsupported[]='declaration/_/'.$key;
-        foreach($d['goods'] as $g)foreach(['hasQuota','hasPreviousDocument','additionalUnitRequired','hasPreference'] as $key)if($g[$key]===true)$unsupported[]='goods/'.$g['id'].'/'.$key;
+        foreach($d['goods'] as $g) {
+            foreach(['hasQuota','hasPreviousDocument','additionalUnitRequired','secondaryAdditionalUnitRequired','hasPreference'] as $key)if(($g[$key]??null)===true)$unsupported[]='goods/'.$g['id'].'/'.$key;
+            if (($g['dutyFormula']??'advalorem')!=='advalorem') $unsupported[]='goods/'.$g['id'].'/dutyFormula';
+        }
         foreach($snapshot['data']['calculation']['items'] as $g)foreach(['deductionValue','indirectValue'] as $key)if(!D::of($g[$key])->isZero())$unsupported[]='goods/'.$g['id'].'/'.$key;
         if($unsupported!==[])throw new ApiError('XML_BRANCH_UNSUPPORTED','Эти данные требуют веток XML, которых нет в предоставленном образце. Расчёт сохранён; формат можно расширить после получения XSD.',422,['addresses'=>$unsupported]);
     }

@@ -30,10 +30,10 @@ function App() {
   useEffect(() => { void request<Registry>('/api/registry').then(setRegistry).catch(e=>setFatal(e.message)); }, []);
   useEffect(() => { if(session?.phase==='reviewing')setPage(p=>p==='calculation'?p:null); },[session?.phase]);
   useEffect(() => {
-    if (!session || !['recognizing','generating'].includes(session.phase) || session.error) return;
+    if (!session || !['recognizing','generating'].includes(session.phase) || (session.error && !session.jobs.some(job => ['queued', 'running'].includes(job.status)))) return;
     const timer = window.setInterval(() => { void request<Session>('/api/session').then(update).catch(error => setFatal(error.message)); }, 2500);
     return () => window.clearInterval(timer);
-  }, [session?.phase, session?.error, update]);
+  }, [session?.phase, session?.jobs, update]);
   async function upload(files: File[]) {
     if (!current.current || busy || files.length === 0) return;
     setBusy(true); const failures: string[] = []; setErrors([]);

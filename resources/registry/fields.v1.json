@@ -3349,6 +3349,7 @@
       "type": "code",
       "acquisition": [
         "extract",
+        "reference",
         "manual"
       ],
       "dtGraphs": [
@@ -4303,7 +4304,8 @@
       "type": "boolean",
       "acquisition": [
         "extract",
-        "manual"
+        "manual",
+        "reference"
       ],
       "dtGraphs": [
         "41"
@@ -4593,7 +4595,13 @@
         "field": "additionalUnitRequired",
         "value": true
       },
-      "validWhen": [],
+      "validWhen": [
+        {
+          "op": "decimal",
+          "min": "0",
+          "exclusiveMin": true
+        }
+      ],
       "sourceHints": [
         {
           "documentKinds": [
@@ -4631,7 +4639,8 @@
       "type": "code",
       "acquisition": [
         "extract",
-        "manual"
+        "manual",
+        "reference"
       ],
       "dtGraphs": [
         "41"
@@ -7003,13 +7012,38 @@
       "label": "Ставка пошлины, %",
       "type": "decimal",
       "acquisition": [
+        "reference",
         "manual"
       ],
       "dtGraphs": [
         "47"
       ],
       "rule": "DT:15(45)",
-      "requiredWhen": true,
+      "requiredWhen": {
+        "op": "any",
+        "args": [
+          {
+            "op": "eq",
+            "field": "dutyFormula",
+            "value": "advalorem"
+          },
+          {
+            "op": "eq",
+            "field": "dutyFormula",
+            "value": "combined"
+          },
+          {
+            "op": "eq",
+            "field": "dutyFormula",
+            "value": "combined_sum"
+          },
+          {
+            "op": "eq",
+            "field": "dutyFormula",
+            "value": "alternative_minimum"
+          }
+        ]
+      },
       "validWhen": [
         {
           "op": "decimal",
@@ -7952,6 +7986,7 @@
       "label": "Формула пошлины",
       "type": "enum",
       "acquisition": [
+        "reference",
         "manual"
       ],
       "dtGraphs": [
@@ -7969,7 +8004,9 @@
       "values": [
         "advalorem",
         "specific",
-        "combined"
+        "combined",
+        "combined_sum",
+        "alternative_minimum"
       ]
     },
     {
@@ -8027,6 +8064,477 @@
           "path": "I/cacdo:CustomsPaymentDetails/casdo:CustomsTaxPaymentFeatureCode"
         }
       }
+    },
+    {
+      "id": "goods.tariffFromCatalogue",
+      "key": "tariffFromCatalogue",
+      "scope": "goods",
+      "label": "Использовать ставку по ТН ВЭД",
+      "type": "boolean",
+      "acquisition": [
+        "reference",
+        "manual"
+      ],
+      "dtGraphs": [],
+      "rule": "TNVED:tariff-and-units-v2",
+      "requiredWhen": false,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": null,
+        "graphs": []
+      },
+      "xml": {}
+    },
+    {
+      "id": "goods.tariffConfirmed",
+      "key": "tariffConfirmed",
+      "scope": "goods",
+      "label": "Применимость выбранной ставки проверена",
+      "type": "boolean",
+      "acquisition": [
+        "reference",
+        "manual"
+      ],
+      "dtGraphs": [],
+      "rule": "TNVED:tariff-and-units-v2",
+      "requiredWhen": {
+        "op": "eq",
+        "field": "tariffFromCatalogue",
+        "value": true
+      },
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": null,
+        "graphs": []
+      },
+      "xml": {}
+    },
+    {
+      "id": "goods.dutyAlternativeRate",
+      "key": "dutyAlternativeRate",
+      "scope": "goods",
+      "label": "Первая альтернативная ставка, %",
+      "type": "decimal",
+      "acquisition": [
+        "reference",
+        "manual"
+      ],
+      "dtGraphs": [],
+      "rule": "TNVED:tariff-and-units-v2",
+      "requiredWhen": {
+        "op": "eq",
+        "field": "dutyFormula",
+        "value": "alternative_minimum"
+      },
+      "validWhen": [
+        {
+          "op": "decimal",
+          "min": "0"
+        }
+      ],
+      "sourceHints": [],
+      "pdf": {
+        "document": null,
+        "graphs": []
+      },
+      "xml": {},
+      "unit": "percent"
+    },
+    {
+      "id": "goods.dutySpecificRate",
+      "key": "dutySpecificRate",
+      "scope": "goods",
+      "label": "Специфическая часть ставки",
+      "type": "decimal",
+      "acquisition": [
+        "reference",
+        "manual"
+      ],
+      "dtGraphs": [],
+      "rule": "TNVED:tariff-and-units-v2",
+      "requiredWhen": {
+        "op": "any",
+        "args": [
+          {
+            "op": "eq",
+            "field": "dutyFormula",
+            "value": "specific"
+          },
+          {
+            "op": "eq",
+            "field": "dutyFormula",
+            "value": "combined"
+          },
+          {
+            "op": "eq",
+            "field": "dutyFormula",
+            "value": "combined_sum"
+          },
+          {
+            "op": "eq",
+            "field": "dutyFormula",
+            "value": "alternative_minimum"
+          }
+        ]
+      },
+      "validWhen": [
+        {
+          "op": "decimal",
+          "min": "0"
+        }
+      ],
+      "sourceHints": [],
+      "pdf": {
+        "document": null,
+        "graphs": []
+      },
+      "xml": {},
+      "unit": "tariffQuantity"
+    },
+    {
+      "id": "goods.dutyCurrency",
+      "key": "dutyCurrency",
+      "scope": "goods",
+      "label": "Валюта специфической ставки",
+      "type": "code",
+      "acquisition": [
+        "reference",
+        "manual"
+      ],
+      "dtGraphs": [],
+      "rule": "TNVED:tariff-and-units-v2",
+      "requiredWhen": {
+        "op": "any",
+        "args": [
+          {
+            "op": "eq",
+            "field": "dutyFormula",
+            "value": "specific"
+          },
+          {
+            "op": "eq",
+            "field": "dutyFormula",
+            "value": "combined"
+          },
+          {
+            "op": "eq",
+            "field": "dutyFormula",
+            "value": "combined_sum"
+          },
+          {
+            "op": "eq",
+            "field": "dutyFormula",
+            "value": "alternative_minimum"
+          }
+        ]
+      },
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": null,
+        "graphs": []
+      },
+      "xml": {}
+    },
+    {
+      "id": "goods.dutyPerQuantity",
+      "key": "dutyPerQuantity",
+      "scope": "goods",
+      "label": "Ставка за количество единиц",
+      "type": "decimal",
+      "acquisition": [
+        "reference",
+        "manual"
+      ],
+      "dtGraphs": [],
+      "rule": "TNVED:tariff-and-units-v2",
+      "requiredWhen": {
+        "op": "any",
+        "args": [
+          {
+            "op": "eq",
+            "field": "dutyFormula",
+            "value": "specific"
+          },
+          {
+            "op": "eq",
+            "field": "dutyFormula",
+            "value": "combined"
+          },
+          {
+            "op": "eq",
+            "field": "dutyFormula",
+            "value": "combined_sum"
+          },
+          {
+            "op": "eq",
+            "field": "dutyFormula",
+            "value": "alternative_minimum"
+          }
+        ]
+      },
+      "validWhen": [
+        {
+          "op": "decimal",
+          "min": "0",
+          "exclusiveMin": true
+        }
+      ],
+      "sourceHints": [],
+      "pdf": {
+        "document": null,
+        "graphs": []
+      },
+      "xml": {},
+      "unit": "tariffQuantity"
+    },
+    {
+      "id": "goods.dutyUnitCode",
+      "key": "dutyUnitCode",
+      "scope": "goods",
+      "label": "Код единицы специфической ставки",
+      "type": "code",
+      "acquisition": [
+        "reference",
+        "manual"
+      ],
+      "dtGraphs": [],
+      "rule": "TNVED:tariff-and-units-v2",
+      "requiredWhen": false,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": null,
+        "graphs": []
+      },
+      "xml": {}
+    },
+    {
+      "id": "goods.dutyUnitSymbol",
+      "key": "dutyUnitSymbol",
+      "scope": "goods",
+      "label": "Единица специфической ставки",
+      "type": "string",
+      "acquisition": [
+        "reference",
+        "manual"
+      ],
+      "dtGraphs": [],
+      "rule": "TNVED:tariff-and-units-v2",
+      "requiredWhen": {
+        "op": "any",
+        "args": [
+          {
+            "op": "eq",
+            "field": "dutyFormula",
+            "value": "specific"
+          },
+          {
+            "op": "eq",
+            "field": "dutyFormula",
+            "value": "combined"
+          },
+          {
+            "op": "eq",
+            "field": "dutyFormula",
+            "value": "combined_sum"
+          },
+          {
+            "op": "eq",
+            "field": "dutyFormula",
+            "value": "alternative_minimum"
+          }
+        ]
+      },
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": null,
+        "graphs": []
+      },
+      "xml": {}
+    },
+    {
+      "id": "goods.dutyQuantityBasis",
+      "key": "dutyQuantityBasis",
+      "scope": "goods",
+      "label": "База количества для пошлины",
+      "type": "enum",
+      "acquisition": [
+        "reference",
+        "manual"
+      ],
+      "dtGraphs": [],
+      "rule": "TNVED:tariff-and-units-v2",
+      "requiredWhen": {
+        "op": "any",
+        "args": [
+          {
+            "op": "eq",
+            "field": "dutyFormula",
+            "value": "specific"
+          },
+          {
+            "op": "eq",
+            "field": "dutyFormula",
+            "value": "combined"
+          },
+          {
+            "op": "eq",
+            "field": "dutyFormula",
+            "value": "combined_sum"
+          },
+          {
+            "op": "eq",
+            "field": "dutyFormula",
+            "value": "alternative_minimum"
+          }
+        ]
+      },
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": null,
+        "graphs": []
+      },
+      "xml": {},
+      "values": [
+        "net_mass",
+        "goods_quantity",
+        "engine_displacement"
+      ]
+    },
+    {
+      "id": "goods.dutyQuantity",
+      "key": "dutyQuantity",
+      "scope": "goods",
+      "label": "Количество для специфической ставки",
+      "type": "decimal",
+      "acquisition": [
+        "reference",
+        "manual"
+      ],
+      "dtGraphs": [],
+      "rule": "TNVED:tariff-and-units-v2",
+      "requiredWhen": {
+        "op": "any",
+        "args": [
+          {
+            "op": "eq",
+            "field": "dutyFormula",
+            "value": "specific"
+          },
+          {
+            "op": "eq",
+            "field": "dutyFormula",
+            "value": "combined"
+          },
+          {
+            "op": "eq",
+            "field": "dutyFormula",
+            "value": "combined_sum"
+          },
+          {
+            "op": "eq",
+            "field": "dutyFormula",
+            "value": "alternative_minimum"
+          }
+        ]
+      },
+      "validWhen": [
+        {
+          "op": "decimal",
+          "min": "0",
+          "exclusiveMin": true
+        }
+      ],
+      "sourceHints": [],
+      "pdf": {
+        "document": null,
+        "graphs": []
+      },
+      "xml": {},
+      "unit": "tariffQuantity"
+    },
+    {
+      "id": "goods.secondaryAdditionalUnitRequired",
+      "key": "secondaryAdditionalUnitRequired",
+      "scope": "goods",
+      "label": "Требуется вторая дополнительная единица",
+      "type": "boolean",
+      "acquisition": [
+        "reference",
+        "manual"
+      ],
+      "dtGraphs": [],
+      "rule": "TNVED:tariff-and-units-v2",
+      "requiredWhen": false,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": null,
+        "graphs": []
+      },
+      "xml": {}
+    },
+    {
+      "id": "goods.secondaryAdditionalUnit",
+      "key": "secondaryAdditionalUnit",
+      "scope": "goods",
+      "label": "Вторая дополнительная единица",
+      "type": "code",
+      "acquisition": [
+        "reference",
+        "manual"
+      ],
+      "dtGraphs": [],
+      "rule": "TNVED:tariff-and-units-v2",
+      "requiredWhen": {
+        "op": "eq",
+        "field": "secondaryAdditionalUnitRequired",
+        "value": true
+      },
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": null,
+        "graphs": []
+      },
+      "xml": {}
+    },
+    {
+      "id": "goods.secondaryAdditionalQuantity",
+      "key": "secondaryAdditionalQuantity",
+      "scope": "goods",
+      "label": "Количество во второй дополнительной единице",
+      "type": "decimal",
+      "acquisition": [
+        "reference",
+        "manual"
+      ],
+      "dtGraphs": [],
+      "rule": "TNVED:tariff-and-units-v2",
+      "requiredWhen": {
+        "op": "eq",
+        "field": "secondaryAdditionalUnitRequired",
+        "value": true
+      },
+      "validWhen": [
+        {
+          "op": "decimal",
+          "min": "0",
+          "exclusiveMin": true
+        }
+      ],
+      "sourceHints": [],
+      "pdf": {
+        "document": null,
+        "graphs": []
+      },
+      "xml": {},
+      "unit": "tariffQuantity"
     }
   ],
   "dtsMatrixCoverage": [

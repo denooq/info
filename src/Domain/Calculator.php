@@ -73,13 +73,14 @@ final class Calculator
         $items=[]; $totals=['invoiceTotal'=>D::zero(),'customsValue'=>D::zero(),'duty'=>D::zero(),'fee'=>D::zero(),'vat'=>D::zero(),'accruedTotal'=>D::zero()];
         foreach($goods as $i=>$g) {
             if(($g['valuationMethod']??'1')!=='1')throw new ApiError('METHOD_UNSUPPORTED','MVP поддерживает только метод 1.',422);
-            if(($g['dutyFormula']??'advalorem')!=='advalorem'||($g['exciseApplicable']??false)!==false)throw new ApiError('PAYMENT_FORMULA_UNSUPPORTED','MVP поддерживает адвалорную пошлину без акциза.',422);
+            if(($g['exciseApplicable']??false)!==false)throw new ApiError('PAYMENT_FORMULA_UNSUPPORTED','Расчёт акциза не поддерживается текущим профилем.',422);
             $id=$g['id']; $invoice=$this->convert($g['invoiceValue'],$d['declaration']['invoiceCurrency'],$d['rates']);
             $indirect=self::money($parts[$id]['indirect']); $basis=self::money(D::of($invoice)->plus($indirect));
             $addition=self::money($parts[$id]['addition']); $deduction=self::money($parts[$id]['deduction']);
             $cv=self::money(D::of($basis)->plus($addition)->minus($deduction));
             if(D::of($cv)->isNegative())throw new ApiError('CUSTOMS_VALUE_NEGATIVE','Вычеты превышают стоимость товара.',422);
-            $duty=(string)D::of($cv)->multipliedBy($g['dutyRate'])->dividedBy('100',2,R::HalfUp);
+            $dutyResult=(new TariffEngine())->calculate(TariffEngine::rule($g),$cv,$g,$d['rates']);
+            $duty=$dutyResult['amount'];
             $fee=$fees[$id]; $vatBase=self::money(D::of($cv)->plus($duty)->plus($fee));
             $vat=(string)D::of($vatBase)->multipliedBy($g['vatRate'])->dividedBy('100',2,R::HalfUp);
             $total=self::money(D::of($duty)->plus($fee)->plus($vat));
@@ -89,7 +90,7 @@ final class Calculator
             if($usdRate===null)throw new ApiError('RATE_REQUIRED','Нужен курс USD.',422);
             $stat=(string)$statKzt->multipliedBy($usdRate['nominal'])->dividedBy($usdRate['value'],2,R::HalfUp);
             $cvUsd=(string)D::of($cv)->multipliedBy($usdRate['nominal'])->dividedBy($usdRate['value'],2,R::HalfUp);
-            $items[]=['id'=>$id,'ordinal'=>$i+1,'sheetOrdinal'=>$i===0?1:2+intdiv($i-1,3),'dtsPageOrdinal'=>2+intdiv($i,3),'nationalInvoiceValue'=>$invoice,'indirectValue'=>$indirect,'basisValue'=>$basis,'additionValue'=>$addition,'deductionValue'=>$deduction,'customsValue'=>$cv,'customsValueUsd'=>$cvUsd,'statisticalValue'=>$stat,'statisticalBaseKzt'=>self::money($statKzt),'fee'=>$fee,'duty'=>$duty,'vatBase'=>$vatBase,'vat'=>$vat,'accruedTotal'=>$total,'payments'=>[['code'=>'1010','base'=>$cv,'rate'=>null,'amount'=>$fee],['code'=>'2010','base'=>$cv,'rate'=>$g['dutyRate'],'amount'=>$duty],['code'=>'5060','base'=>$vatBase,'rate'=>$g['vatRate'],'amount'=>$vat]]];
+            $items[]=['id'=>$id,'ordinal'=>$i+1,'sheetOrdinal'=>$i===0?1:2+intdiv($i-1,3),'dtsPageOrdinal'=>2+intdiv($i,3),'nationalInvoiceValue'=>$invoice,'indirectValue'=>$indirect,'basisValue'=>$basis,'additionValue'=>$addition,'deductionValue'=>$deduction,'customsValue'=>$cv,'customsValueUsd'=>$cvUsd,'statisticalValue'=>$stat,'statisticalBaseKzt'=>self::money($statKzt),'fee'=>$fee,'duty'=>$duty,'dutyFormulaText'=>$dutyResult['formula'],'dutyRule'=>$dutyResult['rule'],'dutyTrace'=>$dutyResult['trace'],'vatBase'=>$vatBase,'vat'=>$vat,'accruedTotal'=>$total,'payments'=>[['code'=>'1010','base'=>$cv,'rate'=>null,'amount'=>$fee],['code'=>'2010','base'=>$cv,'rate'=>$g['dutyFormula']==='advalorem'?$g['dutyRate']:null,'amount'=>$duty],['code'=>'5060','base'=>$vatBase,'rate'=>$g['vatRate'],'amount'=>$vat]]];
             $totals['invoiceTotal']=$totals['invoiceTotal']->plus($g['invoiceValue']);
             foreach(['customsValue'=>$cv,'duty'=>$duty,'fee'=>$fee,'vat'=>$vat,'accruedTotal'=>$total] as $key=>$v)$totals[$key]=$totals[$key]->plus($v);
         }
@@ -103,7 +104,7 @@ final class Calculator
         $nodes=[];
         foreach($items as $item){$g=$goods[$item['ordinal']-1];$prefix=$item['id'].'/';
             $nodes[$prefix.'customsValue']=['formula'=>'basisValue + additionValue - deductionValue','operands'=>array_intersect_key($item,array_flip(['basisValue','additionValue','deductionValue'])),'result'=>$item['customsValue'],'scale'=>2];
-            $nodes[$prefix.'duty']=['formula'=>'customsValue * dutyRate / 100','operands'=>['customsValue'=>$item['customsValue'],'dutyRate'=>$g['dutyRate']],'result'=>$item['duty'],'scale'=>2];
+            $nodes[$prefix.'duty']=['formula'=>$item['dutyFormulaText'],'operands'=>['customsValue'=>$item['customsValue'],'rule'=>$item['dutyRule'],'trace'=>$item['dutyTrace']],'result'=>$item['duty'],'scale'=>2];
             $nodes[$prefix.'vat']=['formula'=>'(customsValue + duty + fee) * vatRate / 100','operands'=>['customsValue'=>$item['customsValue'],'duty'=>$item['duty'],'fee'=>$item['fee'],'vatRate'=>$g['vatRate']],'result'=>$item['vat'],'scale'=>2];
         }
         $result=['dataRevision'=>$state['dataRevision'],'registryVersion'=>$state['registryVersion'],'profile'=>Registry::resource('calculation-profile'),'nodes'=>$nodes,'goodsCount'=>$count,'sheetCount'=>1+$extra,'packageCount'=>$packageCount,'items'=>$items,'costs'=>$costs,'totals'=>array_map(self::money(...),$totals),'actualPaid'=>$paid,'graphB'=>$wholePaid,'proposals'=>[],'consistent'=>true];

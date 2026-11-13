@@ -13,16 +13,53 @@ final class MistralClient
 
     public function ocr(string $path, string $mime, array $pages): array
     {
-        $bytes = @file_get_contents($path);
-        if ($bytes === false) throw new ApiError('DOCUMENT_NOT_FOUND', 'Документ недоступен или удалён.', 404);
-        $data = 'data:' . $mime . ';base64,' . base64_encode($bytes);
-        $image = str_starts_with($mime, 'image/');
-        return $this->request('/ocr', [
+        $result = null; $failure = null;
+        $this->ocrBatch(['single' => ['path' => $path, 'mime' => $mime, 'pages' => $pages]], dirname($path), static function ($id, $response, $error) use (&$result, &$failure): void { $result = $response; $failure = $error; });
+        if ($failure !== null) throw $failure;
+        return $result;
+    }
+
+    public function ocrBatch(array $requests, string $directory, callable $complete): void
+    {
+        $key = (string) $this->config->get('mistral_api_key');
+        if ($key === '') throw new ApiError('MISTRAL_NOT_CONFIGURED', 'Ключ Mistral не настроен на backend.', 503);
+        $headers = ['Authorization: Bearer ' . $key, 'Content-Type: application/json'];
+        $transfers = [];
+        foreach ($requests as $id => $request) $transfers[$id] = ['path' => $request['path'], 'payload' => $this->ocrPayload($request['mime'], $request['pages'])];
+        $receive = function ($id, ?array $response, ?\Throwable $error) use ($complete): void {
+            $decoded = null;
+            if ($error === null) {
+                try { $decoded = $this->decode($response); }
+                catch (\Throwable $failure) { $error = $failure; }
+            }
+            $complete($id, $decoded, $error);
+        };
+        if ($this->transport === null) {
+            (new ParallelOcrTransport($this->config))->send('https://api.mistral.ai/v1/ocr', $transfers, $headers, $directory, $receive);
+            return;
+        }
+        // Injectable transport is for offline tests; production uses curl_multi above.
+        foreach ($transfers as $id => $request) {
+            $response = null; $error = null;
+            try {
+                $body = new OcrRequestBody($request['path'], $request['payload']);
+                $json = '';
+                while (($chunk = $body->read(65_536)) !== '') $json .= $chunk;
+                $response = ($this->transport)('https://api.mistral.ai/v1/ocr', json_decode($json, true, 256, JSON_THROW_ON_ERROR), $headers);
+            } catch (\Throwable $failure) { $error = $failure; }
+            $receive($id, $response, $error);
+        }
+    }
+
+    private function ocrPayload(string $mime, array $pages): array
+    {
+        $data = 'data:' . $mime . ';base64,';
+        return [
             'model' => $this->config->get('ocr_model'),
-            'document' => $image ? ['type' => 'image_url','image_url' => $data] : ['type' => 'document_url','document_url' => $data],
+            'document' => str_starts_with($mime, 'image/') ? ['type' => 'image_url','image_url' => $data] : ['type' => 'document_url','document_url' => $data],
             'pages' => $pages, 'include_blocks' => true, 'table_format' => 'html',
             'confidence_scores_granularity' => 'block', 'include_image_base64' => false,
-        ]);
+        ];
     }
 
     public function structured(string $system, string $input, array $schema): array
@@ -65,6 +102,11 @@ final class MistralClient
             if ($success === false) throw new ApiError('NETWORK_ERROR', 'Нет ответа Mistral. Состояние этапа сохранено для ограниченного повтора.', 502, ['outcomeUnknown' => true]);
             $response = ['status' => $status, 'headers' => $responseHeaders, 'body' => $body];
         }
+        return $this->decode($response);
+    }
+
+    private function decode(array $response): array
+    {
         $status = (int) ($response['status'] ?? 0);
         $retryAfter = $response['headers']['retry-after'] ?? null;
         if ($status === 429) throw new ApiError('MISTRAL_RATE_LIMIT', 'Достигнут лимит запросов Mistral. Обработка будет повторена.', 429, ['retryAfter' => is_numeric($retryAfter) ? min(300, (int) $retryAfter) : 0]);

@@ -49,6 +49,7 @@ final class Normalizer
     public function issues(array $field, mixed $value): array
     {
         $issues = [];
+        if (($field['id'] ?? '') === 'goods.commodityCode' && preg_match('/^[0-9]{10}$/D', (string) $value) && !TnvedCatalogue::containsCode((string) $value)) $issues[] = 'Код отсутствует в подключённом справочнике ТН ВЭД; требуется ручная проверка.';
         if ($field['type'] === 'enum' && isset($field['values']) && !in_array($value, $field['values'], true)) $issues[] = 'Выберите допустимое значение списка.';
         $catalogs = Registry::resource('catalogs');
         $catalog = $catalogs['fieldCatalogs'][$field['id']] ?? null;
@@ -67,6 +68,9 @@ final class Normalizer
 
     public function date(string $raw): string
     {
+        $raw = trim(preg_replace('/\s*г(?:ода)?\.?$/ui', '', str_replace(['«', '»', '"'], '', trim($raw))));
+        $months = ['января' => '01', 'февраля' => '02', 'марта' => '03', 'апреля' => '04', 'мая' => '05', 'июня' => '06', 'июля' => '07', 'августа' => '08', 'сентября' => '09', 'октября' => '10', 'ноября' => '11', 'декабря' => '12'];
+        if (preg_match('/^([0-9]{1,2})\s+([а-я]+)\s+([0-9]{4})$/uiD', $raw, $match) && isset($months[mb_strtolower($match[2])])) $raw = $match[3] . '-' . $months[mb_strtolower($match[2])] . '-' . str_pad($match[1], 2, '0', STR_PAD_LEFT);
         if (preg_match('/^[0-9]{1,2}\/[0-9]{1,2}\/[0-9]{4}$/D', $raw)) throw new ApiError('DATE_AMBIGUOUS', 'Числовая дата со слешами требует проверки порядка дня/месяца.');
         $raw = preg_replace('/^([0-9]{4})年([0-9]{1,2})月([0-9]{1,2})日$/u', '$1-$2-$3', $raw);
         $raw = preg_replace('/\b([0-9]{1,2})(?:ST|ND|RD|TH)\b/i', '$1', $raw);
@@ -89,12 +93,18 @@ final class Normalizer
 
     private function code(array $field, string $raw): string
     {
+        if (($field['id'] ?? '') === 'goods.commodityCode' && preg_match('/^[0-9\s\x{00A0}\x{202F}]+$/uD', $raw)) return preg_replace('/[\s\x{00A0}\x{202F}]+/u', '', $raw);
         $catalogs = Registry::resource('catalogs');
         $catalog = $catalogs['fieldCatalogs'][$field['id']] ?? null;
         if ($catalog !== null) foreach ($catalogs['lists'][$catalog] as $entry) {
-            foreach ([$entry['code'], ...($entry['aliases'] ?? [])] as $alias) if (mb_strtolower($raw) === mb_strtolower($alias)) return $entry['code'];
+            foreach ([$entry['code'], $entry['label'], ...($entry['aliases'] ?? [])] as $alias) if ($this->codeText($raw) === $this->codeText($alias)) return $entry['code'];
         }
         // Preserve unknown codes and short HS values; validation/confirmation is separate.
         return $raw;
+    }
+
+    private function codeText(string $value): string
+    {
+        return mb_strtolower(trim(preg_replace('/[\s\x{00A0}\x{202F}]+/u', ' ', $value)));
     }
 }

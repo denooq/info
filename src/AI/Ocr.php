@@ -14,6 +14,53 @@ final class Ocr
 
     public function run(array $job, array $state, string $directory): array
     {
+        $result = null; $failure = null;
+        $this->runBatch([$job], $state, $directory, static function ($job, $payload, $error) use (&$result, &$failure): void { $result = $payload; $failure = $error; });
+        if ($failure !== null) throw $failure;
+        return $result;
+    }
+
+    public function runBatch(array $jobs, array $state, string $directory, callable $complete): void
+    {
+        $remote = []; $prepared = []; $pending = [];
+        foreach ($jobs as $job) {
+            $payload = null; $error = null;
+            try {
+                $item = $this->prepare($job, $state, $directory);
+                if (isset($item['saved'])) $payload = $item['saved'];
+                elseif ($item['document']['extension'] === 'xlsx') {
+                    $book = (new XlsxReader($this->config->get('max_unpacked_bytes')))->read($item['path']);
+                    $payload = $this->save($item, ['kind' => 'spreadsheet', 'sheets' => $book['sheets'], 'pages' => [], 'usage' => [], 'model' => 'programmatic-xlsx-v1']);
+                } else {
+                    $id = $job['id'];
+                    $prepared[$id] = $item; $pending[$id] = $job;
+                    $remote[$id] = ['path' => $item['path'], 'mime' => $item['document']['mime'], 'pages' => $item['pages']];
+                    continue;
+                }
+            } catch (\Throwable $failure) { $error = $failure; }
+            $complete($job, $payload, $error);
+        }
+        if ($remote === []) return;
+        try {
+            $this->client->ocrBatch($remote, $directory . '/ocr', function (string $id, ?array $response, ?\Throwable $error) use (&$pending, $prepared, $complete): void {
+                $job = $pending[$id]; unset($pending[$id]);
+                $payload = null;
+                if ($error === null) {
+                    try {
+                        $normalized = $this->normalize($response, $prepared[$id]['pages']);
+                        $normalized['raw'] = $response;
+                        $payload = $this->save($prepared[$id], $normalized);
+                    } catch (\Throwable $failure) { $error = $failure; }
+                }
+                $complete($job, $payload, $error);
+            });
+        } catch (\Throwable $error) {
+            foreach ($pending as $job) $complete($job, null, $error);
+        }
+    }
+
+    private function prepare(array $job, array $state, string $directory): array
+    {
         $document = $state['documents'][$job['documentId']] ?? throw new ApiError('DOCUMENT_NOT_FOUND', 'Документ удалён.', 404);
         $path = $directory . '/documents/' . $document['storageName'];
         $start = $job['chunkStart'] ?? 0;
@@ -24,16 +71,14 @@ final class Ocr
             $raw = @file_get_contents($cache);
             if ($raw === false) throw new ApiError('SESSION_EXPIRED', 'Сессия или сохранённый результат недоступны.', 410);
             $saved = json_decode($raw, true, 256, JSON_THROW_ON_ERROR);
-            if (($saved['fingerprint'] ?? null) === $fingerprint) return $saved;
+            if (($saved['fingerprint'] ?? null) === $fingerprint) return ['saved' => $saved];
         }
-        if ($document['extension'] === 'xlsx') {
-            $book = (new XlsxReader($this->config->get('max_unpacked_bytes')))->read($path);
-            $normalized = ['kind' => 'spreadsheet','sheets' => $book['sheets'],'pages' => [],'usage' => [],'model' => 'programmatic-xlsx-v1'];
-        } else {
-            $response = $this->client->ocr($path, $document['mime'], $pages);
-            $normalized = $this->normalize($response, $pages);
-            $normalized['raw'] = $response;
-        }
+        return compact('document', 'path', 'pages', 'fingerprint', 'cache');
+    }
+
+    private function save(array $item, array $normalized): array
+    {
+        ['document' => $document, 'pages' => $pages, 'fingerprint' => $fingerprint, 'cache' => $cache] = $item;
         $saved = ['fingerprint' => $fingerprint, 'documentId' => $document['id'], 'sourceHash' => $document['hash'], 'ocrModel' => $this->config->get('ocr_model'), 'pageIndexes' => $document['extension'] === 'xlsx' ? range(0, $document['pages'] - 1) : $pages, 'result' => $normalized];
         $this->writeCache($cache, $saved);
         return $saved;

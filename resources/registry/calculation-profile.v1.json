@@ -1,6 +1,6 @@
 {
-  "id": "im40-method1-advalorem-v1",
-  "version": "0.1.0",
+  "id": "im40-method1-tariff-v2",
+  "version": "0.2.0",
   "status": "provisional-mvp",
   "jurisdiction": "KZ",
   "valuationMethod": "1",
@@ -43,11 +43,16 @@
     },
     {
       "code": "2010",
-      "kind": "advalorem",
-      "expression": "customsValue * dutyRate / 100",
+      "kind": "tariff-expression",
+      "expression": "advalorem | specific | max | sum | min(percent, max(percent, specific))",
       "source": "Подтверждённая пользователем ставка по коду/происхождению/дате",
       "parameters": [
-        "dutyRate"
+        "dutyRate",
+        "dutySpecificRate",
+        "dutyCurrency",
+        "dutyPerQuantity",
+        "dutyQuantity",
+        "dutyAlternativeRate"
       ]
     },
     {
@@ -68,7 +73,8 @@
     "requireFor": [
       "invoiceCurrency",
       "USD",
-      "costCurrencies"
+      "costCurrencies",
+      "specificDutyCurrency"
     ],
     "requireConfirmed": true
   },
@@ -80,10 +86,22 @@
     "roundingSource": "reference/rules/DT_2026.docx:15(46)"
   },
   "unsupported": [
-    "specific-duty",
-    "combined-duty",
     "excise",
     "valuation-methods-2-6"
   ],
-  "unsupportedPolicy": "explicit-validation-error"
+  "unsupportedPolicy": "explicit-validation-error",
+  "supportedDutyKinds": [
+    "advalorem",
+    "specific",
+    "combined",
+    "combined_sum",
+    "alternative_minimum"
+  ],
+  "tariffPolicy": {
+    "source": "reference/TNVED/tnved.json",
+    "effectiveRuleAvailable": false,
+    "requireApplicabilityConfirmation": true,
+    "unitPolicy": "reporting-units-distinct-from-duty-units",
+    "intermediateDutyRounding": false
+  }
 }

@@ -8,4 +8,5 @@
 /.env.*
 !/config/.env.example
 /config/local.php
+/sesssion.json
 *.log

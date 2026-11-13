@@ -11,7 +11,7 @@ use Customs\Storage\SessionStore;
 
 final class Pipeline
 {
-    public const MAPPING_PLAN_VERSION='per-document-scopes-v3';
+    public const MAPPING_PLAN_VERSION='per-document-scopes-v4-shipment-context';
     private Queue $queue;
     private Ocr $ocr;
     private Registry $registry;
@@ -35,10 +35,10 @@ final class Pipeline
         return $this->store->read($sessionId);
     }
 
-    public function tick(int $maxJobs = 3, ?string $onlySessionId = null): array
+    public function tick(int $maxJobs = 100, ?string $onlySessionId = null): array
     {
         $handlers = [
-            'ocr' => ['run' => $this->ocr->run(...),'apply' => $this->ocr->apply(...)],
+            'ocr' => ['run' => $this->ocr->run(...), 'runBatch' => $this->ocr->runBatch(...), 'apply' => $this->ocr->apply(...)],
             'mapping' => [
                 'run' => $this->mapPart(...), 'apply' => $this->applyPart(...),
                 'continue' => fn(array $payload): bool => $payload['more'], 'changesData' => true,
@@ -46,7 +46,7 @@ final class Pipeline
         ];
         $bundle=new \Customs\Export\Bundle((new \Customs\Export\XmlProfiles())->serialize(...),$this->config);
         $handlers['generate']=['run'=>$bundle->run(...),'apply'=>$bundle->apply(...)];
-        $result = $this->queue->tick($handlers, $maxJobs, 150, $onlySessionId);
+        $result = $this->queue->tick($handlers, $maxJobs, 150, $onlySessionId, fn(string $id) => $this->scheduleMapping($id, false));
         foreach (glob($this->config->get('runtime_dir') . '/sessions/*', GLOB_ONLYDIR) as $directory) {
             $id = basename($directory);
             if (!preg_match('/^[a-f0-9]{64}$/D', $id)) continue;
@@ -81,6 +81,7 @@ final class Pipeline
             }
             ksort($source['pages']);
             $source['pages'] = array_values($source['pages']); $source['sheets'] = array_values($source['sheets']);
+            $source['allowsNewGoods'] = (new SourceIndex([$source]))->supportsNewGoods($source['documentId']);
             if ($source['pages'] === [] && $source['sheets'] === []) throw new ApiError('OCR_REQUIRED', 'Не все документы имеют сохранённый OCR.');
             $sources[] = $source;
         }
@@ -92,11 +93,11 @@ final class Pipeline
         $chunks = []; $current = []; $bytes = 0;
         foreach ($sources as $source) {
             $parts = [];
-            foreach ($source['pages'] as $page) foreach ($page['blocks'] as $block) $parts[] = ['documentId' => $source['documentId'],'name' => $source['name'],'pages' => [['page' => $page['page'],'blocks' => [$block]]], 'sheets' => []];
+            foreach ($source['pages'] as $page) foreach ($page['blocks'] as $block) $parts[] = ['documentId' => $source['documentId'],'name' => $source['name'], 'allowsNewGoods' => $source['allowsNewGoods'], 'pages' => [['page' => $page['page'],'blocks' => [$block]]], 'sheets' => []];
             foreach ($source['sheets'] as $sheet) {
                 $cells = [];
                 foreach ($sheet['cells'] as $address => $cell) if ($cell['value'] !== null && $cell['value'] !== '') $cells[$address] = $cell;
-                foreach (array_chunk($cells, 600, true) as $cellChunk) $parts[] = ['documentId' => $source['documentId'],'name' => $source['name'],'pages' => [],'sheets' => [['name' => $sheet['name'],'cells' => $cellChunk]]];
+                foreach (array_chunk($cells, 600, true) as $cellChunk) $parts[] = ['documentId' => $source['documentId'],'name' => $source['name'], 'allowsNewGoods' => $source['allowsNewGoods'], 'pages' => [],'sheets' => [['name' => $sheet['name'],'cells' => $cellChunk]]];
             }
             foreach ($parts as $part) {
                 $length = strlen(json_encode($part, JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR));
@@ -110,6 +111,8 @@ final class Pipeline
         }
         if ($current !== []) $chunks[] = $this->combineSources($current);
         if ($chunks === []) return [];
+        // Establish shipment items before asking supporting permits about those items.
+        usort($chunks, static fn(array $a, array $b): int => (int) $b[0]['allowsNewGoods'] <=> (int) $a[0]['allowsNewGoods']);
         $plan = [];
         foreach ($chunks as $chunk) foreach ([['declaration','party','transport'],['goods','cost'],['document']] as $scopes) {
             $fields=array_filter($this->registry->extractable(),fn(array $f):bool=>in_array($f['scope'],$scopes,true));
@@ -122,7 +125,7 @@ final class Pipeline
     {
         $result = [];
         foreach ($parts as $part) {
-            $id = $part['documentId']; $result[$id] ??= ['documentId' => $id,'name' => $part['name'],'pages' => [],'sheets' => []];
+            $id = $part['documentId']; $result[$id] ??= ['documentId' => $id,'name' => $part['name'], 'allowsNewGoods' => $part['allowsNewGoods'], 'pages' => [],'sheets' => []];
             foreach ($part['pages'] as $page) {
                 $number = $page['page'];
                 $result[$id]['pages'][$number] ??= ['page' => $number,'blocks' => []];
@@ -149,7 +152,9 @@ final class Pipeline
         $cache = $directory . '/ocr/mapping-' . substr($job['fingerprint'], 0, 16) . '-' . $cursor . '.json';
         if (is_file($cache)) $response = json_decode(file_get_contents($cache), true, 128, JSON_THROW_ON_ERROR);
         else {
-            $response = (new Mapper($this->client, $this->registry))->request($part['sources'], $part['fieldIds']);
+            $knownGoods = [];
+            foreach ($state['draft']['goods'] as $goods) if (($goods['description'] ?? null) !== null) $knownGoods[] = ['key' => $goods['id'], 'description' => $goods['description'], 'commodityCode' => $goods['commodityCode'] ?? null];
+            $response = (new Mapper($this->client, $this->registry))->request($part['sources'], $part['fieldIds'], $knownGoods);
             $json = json_encode($response, JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
             $used=0;
             foreach(new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($this->config->get('runtime_dir'),\FilesystemIterator::SKIP_DOTS)) as $file)if($file->isFile()&&!$file->isLink())$used+=$file->getSize();
@@ -162,6 +167,8 @@ final class Pipeline
     private function applyPart(array $state, array $payload, array $job): array
     {
         $state = (new CandidateMerger($this->registry))->merge($state, $payload['response'], $payload['sources']);
+        $state = (new \Customs\Domain\TnvedSuggestions())->apply($state);
+        $state = (new \Customs\Domain\TariffDefaults())->apply($state);
         $state['mappingProgress'][$job['fingerprint']] = $payload['cursor'];
         $state['phase'] = $payload['more'] ? 'recognizing' : 'reviewing';
         return $state;

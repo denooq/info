@@ -194,6 +194,21 @@
         }
       }
     },
+    "classificationQueries": {
+      "type": "array",
+      "maxItems": 200,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["entityKey", "name", "queryRu", "source"],
+        "properties": {
+          "entityKey": {"type": "string", "minLength": 1, "maxLength": 80},
+          "name": {"type": "string", "minLength": 1, "maxLength": 1000},
+          "queryRu": {"type": "string", "minLength": 1, "maxLength": 500},
+          "source": {"$ref": "#/properties/entities/items/properties/source"}
+        }
+      }
+    },
     "warnings": {
       "type": "array",
       "maxItems": 100,
