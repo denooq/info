@@ -1,0 +1,120 @@
+{
+  "id": "multi-goods",
+  "testOnly": true,
+  "cases": [
+    {
+      "id": "two-goods",
+      "goods": [
+        {
+          "id": "g1",
+          "sourceLineIds": [
+            "l1"
+          ],
+          "packageIds": [
+            "p1"
+          ],
+          "invoiceValue": "100",
+          "netMass": "1",
+          "dutyRate": "5"
+        },
+        {
+          "id": "g2",
+          "sourceLineIds": [
+            "l2"
+          ],
+          "packageIds": [
+            "p1"
+          ],
+          "invoiceValue": "200",
+          "netMass": "2",
+          "dutyRate": "10"
+        }
+      ],
+      "freightKzt": "100",
+      "allocationBasis": "value",
+      "expected": {
+        "packageCount": 1,
+        "goodsCount": 2,
+        "dtSheetCount": 2,
+        "freightShares": [
+          "33.33",
+          "66.67"
+        ]
+      }
+    },
+    {
+      "id": "five-goods",
+      "goods": [
+        {
+          "id": "g1",
+          "sourceLineIds": [
+            "l1"
+          ],
+          "packageIds": [
+            "p1"
+          ],
+          "invoiceValue": "1",
+          "netMass": "1"
+        },
+        {
+          "id": "g2",
+          "sourceLineIds": [
+            "l2"
+          ],
+          "packageIds": [
+            "p2"
+          ],
+          "invoiceValue": "1",
+          "netMass": "1"
+        },
+        {
+          "id": "g3",
+          "sourceLineIds": [
+            "l3"
+          ],
+          "packageIds": [
+            "p3"
+          ],
+          "invoiceValue": "1",
+          "netMass": "1"
+        },
+        {
+          "id": "g4",
+          "sourceLineIds": [
+            "l4"
+          ],
+          "packageIds": [
+            "p4"
+          ],
+          "invoiceValue": "1",
+          "netMass": "1"
+        },
+        {
+          "id": "g5",
+          "sourceLineIds": [
+            "l5"
+          ],
+          "packageIds": [
+            "p5"
+          ],
+          "invoiceValue": "1",
+          "netMass": "1"
+        }
+      ],
+      "freightKzt": "1.01",
+      "allocationBasis": "value",
+      "expected": {
+        "goodsCount": 5,
+        "packageCount": 5,
+        "dtSheetCount": 3,
+        "freightShares": [
+          "0.21",
+          "0.20",
+          "0.20",
+          "0.20",
+          "0.20"
+        ]
+      }
+    }
+  ]
+}

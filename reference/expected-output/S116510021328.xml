@@ -1,0 +1,433 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ccecd:KedenGoodsDeclaration xmlns:ccecd="http://www.codecraft.kz/keden/ecd/v1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cacdo="urn:EEC:M:CA:ComplexDataObjects:v1.10.3" xmlns:casdo="urn:EEC:M:CA:SimpleDataObjects:v1.10.3" xmlns:ccdo="urn:EEC:M:ComplexDataObjects:v0.4.16" xmlns:csdo="urn:EEC:M:SimpleDataObjects:v0.4.16" xmlns:gdgdc="urn:EEC:R:055:GoodsDeclaration:v1.2.0" xsi:schemaLocation="urn:EEC:R:055:GoodsDeclaration:v1.2.0 ../xsd/EEC_R_055_GoodsDeclaration_v1.2.0.xsd">
+	<gdgdc:GoodsDeclaration>
+		<csdo:EDocCode>R.055</csdo:EDocCode>
+		<csdo:EDocId>F43C51C5-EC3B-4785-BB08-FD7075A8C06F</csdo:EDocId>
+		<csdo:EDocDateTime>2026-10-28T00:00:00+05:00</csdo:EDocDateTime>
+		<casdo:DeclarationKindCode>ИМ</casdo:DeclarationKindCode>
+		<casdo:CustomsProcedureCode codeListId="2002">40</casdo:CustomsProcedureCode>
+		<casdo:EDocIndicatorCode>ЭД</casdo:EDocIndicatorCode>
+		<csdo:PageQuantity>1</csdo:PageQuantity>
+		<casdo:GoodsQuantity>1</casdo:GoodsQuantity>
+		<casdo:CargoQuantity>136</casdo:CargoQuantity>
+		<cacdo:DeclarantDetails>
+			<csdo:SubjectName>ТОО "ХИМЦЕНТР-А"</csdo:SubjectName>
+			<csdo:SubjectBriefName>ТОО "ХИМЦЕНТР-А"</csdo:SubjectBriefName>
+			<casdo:CAUniqueCustomsNumberId countryCode="KZ" countryCodeListId="2021">БИН</casdo:CAUniqueCustomsNumberId>
+			<csdo:TaxpayerId>040340007232</csdo:TaxpayerId>
+			<ccdo:SubjectAddressDetails>
+				<csdo:UnifiedCountryCode codeListId="2021">KZ</csdo:UnifiedCountryCode>
+				<csdo:RegionName>АЛМАТИНСКАЯ ОБЛАСТЬ</csdo:RegionName>
+				<csdo:CityName>ИЛИЙСКИЙ РАЙОН, СЕЛО АСҚАР ТОҚПАНОВ</csdo:CityName>
+				<csdo:StreetName>УЛ. БЕРЕЖИНСКИЙ АЛЕКСЕЙ ФЕДОРОВИЧ, 47</csdo:StreetName>
+			</ccdo:SubjectAddressDetails>
+		</cacdo:DeclarantDetails>
+		<cacdo:GDGoodsShipmentDetails>
+			<cacdo:DepartureCountryDetails>
+				<casdo:CACountryCode codeListId="2021">CN</casdo:CACountryCode>
+				<casdo:ShortCountryName>КИТАЙ</casdo:ShortCountryName>
+			</cacdo:DepartureCountryDetails>
+			<cacdo:DestinationCountryDetails>
+				<casdo:CACountryCode codeListId="2021">KZ</casdo:CACountryCode>
+				<casdo:ShortCountryName>КАЗАХСТАН</casdo:ShortCountryName>
+			</cacdo:DestinationCountryDetails>
+			<cacdo:TradeCountryDetails>
+				<casdo:CACountryCode codeListId="2021">CN</casdo:CACountryCode>
+			</cacdo:TradeCountryDetails>
+			<cacdo:DeliveryTermsDetails>
+				<casdo:DeliveryTermsCode codeListId="2014">CPT</casdo:DeliveryTermsCode>
+				<casdo:PlaceName>АЛМАТЫ</casdo:PlaceName>
+			</cacdo:DeliveryTermsDetails>
+			<casdo:CAValueAmount currencyCode="USD" currencyCodeListId="2022">37454.40</casdo:CAValueAmount>
+			<cacdo:ConsignorDetails>
+				<csdo:SubjectName>ANHUI RUIBAI NEW MATERIAL CO., LTD.</csdo:SubjectName>
+				<csdo:SubjectBriefName>ANHUI RUIBAI NEW MATERIAL CO., LTD.</csdo:SubjectBriefName>
+				<casdo:CAUniqueCustomsNumberId countryCode="KZ" countryCodeListId="2021">БИН</casdo:CAUniqueCustomsNumberId>
+				<ccdo:SubjectAddressDetails>
+					<csdo:UnifiedCountryCode codeListId="2021">CN</csdo:UnifiedCountryCode>
+					<csdo:CityName>HUAIBEI CITY, ANHUI P.R.</csdo:CityName>
+					<csdo:StreetName>NO. 18 LINBAI ROAD</csdo:StreetName>
+				</ccdo:SubjectAddressDetails>
+			</cacdo:ConsignorDetails>
+			<cacdo:ConsigneeDetails>
+				<casdo:EqualIndicator>1</casdo:EqualIndicator>
+			</cacdo:ConsigneeDetails>
+			<cacdo:FinancialSettlementSubjectDetails>
+				<casdo:EqualIndicator>1</casdo:EqualIndicator>
+			</cacdo:FinancialSettlementSubjectDetails>
+			<casdo:CustomsValueAmount currencyCode="KZT" currencyCodeListId="2022">17065348.27</casdo:CustomsValueAmount>
+			<cacdo:OriginCountryDetails>
+				<casdo:CACountryCode codeListId="2021">CN</casdo:CACountryCode>
+			</cacdo:OriginCountryDetails>
+			<cacdo:TransactionNatureDetails>
+				<casdo:TransactionNatureCode>021</casdo:TransactionNatureCode>
+				<casdo:TransactionFeatureCode>00</casdo:TransactionFeatureCode>
+			</cacdo:TransactionNatureDetails>
+			<cacdo:GDConsignmentDetails>
+				<casdo:ContainerIndicator>0</casdo:ContainerIndicator>
+				<cacdo:BorderTransportDetails>
+					<csdo:UnifiedTransportModeCode codeListId="2004">31</csdo:UnifiedTransportModeCode>
+					<casdo:RegistrationNationalityCode codeListId="2021">KZ</casdo:RegistrationNationalityCode>
+					<casdo:TransportMeansQuantity>1</casdo:TransportMeansQuantity>
+					<cacdo:TransportMeansItemDetails>
+						<csdo:ObjectOrdinal>1</csdo:ObjectOrdinal>
+						<csdo:TransportMeansRegId countryCode="KZ" countryCodeListId="2021">944AKU11</csdo:TransportMeansRegId>
+					</cacdo:TransportMeansItemDetails>
+				</cacdo:BorderTransportDetails>
+				<cacdo:ArrivalDepartureTransportDetails>
+					<csdo:UnifiedTransportModeCode codeListId="2004">31</csdo:UnifiedTransportModeCode>
+					<casdo:RegistrationNationalityCode codeListId="2021">KZ</casdo:RegistrationNationalityCode>
+					<casdo:TransportMeansQuantity>2</casdo:TransportMeansQuantity>
+					<cacdo:TransportMeansItemDetails>
+						<csdo:ObjectOrdinal>1</csdo:ObjectOrdinal>
+						<csdo:TransportMeansRegId countryCode="KZ" countryCodeListId="2021">944AKU11</csdo:TransportMeansRegId>
+					</cacdo:TransportMeansItemDetails>
+					<cacdo:TransportMeansItemDetails>
+						<csdo:ObjectOrdinal>1</csdo:ObjectOrdinal>
+						<csdo:TransportMeansRegId countryCode="KZ" countryCodeListId="2021">99ADO11</csdo:TransportMeansRegId>
+						<casdo:TransportTypeCode codeListId="2024">312</casdo:TransportTypeCode>
+					</cacdo:TransportMeansItemDetails>
+				</cacdo:ArrivalDepartureTransportDetails>
+				<cacdo:BorderCustomsOfficeDetails>
+					<csdo:CustomsOfficeCode>57503</csdo:CustomsOfficeCode>
+					<csdo:CustomsOfficeName>Т/П "АЛАКОЛЬ"</csdo:CustomsOfficeName>
+					<csdo:UnifiedCountryCode codeListId="2021">KZ</csdo:UnifiedCountryCode>
+				</cacdo:BorderCustomsOfficeDetails>
+			</cacdo:GDConsignmentDetails>
+			<cacdo:GoodsLocationDetails>
+				<casdo:GoodsLocationCode codeListId="2013">11</casdo:GoodsLocationCode>
+				<cacdo:RegisterDocumentIdDetails>
+					<csdo:UnifiedCountryCode codeListId="2021">KZ</csdo:UnifiedCountryCode>
+					<casdo:RegistrationNumberId>KZ05VSY00003769</casdo:RegistrationNumberId>
+				</cacdo:RegisterDocumentIdDetails>
+			</cacdo:GoodsLocationDetails>
+			<cacdo:GDGoodsItemDetails>
+				<casdo:ConsignmentItemOrdinal>1</casdo:ConsignmentItemOrdinal>
+				<csdo:CommodityCode>2915310000</csdo:CommodityCode>
+				<casdo:GoodsDescriptionText>ЭТИЛАЦЕТАТ (ИСПОЛЬЗУЕТСЯ ДЛЯ ЧИСТКИ ПЕЧАТНЫХ ПЛАТ, В СМЕСИ СО СПИРТОМ - РАСТВОРИТЕЛЬ В ПРОИЗВОДСТВЕ ИСКУССТВЕННОЙ КОЖИ)</casdo:GoodsDescriptionText>
+				<csdo:UnifiedGrossMassMeasure measurementUnitCode="166" measurementUnitCodeListId="2016">27860</csdo:UnifiedGrossMassMeasure>
+				<csdo:UnifiedNetMassMeasure measurementUnitCode="166" measurementUnitCodeListId="2016">24480</csdo:UnifiedNetMassMeasure>
+				<casdo:PageOrdinal>1</casdo:PageOrdinal>
+				<casdo:ProhibitionCode>C0300</casdo:ProhibitionCode>
+				<casdo:ProhibitionCode>C1300</casdo:ProhibitionCode>
+				<casdo:ProhibitionCode>D0100</casdo:ProhibitionCode>
+				<casdo:ProhibitionCode>E0100</casdo:ProhibitionCode>
+				<casdo:ProhibitionCode>F0100</casdo:ProhibitionCode>
+				<casdo:IPOCode>N</casdo:IPOCode>
+				<cacdo:GoodsItemGroupDetails>
+					<casdo:GoodsDescriptionText>ЭТИЛАЦЕТАТ (ИСПОЛЬЗУЕТСЯ ДЛЯ ЧИСТКИ ПЕЧАТНЫХ ПЛАТ, В СМЕСИ СО СПИРТОМ - РАСТВОРИТЕЛЬ В ПРОИЗВОДСТВЕ ИСКУССТВЕННОЙ КОЖИ)</casdo:GoodsDescriptionText>
+					<cacdo:CommodityGroupItemDetails>
+						<cacdo:CommodityDescriptionDetails>
+							<casdo:TradeMarkName>ОТСУТСВУЕТ</casdo:TradeMarkName>
+							<csdo:ProductMarkName>ОТСУТСВУЕТ</csdo:ProductMarkName>
+							<csdo:ProductModelName>ОТСУТСВУЕТ</csdo:ProductModelName>
+							<csdo:ProductId>ОТСУТСВУЕТ</csdo:ProductId>
+						</cacdo:CommodityDescriptionDetails>
+						<cacdo:ManufacturerDetails>
+							<csdo:SubjectName>ANHUI RUIBAI NEW MATERIAL CO., LTD.</csdo:SubjectName>
+						</cacdo:ManufacturerDetails>
+						<cacdo:GoodsMeasureDetails>
+							<casdo:GoodsMeasure measurementUnitCode="166" measurementUnitCodeListId="2016">24480</casdo:GoodsMeasure>
+						</cacdo:GoodsMeasureDetails>
+					</cacdo:CommodityGroupItemDetails>
+				</cacdo:GoodsItemGroupDetails>
+				<cacdo:CargoPackagePalletDetails>
+					<casdo:PackageAvailabilityCode>1</casdo:PackageAvailabilityCode>
+					<casdo:CargoQuantity>136</casdo:CargoQuantity>
+					<cacdo:PackagePalletDetails>
+						<casdo:InformationKindCode>0</casdo:InformationKindCode>
+						<csdo:PackageKindCode codeListId="2013">CK</csdo:PackageKindCode>
+						<csdo:PackageQuantity>136</csdo:PackageQuantity>
+					</cacdo:PackagePalletDetails>
+				</cacdo:CargoPackagePalletDetails>
+				<cacdo:OriginCountryDetails>
+					<casdo:CACountryCode codeListId="2021">CN</casdo:CACountryCode>
+					<casdo:ShortCountryName>КИТАЙ</casdo:ShortCountryName>
+				</cacdo:OriginCountryDetails>
+				<cacdo:PreferenceDetails>
+					<casdo:CustomsClearanceChargesPrefCode codeListId="2008">ОО</casdo:CustomsClearanceChargesPrefCode>
+					<casdo:CustomsDutyPrefCode codeListId="2008">ОО</casdo:CustomsDutyPrefCode>
+					<casdo:ExcisePrefCode codeListId="2008">Z</casdo:ExcisePrefCode>
+					<casdo:VATPrefCode codeListId="2008">ОО</casdo:VATPrefCode>
+				</cacdo:PreferenceDetails>
+				<cacdo:CustomsProcedureDetails>
+					<casdo:CustomsProcedureCode codeListId="2002">40</casdo:CustomsProcedureCode>
+					<casdo:PreviousCustomsProcedureModeCode codeListId="2002">00</casdo:PreviousCustomsProcedureModeCode>
+					<casdo:GoodsMoveFeatureCode codeListId="2003">000</casdo:GoodsMoveFeatureCode>
+				</cacdo:CustomsProcedureDetails>
+				<casdo:CAValueAmount currencyCode="USD" currencyCodeListId="2022">37454.40</casdo:CAValueAmount>
+				<casdo:CustomsValueAmount currencyCode="KZT" currencyCodeListId="2022">17065348.27</casdo:CustomsValueAmount>
+				<casdo:StatisticValueAmount currencyCode="USD" currencyCodeListId="2022">37454.40</casdo:StatisticValueAmount>
+				<casdo:ValuationMethodCode codeListId="2005">1</casdo:ValuationMethodCode>
+				<cacdo:PresentedDocDetails>
+					<csdo:DocKindCode codeListId="2009">01999</csdo:DocKindCode>
+					<csdo:DocName>ИНЫЕ ДОКУМЕНТЫ, ПОДТВЕРЖДАЮЩИЕ СОБЛЮДЕНИЕ ЗАПРЕТОВ И ОГРАНИЧЕНИЙ</csdo:DocName>
+					<csdo:DocId>10-18/332</csdo:DocId>
+					<csdo:DocCreationDate>2025-02-21</csdo:DocCreationDate>
+					<cacdo:DocumentPresentingDetails>
+						<casdo:DocPresentKindCode>0</casdo:DocPresentKindCode>
+					</cacdo:DocumentPresentingDetails>
+				</cacdo:PresentedDocDetails>
+				<cacdo:PresentedDocDetails>
+					<csdo:DocKindCode codeListId="2009">01999</csdo:DocKindCode>
+					<csdo:DocName>ИНЫЕ ДОКУМЕНТЫ, ПОДТВЕРЖДАЮЩИЕ СОБЛЮДЕНИЕ ЗАПРЕТОВ И ОГРАНИЧЕНИЙ</csdo:DocName>
+					<csdo:DocId>2587</csdo:DocId>
+					<csdo:DocCreationDate>2026-01-14</csdo:DocCreationDate>
+					<cacdo:DocumentPresentingDetails>
+						<casdo:DocPresentKindCode>0</casdo:DocPresentKindCode>
+					</cacdo:DocumentPresentingDetails>
+				</cacdo:PresentedDocDetails>
+				<cacdo:PresentedDocDetails>
+					<csdo:DocKindCode codeListId="2009">02015</csdo:DocKindCode>
+					<csdo:DocName>ТРАНСПОРТНАЯ НАКЛАДНАЯ, ПРЕДУСМОТРЕННАЯ КОНВЕНЦИЕЙ О ДОГОВОРЕ МЕЖДУНАРОДНОЙ ДОРОЖНОЙ ПЕРЕВОЗКИ ГРУЗОВ 1956 ГОДА</csdo:DocName>
+					<csdo:DocId>AHRBXS2026103311</csdo:DocId>
+					<cacdo:DocumentPresentingDetails>
+						<casdo:DocPresentKindCode>0</casdo:DocPresentKindCode>
+					</cacdo:DocumentPresentingDetails>
+				</cacdo:PresentedDocDetails>
+				<cacdo:PresentedDocDetails>
+					<csdo:DocKindCode codeListId="2009">03011</csdo:DocKindCode>
+					<csdo:DocName>ДОГОВОР (КОНТРАКТ), ЗАКЛЮЧЕННЫЙ ПРИ СОВЕРШЕНИИ СДЕЛКИ С ТОВАРАМИ</csdo:DocName>
+					<csdo:DocId>777-ЕА</csdo:DocId>
+					<csdo:DocCreationDate>2025-04-08</csdo:DocCreationDate>
+					<cacdo:DocumentPresentingDetails>
+						<casdo:DocPresentKindCode>0</casdo:DocPresentKindCode>
+					</cacdo:DocumentPresentingDetails>
+				</cacdo:PresentedDocDetails>
+				<cacdo:PresentedDocDetails>
+					<csdo:DocKindCode codeListId="2009">03012</csdo:DocKindCode>
+					<csdo:DocName>ДОКУМЕНТЫ, ВНОСЯЩИЕ ИЗМЕНЕНИЯ И (ИЛИ) ДОПОЛНЕНИЯ К ДОКУМЕНТУ, СВЕДЕНИЯ О КОТОРОМ УКАЗАНЫ ПОД КОДОМ 03011</csdo:DocName>
+					<csdo:DocId>25</csdo:DocId>
+					<csdo:DocCreationDate>2026-10-09</csdo:DocCreationDate>
+					<cacdo:DocumentPresentingDetails>
+						<casdo:DocPresentKindCode>0</casdo:DocPresentKindCode>
+					</cacdo:DocumentPresentingDetails>
+				</cacdo:PresentedDocDetails>
+				<cacdo:PresentedDocDetails>
+					<csdo:DocKindCode codeListId="2009">03031</csdo:DocKindCode>
+					<csdo:DocName>ДОКУМЕНТ, ПОДТВЕРЖДАЮЩИЙ СОБЛЮДЕНИЕ ТРЕБОВАНИЙ В ОБЛАСТИ ВАЛЮТНОГО КОНТРОЛЯ: -РЕГИСТРАЦИОННЫЙ НОМЕР СДЕЛКИ/РЕГИСТРАЦИОННЫЙ НОМЕР ВАЛЮТНОГО ДОГОВОРА (ДЛЯ РЕСПУБЛИКИ БЕЛАРУСЬ); -УЧЕТНЫЙ НОМЕР КОНТРАКТА (РЕГИСТРАЦИОННЫЙ НОМЕР, ПРЕДНАЗНАЧЕННЫЙ ДЛЯ ОБЕСПЕ</csdo:DocName>
+					<csdo:DocId>2/385/0021/68163</csdo:DocId>
+					<csdo:DocCreationDate>2025-04-11</csdo:DocCreationDate>
+					<cacdo:DocumentPresentingDetails>
+						<casdo:DocPresentKindCode>0</casdo:DocPresentKindCode>
+					</cacdo:DocumentPresentingDetails>
+				</cacdo:PresentedDocDetails>
+				<cacdo:PresentedDocDetails>
+					<csdo:DocKindCode codeListId="2009">04021</csdo:DocKindCode>
+					<csdo:DocName>СЧЕТ-ФАКТУРА (ИНВОЙС) К ДОГОВОРУ</csdo:DocName>
+					<csdo:DocId>AHRBXS2026103311</csdo:DocId>
+					<csdo:DocCreationDate>2026-10-09</csdo:DocCreationDate>
+					<cacdo:DocumentPresentingDetails>
+						<casdo:DocPresentKindCode>0</casdo:DocPresentKindCode>
+					</cacdo:DocumentPresentingDetails>
+				</cacdo:PresentedDocDetails>
+				<cacdo:PresentedDocDetails>
+					<csdo:DocKindCode codeListId="2009">04023</csdo:DocKindCode>
+					<csdo:DocName>БАНКОВСКИЕ ДОКУМЕНТЫ (ЕСЛИ СЧЕТ-ФАКТУРА ОПЛАЧЕН В ЗАВИСИМОСТИ ОТ УСЛОВИЙ ВНЕШНЕТОРГОВОГО КОНТРАКТА), А ТАКЖЕ ДРУГИЕ ПЛАТЕЖНЫЕ ДОКУМЕНТЫ, ОТРАЖАЮЩИЕ СТОИМОСТЬ ТОВАРА</csdo:DocName>
+					<csdo:DocId>393</csdo:DocId>
+					<csdo:DocCreationDate>2026-10-13</csdo:DocCreationDate>
+					<cacdo:DocumentPresentingDetails>
+						<casdo:DocPresentKindCode>0</casdo:DocPresentKindCode>
+					</cacdo:DocumentPresentingDetails>
+				</cacdo:PresentedDocDetails>
+				<cacdo:PresentedDocDetails>
+					<csdo:DocKindCode codeListId="2009">04131</csdo:DocKindCode>
+					<csdo:DocName>ОТГРУЗОЧНЫЙ (УПАКОВОЧНЫЙ) ЛИСТ</csdo:DocName>
+					<csdo:DocId>AHRBXS2026103311</csdo:DocId>
+					<csdo:DocCreationDate>2026-10-09</csdo:DocCreationDate>
+					<cacdo:DocumentPresentingDetails>
+						<casdo:DocPresentKindCode>0</casdo:DocPresentKindCode>
+					</cacdo:DocumentPresentingDetails>
+				</cacdo:PresentedDocDetails>
+				<cacdo:PresentedDocDetails>
+					<csdo:DocKindCode codeListId="2009">06999</csdo:DocKindCode>
+					<csdo:DocName>ИНЫЕ ДОКУМЕНТЫ, СВЯЗАННЫЕ С ПРОИСХОЖДЕНИЕМ ТОВАРА</csdo:DocName>
+					<csdo:DocId>AHRBXS2026103311</csdo:DocId>
+					<csdo:DocCreationDate>2026-10-09</csdo:DocCreationDate>
+					<cacdo:DocumentPresentingDetails>
+						<casdo:DocPresentKindCode>1</casdo:DocPresentKindCode>
+					</cacdo:DocumentPresentingDetails>
+				</cacdo:PresentedDocDetails>
+				<cacdo:PresentedDocDetails>
+					<csdo:DocKindCode codeListId="2009">09013</csdo:DocKindCode>
+					<csdo:DocName>ТРАНЗИТНАЯ ДЕКЛАРАЦИЯ</csdo:DocName>
+					<csdo:DocId>39857503/251026/9104489</csdo:DocId>
+					<csdo:DocCreationDate>2026-10-25</csdo:DocCreationDate>
+					<cacdo:DocumentPresentingDetails>
+						<casdo:DocPresentKindCode>0</casdo:DocPresentKindCode>
+					</cacdo:DocumentPresentingDetails>
+				</cacdo:PresentedDocDetails>
+				<cacdo:PresentedDocDetails>
+					<csdo:DocKindCode codeListId="2009">09015</csdo:DocKindCode>
+					<csdo:DocName>ТАМОЖЕННЫЕ ДОКУМЕНТЫ ИНОСТРАННЫХ ГОСУДАРСТВ, ИСПОЛЬЗУЕМЫЕ ДЛЯ ТАМОЖЕННЫХ ЦЕЛЕЙ В СООТВЕТСТВИИ С МЕЖДУНАРОДНЫМИ ДОГОВОРАМИ ГОСУДАРСТВ-ЧЛЕНОВ ТАМОЖЕННОГО СОЮЗА И МЕЖДУНАРОДНЫМИ ДОГОВОРАМИ ГОСУДАРСТВ-ЧЛЕНОВ ТАМОЖЕННОГО СОЮЗА С ИНОСТРАННЫМИ ГОСУДАРСТВАМИ</csdo:DocName>
+					<csdo:DocId>940420260000148436</csdo:DocId>
+					<csdo:DocCreationDate>2026-10-24</csdo:DocCreationDate>
+					<cacdo:DocumentPresentingDetails>
+						<casdo:DocPresentKindCode>0</casdo:DocPresentKindCode>
+					</cacdo:DocumentPresentingDetails>
+				</cacdo:PresentedDocDetails>
+				<cacdo:PresentedDocDetails>
+					<csdo:DocKindCode codeListId="2009">09025</csdo:DocKindCode>
+					<csdo:DocName>СВЕДЕНИЯ О ЗАВЕРШЕНИИ ПРОЦЕДУРЫ ТАМОЖЕННОГО ТРАНЗИТА</csdo:DocName>
+					<csdo:DocId>55411/281026/034899</csdo:DocId>
+					<csdo:DocCreationDate>2026-10-28</csdo:DocCreationDate>
+					<cacdo:DocumentPresentingDetails>
+						<casdo:DocPresentKindCode>0</casdo:DocPresentKindCode>
+					</cacdo:DocumentPresentingDetails>
+				</cacdo:PresentedDocDetails>
+				<cacdo:PresentedDocDetails>
+					<csdo:DocKindCode codeListId="2009">09026</csdo:DocKindCode>
+					<csdo:DocName>ПОДТВЕРЖДЕНИЕ О РЕГИСТРАЦИИ ДОКУМЕНТОВ, ПРЕДСТАВЛЕННЫХ ДЛЯ ПОМЕЩЕНИЯ ТОВАРОВ НА ВРЕМЕННОЕ ХРАНЕНИЕ</csdo:DocName>
+					<csdo:DocId>55400/271026/600422</csdo:DocId>
+					<csdo:DocCreationDate>2026-10-27</csdo:DocCreationDate>
+					<cacdo:DocumentPresentingDetails>
+						<casdo:DocPresentKindCode>0</casdo:DocPresentKindCode>
+					</cacdo:DocumentPresentingDetails>
+				</cacdo:PresentedDocDetails>
+				<cacdo:PresentedDocDetails>
+					<csdo:DocKindCode codeListId="2009">09026</csdo:DocKindCode>
+					<csdo:DocName>ПОДТВЕРЖДЕНИЕ О РЕГИСТРАЦИИ ДОКУМЕНТОВ, ПРЕДСТАВЛЕННЫХ ДЛЯ ПОМЕЩЕНИЯ ТОВАРОВ НА ВРЕМЕННОЕ ХРАНЕНИЕ</csdo:DocName>
+					<csdo:DocId>55400/271026/000458</csdo:DocId>
+					<csdo:DocCreationDate>2026-10-27</csdo:DocCreationDate>
+					<cacdo:DocumentPresentingDetails>
+						<casdo:DocPresentKindCode>0</casdo:DocPresentKindCode>
+					</cacdo:DocumentPresentingDetails>
+				</cacdo:PresentedDocDetails>
+				<cacdo:PresentedDocDetails>
+					<csdo:DocKindCode codeListId="2009">09034</csdo:DocKindCode>
+					<csdo:DocName>ДОКУМЕНТ, СВИДЕТЕЛЬСТВУЮЩИЙ О ВКЛЮЧЕНИИ ЛИЦА В РЕЕСТР ТАМОЖЕННЫХ ПРЕДСТАВИТЕЛЕЙ, ИЛИ РЕГИСТРАЦИОННЫЙ НОМЕР ЛИЦА В РЕЕСТРЕ ТАМОЖЕННЫХ ПРЕДСТАВИТЕЛЕЙ</csdo:DocName>
+					<csdo:DocId>KZ19VEA00191708</csdo:DocId>
+					<csdo:DocCreationDate>2022-08-10</csdo:DocCreationDate>
+					<cacdo:DocumentPresentingDetails>
+						<casdo:DocPresentKindCode>0</casdo:DocPresentKindCode>
+					</cacdo:DocumentPresentingDetails>
+				</cacdo:PresentedDocDetails>
+				<cacdo:PresentedDocDetails>
+					<csdo:DocKindCode codeListId="2009">11002</csdo:DocKindCode>
+					<csdo:DocName>ДОГОВОР С ТАМОЖЕННЫМ ПРЕДСТАВИТЕЛЕМ</csdo:DocName>
+					<csdo:DocId>166А/2026/0013</csdo:DocId>
+					<csdo:DocCreationDate>2026-02-13</csdo:DocCreationDate>
+					<csdo:DocStartDate>2026-02-13</csdo:DocStartDate>
+					<csdo:DocValidityDate>2026-12-31</csdo:DocValidityDate>
+					<cacdo:DocumentPresentingDetails>
+						<casdo:DocPresentKindCode>0</casdo:DocPresentKindCode>
+					</cacdo:DocumentPresentingDetails>
+				</cacdo:PresentedDocDetails>
+				<cacdo:PresentedDocDetails>
+					<csdo:DocKindCode codeListId="2009">11004</csdo:DocKindCode>
+					<csdo:DocName>ДОВЕРЕННОСТЬ ИЛИ ИНОЙ ДОКУМЕНТ, УДОСТОВЕРЯЮЩИЙ ПОЛНОМОЧИЯ РАБОТНИКА НА СОВЕРШЕНИЕ ДЕЙСТВИЙ ОТ ИМЕНИ ДЕКЛАРАНТА (ЛИБО ЛИЦА, ПОДАЮЩЕГО ЗАЯВЛЕНИЕ О ВЫПУСКЕ ТОВАРОВ ДО ПОДАЧИ ДЕКЛАРАЦИИ НА ТОВАРЫ, ЛИБО ЛИЦА, ПРЕДСТАВИВШЕГО СЕРТИФИКАТ ОБЕСПЕЧЕНИЯ ИСПОЛНЕН</csdo:DocName>
+					<csdo:DocId>4</csdo:DocId>
+					<csdo:DocCreationDate>2026-01-01</csdo:DocCreationDate>
+					<csdo:DocStartDate>2026-01-01</csdo:DocStartDate>
+					<csdo:DocValidityDate>2026-12-31</csdo:DocValidityDate>
+					<cacdo:DocumentPresentingDetails>
+						<casdo:DocPresentKindCode>0</casdo:DocPresentKindCode>
+					</cacdo:DocumentPresentingDetails>
+				</cacdo:PresentedDocDetails>
+				<cacdo:CustomsPaymentDetails>
+					<casdo:CustomsTaxModeCode codeListId="2010">1010</casdo:CustomsTaxModeCode>
+					<cacdo:EffectiveCustomsRateDetails>
+						<casdo:DutyTaxFeeRateKindCode>S</casdo:DutyTaxFeeRateKindCode>
+						<casdo:DutyTaxFeeRateValue>6</casdo:DutyTaxFeeRateValue>
+					</cacdo:EffectiveCustomsRateDetails>
+					<casdo:DutyTaxFeeRateDate>2026-10-28</casdo:DutyTaxFeeRateDate>
+					<casdo:CustomsTaxPaymentFeatureCode codeListId="2011">ИУ</casdo:CustomsTaxPaymentFeatureCode>
+					<casdo:CAPaymentNAmount currencyCode="398" currencyCodeListId="2022">25950</casdo:CAPaymentNAmount>
+				</cacdo:CustomsPaymentDetails>
+				<cacdo:CustomsPaymentDetails>
+					<casdo:CustomsTaxModeCode codeListId="2010">2010</casdo:CustomsTaxModeCode>
+					<casdo:TaxBaseMeasure>17065348.27</casdo:TaxBaseMeasure>
+					<csdo:UnifiedCurrencyN3Code codeListId="2022">398</csdo:UnifiedCurrencyN3Code>
+					<cacdo:EffectiveCustomsRateDetails>
+						<casdo:DutyTaxFeeRateKindCode>%</casdo:DutyTaxFeeRateKindCode>
+						<casdo:DutyTaxFeeRateValue>5</casdo:DutyTaxFeeRateValue>
+					</cacdo:EffectiveCustomsRateDetails>
+					<casdo:DutyTaxFeeRateDate>2026-10-28</casdo:DutyTaxFeeRateDate>
+					<casdo:CustomsTaxPaymentFeatureCode codeListId="2011">ИУ</casdo:CustomsTaxPaymentFeatureCode>
+					<casdo:CAPaymentNAmount currencyCode="398" currencyCodeListId="2022">853267.41</casdo:CAPaymentNAmount>
+				</cacdo:CustomsPaymentDetails>
+				<cacdo:CustomsPaymentDetails>
+					<casdo:CustomsTaxModeCode codeListId="2010">5060</casdo:CustomsTaxModeCode>
+					<casdo:TaxBaseMeasure>17944565.68</casdo:TaxBaseMeasure>
+					<csdo:UnifiedCurrencyN3Code codeListId="2022">398</csdo:UnifiedCurrencyN3Code>
+					<cacdo:EffectiveCustomsRateDetails>
+						<casdo:DutyTaxFeeRateKindCode>%</casdo:DutyTaxFeeRateKindCode>
+						<casdo:DutyTaxFeeRateValue>16</casdo:DutyTaxFeeRateValue>
+					</cacdo:EffectiveCustomsRateDetails>
+					<casdo:DutyTaxFeeRateDate>2026-10-28</casdo:DutyTaxFeeRateDate>
+					<casdo:CustomsTaxPaymentFeatureCode codeListId="2011">ИУ</casdo:CustomsTaxPaymentFeatureCode>
+					<casdo:CAPaymentNAmount currencyCode="398" currencyCodeListId="2022">2871130.51</casdo:CAPaymentNAmount>
+				</cacdo:CustomsPaymentDetails>
+			</cacdo:GDGoodsItemDetails>
+			<cacdo:GDFactPaymentDetails>
+				<casdo:CustomsTaxModeCode codeListId="2010">1010</casdo:CustomsTaxModeCode>
+				<casdo:CAPaymentNAmount currencyCodeListId="2022">25950</casdo:CAPaymentNAmount>
+				<casdo:ExchangeRate currencyCode="USD" currencyCodeListId="2022">1</casdo:ExchangeRate>
+				<cacdo:GDPaymentDocDetails>
+					<csdo:DocCreationDate>2026-10-28</csdo:DocCreationDate>
+					<csdo:TaxpayerId>040340007232</csdo:TaxpayerId>
+					<casdo:PaymentDate>2026-10-28</casdo:PaymentDate>
+					<casdo:CustomsTaxPaymentMethodCode codeListId="2012">НР</casdo:CustomsTaxPaymentMethodCode>
+				</cacdo:GDPaymentDocDetails>
+			</cacdo:GDFactPaymentDetails>
+			<cacdo:GDFactPaymentDetails>
+				<casdo:CustomsTaxModeCode codeListId="2010">2010</casdo:CustomsTaxModeCode>
+				<casdo:CAPaymentNAmount currencyCodeListId="2022">853268</casdo:CAPaymentNAmount>
+				<casdo:ExchangeRate currencyCode="USD" currencyCodeListId="2022">1</casdo:ExchangeRate>
+				<cacdo:GDPaymentDocDetails>
+					<csdo:DocCreationDate>2026-10-28</csdo:DocCreationDate>
+					<csdo:TaxpayerId>040340007232</csdo:TaxpayerId>
+					<casdo:PaymentDate>2026-10-28</casdo:PaymentDate>
+					<casdo:CustomsTaxPaymentMethodCode codeListId="2012">НР</casdo:CustomsTaxPaymentMethodCode>
+				</cacdo:GDPaymentDocDetails>
+			</cacdo:GDFactPaymentDetails>
+			<cacdo:GDFactPaymentDetails>
+				<casdo:CustomsTaxModeCode codeListId="2010">5060</casdo:CustomsTaxModeCode>
+				<casdo:CAPaymentNAmount currencyCodeListId="2022">2871131</casdo:CAPaymentNAmount>
+				<casdo:ExchangeRate currencyCode="USD" currencyCodeListId="2022">1</casdo:ExchangeRate>
+				<cacdo:GDPaymentDocDetails>
+					<csdo:DocCreationDate>2026-10-28</csdo:DocCreationDate>
+					<csdo:TaxpayerId>040340007232</csdo:TaxpayerId>
+					<casdo:PaymentDate>2026-10-28</casdo:PaymentDate>
+					<casdo:CustomsTaxPaymentMethodCode codeListId="2012">НР</casdo:CustomsTaxPaymentMethodCode>
+				</cacdo:GDPaymentDocDetails>
+			</cacdo:GDFactPaymentDetails>
+		</cacdo:GDGoodsShipmentDetails>
+		<cacdo:SignatoryRepresentativeDetails>
+			<cacdo:RegisterDocumentIdDetails>
+				<casdo:RegistrationNumberId>166</casdo:RegistrationNumberId>
+			</cacdo:RegisterDocumentIdDetails>
+			<cacdo:RepresentativeContractDetails></cacdo:RepresentativeContractDetails>
+		</cacdo:SignatoryRepresentativeDetails>
+		<cacdo:SignatoryPersonV2Details>
+			<cacdo:SigningDetails>
+				<ccdo:FullNameDetails>
+					<csdo:FirstName>ДАУРЕН</csdo:FirstName>
+					<csdo:MiddleName>МЕДЕТБЕКОВИЧ</csdo:MiddleName>
+					<csdo:LastName>КАЛБАЕВ</csdo:LastName>
+				</ccdo:FullNameDetails>
+				<csdo:PositionName>СПЕЦИАЛИСТ ПО ТАМОЖЕННОМУ ДЕКЛАРИРОВАНИЮ</csdo:PositionName>
+				<ccdo:CommunicationDetails>
+					<csdo:CommunicationChannelId>87005420058</csdo:CommunicationChannelId>
+				</ccdo:CommunicationDetails>
+				<casdo:SigningDate>2026-10-28</casdo:SigningDate>
+			</cacdo:SigningDetails>
+			<cacdo:PowerOfAttorneyDetails>
+				<csdo:DocId>10</csdo:DocId>
+				<csdo:DocCreationDate>2026-01-03</csdo:DocCreationDate>
+				<csdo:DocValidityDate>2026-12-31</csdo:DocValidityDate>
+			</cacdo:PowerOfAttorneyDetails>
+		</cacdo:SignatoryPersonV2Details>
+	</gdgdc:GoodsDeclaration>
+	<ccecd:KedenGoodsItemDetails>
+		<ccecd:GoodsItemOrder>1</ccecd:GoodsItemOrder>
+		<ccecd:Ntincode>0200176619420</ccecd:Ntincode>
+	</ccecd:KedenGoodsItemDetails>
+	<ccecd:CustomsOfficeCode>55411</ccecd:CustomsOfficeCode>
+	<ccecd:RateType>ETT</ccecd:RateType>
+	<ccecd:FillerInformation>
+		<ccecd:FillerType>FILLER_CUSTOMS_REPRESENTATIVE</ccecd:FillerType>
+		<ccecd:FilledBy>EMPLOYEE</ccecd:FilledBy>
+		<ccecd:PersonId>870810302644</ccecd:PersonId>
+	</ccecd:FillerInformation>
+</ccecd:KedenGoodsDeclaration>

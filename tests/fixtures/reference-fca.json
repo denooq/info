@@ -1,0 +1,199 @@
+{
+  "id": "fca-adhesive",
+  "purpose": "reference-observations-not-authoritative-output",
+  "inputs": [
+    "reference/source-documents/example2/2601011274.xlsx",
+    "reference/source-documents/example2/авиа.pdf",
+    "reference/source-documents/example2/инвойс за транспортировку.pdf",
+    "reference/source-documents/example2/инвойс.jpg",
+    "reference/source-documents/example2/контракт.pdf",
+    "reference/source-documents/example2/СГР.pdf",
+    "reference/source-documents/example2/упаков.jpg"
+  ],
+  "comparisonOnly": [
+    "reference/source-documents/example2/Выпуск KT&G KAZAKHSTAN  (HB Fuller inv 2601011274) Авиа.pdf"
+  ],
+  "facts": [
+    {
+      "fieldId": "document.number",
+      "value": "2601011274",
+      "evidence": {
+        "file": "reference/source-documents/example2/инвойс.jpg",
+        "page": 1,
+        "quote": "2601011274"
+      }
+    },
+    {
+      "fieldId": "document.date",
+      "value": "2026-10-26",
+      "evidence": {
+        "file": "reference/source-documents/example2/инвойс.jpg",
+        "page": 1,
+        "quote": "26.10.2026"
+      }
+    },
+    {
+      "fieldId": "goods.invoiceValue",
+      "value": "2844",
+      "evidence": {
+        "file": "reference/source-documents/example2/инвойс.jpg",
+        "page": 1,
+        "quote": "2844"
+      },
+      "currency": "EUR"
+    },
+    {
+      "fieldId": "goods.netMass",
+      "value": "1200",
+      "evidence": {
+        "file": "reference/source-documents/example2/упаков.jpg",
+        "page": 1,
+        "quote": "1200"
+      },
+      "unit": "kg"
+    },
+    {
+      "fieldId": "goods.grossMass",
+      "value": "1248",
+      "evidence": {
+        "file": "reference/source-documents/example2/упаков.jpg",
+        "page": 1,
+        "quote": "1248"
+      },
+      "unit": "kg"
+    },
+    {
+      "fieldId": "goods.commodityCode",
+      "value": "3506910000",
+      "evidence": {
+        "file": "reference/source-documents/example2/2601011274.xlsx",
+        "sheet": "Лист1",
+        "cell": "G4",
+        "quote": "3506910000"
+      }
+    },
+    {
+      "fieldId": "goods.article",
+      "value": "1000054922",
+      "evidence": {
+        "file": "reference/source-documents/example2/2601011274.xlsx",
+        "sheet": "Лист1",
+        "cell": "H4",
+        "quote": "1000054922"
+      },
+      "conflictGroup": "article"
+    },
+    {
+      "fieldId": "goods.article",
+      "value": "15022275",
+      "evidence": {
+        "file": "reference/source-documents/example2/инвойс.jpg",
+        "page": 1,
+        "quote": "15022275"
+      },
+      "conflictGroup": "article"
+    },
+    {
+      "fieldId": "declaration.deliveryCode",
+      "value": "FCA",
+      "evidence": {
+        "file": "reference/source-documents/example2/инвойс.jpg",
+        "page": 1,
+        "quote": "FCA"
+      }
+    },
+    {
+      "fieldId": "declaration.deliveryPlace",
+      "value": "NIENBURG",
+      "evidence": {
+        "file": "reference/source-documents/example2/инвойс.jpg",
+        "page": 1,
+        "quote": "Nienburg"
+      }
+    },
+    {
+      "fieldId": "document.number",
+      "value": "235-19031073",
+      "evidence": {
+        "file": "reference/source-documents/example2/авиа.pdf",
+        "page": 1,
+        "quote": "235-19031073"
+      }
+    },
+    {
+      "fieldId": "cost.amount",
+      "value": "2058736.50",
+      "evidence": {
+        "file": "reference/source-documents/example2/инвойс за транспортировку.pdf",
+        "page": 1,
+        "quote": "2058736.50"
+      },
+      "currency": "KZT",
+      "kind": "freight"
+    },
+    {
+      "fieldId": "cost.amount",
+      "value": "5222.00",
+      "evidence": {
+        "file": "reference/source-documents/example2/инвойс за транспортировку.pdf",
+        "page": 1,
+        "quote": "5222.00"
+      },
+      "currency": "KZT",
+      "kind": "insurance"
+    }
+  ],
+  "discrepancies": [
+    {
+      "id": "quantity",
+      "kind": "ambiguous-spreadsheet",
+      "cell": "I4",
+      "value": "2975",
+      "netMass": "1200",
+      "resolution": "do-not-treat-quantity-as-net-mass"
+    },
+    {
+      "id": "article",
+      "kind": "source-conflict",
+      "resolution": "explicit-choice"
+    },
+    {
+      "id": "freight-overlap",
+      "kind": "context-conflict",
+      "awbEur": "7700.16",
+      "forwarderEur": "4050",
+      "resolution": "no-automatic-sum"
+    },
+    {
+      "id": "missing-pages",
+      "kind": "incomplete-source",
+      "file": "reference/source-documents/example2/инвойс.jpg",
+      "providedPages": [
+        1
+      ],
+      "printedTotalPages": 3,
+      "resolution": "do-not-invent-pages"
+    }
+  ],
+  "calculationScenario": {
+    "testOnly": true,
+    "date": "2026-11-02",
+    "invoice": "2844.00",
+    "currency": "EUR",
+    "rate": "508.33",
+    "nominal": "1",
+    "freightKzt": "2058736.50",
+    "insuranceKzt": "5222.00",
+    "borderSegmentConfirmed": true,
+    "dutyRate": "5",
+    "vatRate": "16",
+    "feeBase": "25950",
+    "feeAdditional": "0",
+    "expected": {
+      "customsValue": "3509649.02",
+      "duty": "175482.45",
+      "vat": "593773.04",
+      "accruedTotal": "795205.49"
+    }
+  }
+}

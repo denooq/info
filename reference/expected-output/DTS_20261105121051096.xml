@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cvd:CustomsValueDeclaration xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:bdt="urn:EEC:M:BaseDataTypes:v0.4.14" xmlns:cacdo="urn:EEC:M:CA:ComplexDataObjects:v1.8.1" xmlns:casdo="urn:EEC:M:CA:SimpleDataObjects:v1.8.1" xmlns:ccdo="urn:EEC:M:ComplexDataObjects:v0.4.14" xmlns:csdo="urn:EEC:M:SimpleDataObjects:v0.4.14" xmlns:cvd="urn:EEC:R:038:CustomsValueDeclaration:v1.5.0">
+	<csdo:EDocCode>R.038</csdo:EDocCode>
+	<csdo:EDocId>CDA1A6C8-28E3-4975-8711-A854D36E5B4E</csdo:EDocId>
+	<csdo:EDocDateTime>2026-10-28T00:00:00+05:00</csdo:EDocDateTime>
+	<casdo:EDocIndicatorCode>ЭД</casdo:EDocIndicatorCode>
+	<casdo:ReferenceDocumentId>S116510021328</casdo:ReferenceDocumentId>
+	<casdo:CVDFormCode>1</casdo:CVDFormCode>
+	<casdo:ValuationMethodCode codeListId="2005">1</casdo:ValuationMethodCode>
+	<cacdo:SellerDetails>
+		<csdo:SubjectBriefName>ANHUI RUIBAI NEW MATERIAL CO., LTD.</csdo:SubjectBriefName>
+		<ccdo:SubjectAddressDetails>
+			<csdo:CityName>HUAIBEI CITY, ANHUI P.R.</csdo:CityName>
+			<csdo:StreetName>NO. 18 LINBAI ROAD</csdo:StreetName>
+		</ccdo:SubjectAddressDetails>
+	</cacdo:SellerDetails>
+	<cacdo:BuyerDetails>
+		<csdo:SubjectName>ТОО "ХИМЦЕНТР-А"</csdo:SubjectName>
+		<csdo:TaxpayerId>040340007232</csdo:TaxpayerId>
+		<ccdo:SubjectAddressDetails>
+			<csdo:AddressKindCode>1</csdo:AddressKindCode>
+			<csdo:RegionName>АЛМАТИНСКАЯ ОБЛАСТЬ</csdo:RegionName>
+			<csdo:CityName>ИЛИЙСКИЙ РАЙОН, СЕЛО АСҚАР ТОҚПАНОВ</csdo:CityName>
+			<csdo:StreetName>УЛ. БЕРЕЖИНСКИЙ АЛЕКСЕЙ ФЕДОРОВИЧ, 47</csdo:StreetName>
+		</ccdo:SubjectAddressDetails>
+	</cacdo:BuyerDetails>
+	<cacdo:DeclarantDetails>
+		<csdo:SubjectName>ТОО "ХИМЦЕНТР-А"</csdo:SubjectName>
+		<csdo:TaxpayerId>040340007232</csdo:TaxpayerId>
+		<ccdo:SubjectAddressDetails>
+			<csdo:AddressKindCode>1</csdo:AddressKindCode>
+			<csdo:RegionName>АЛМАТИНСКАЯ ОБЛАСТЬ</csdo:RegionName>
+			<csdo:CityName>ИЛИЙСКИЙ РАЙОН, СЕЛО АСҚАР ТОҚПАНОВ</csdo:CityName>
+			<csdo:StreetName>УЛ. БЕРЕЖИНСКИЙ АЛЕКСЕЙ ФЕДОРОВИЧ, 47</csdo:StreetName>
+		</ccdo:SubjectAddressDetails>
+	</cacdo:DeclarantDetails>
+	<cacdo:DeliveryTermsDetails>
+		<casdo:DeliveryTermsCode codeListId="2014">CPT</casdo:DeliveryTermsCode>
+		<casdo:PlaceName>АЛМАТЫ</casdo:PlaceName>
+	</cacdo:DeliveryTermsDetails>
+	<cacdo:CVDMethod1Details>
+		<cacdo:PaymentInvoiceDetails>
+			<csdo:DocKindCode codeListId="2009">04021</csdo:DocKindCode>
+			<csdo:DocName>СЧЕТ-ФАКТУРА (ИНВОЙС) К ДОГОВОРУ</csdo:DocName>
+			<csdo:DocId>AHRBXS2026103311</csdo:DocId>
+			<csdo:DocCreationDate>2026-10-09</csdo:DocCreationDate>
+		</cacdo:PaymentInvoiceDetails>
+		<cacdo:PaymentInvoiceDetails>
+			<csdo:DocKindCode codeListId="2009">04023</csdo:DocKindCode>
+			<csdo:DocName>БАНКОВСКИЕ ДОКУМЕНТЫ (ЕСЛИ СЧЕТ-ФАКТУРА ОПЛАЧЕН В ЗАВИСИМОСТИ ОТ УСЛОВИЙ ВНЕШНЕТОРГОВОГО КОНТРАКТА), А ТАКЖЕ ДРУГИЕ ПЛАТЕЖНЫЕ ДОКУМЕНТЫ, ОТРАЖАЮЩИЕ СТОИМОСТЬ ТОВАРА</csdo:DocName>
+			<csdo:DocId>393</csdo:DocId>
+			<csdo:DocCreationDate>2026-10-13</csdo:DocCreationDate>
+		</cacdo:PaymentInvoiceDetails>
+		<cacdo:ContractDetails>
+			<csdo:DocKindCode codeListId="2009">03011</csdo:DocKindCode>
+			<csdo:DocName>ДОГОВОР (КОНТРАКТ), ЗАКЛЮЧЕННЫЙ ПРИ СОВЕРШЕНИИ СДЕЛКИ С ТОВАРАМИ</csdo:DocName>
+			<csdo:DocId>777-ЕА</csdo:DocId>
+			<csdo:DocCreationDate>2025-04-08</csdo:DocCreationDate>
+		</cacdo:ContractDetails>
+		<cacdo:ContractDetails>
+			<csdo:DocKindCode codeListId="2009">03012</csdo:DocKindCode>
+			<csdo:DocName>ДОКУМЕНТЫ, ВНОСЯЩИЕ ИЗМЕНЕНИЯ И (ИЛИ) ДОПОЛНЕНИЯ К ДОКУМЕНТУ, СВЕДЕНИЯ О КОТОРОМ УКАЗАНЫ ПОД КОДОМ 03011</csdo:DocName>
+			<csdo:DocId>25</csdo:DocId>
+			<csdo:DocCreationDate>2026-10-09</csdo:DocCreationDate>
+		</cacdo:ContractDetails>
+		<cacdo:BuyerSellerRelationDetails>
+			<casdo:RelationIndicator>0</casdo:RelationIndicator>
+		</cacdo:BuyerSellerRelationDetails>
+		<cacdo:GoodsUseRestrictionDetails>
+			<casdo:RestrictionIndicator>0</casdo:RestrictionIndicator>
+			<casdo:ValueConditionIndicator>0</casdo:ValueConditionIndicator>
+		</cacdo:GoodsUseRestrictionDetails>
+		<cacdo:BuyerSellerRoyaltyFeeDetails>
+			<casdo:RoyaltyContractIndicator>0</casdo:RoyaltyContractIndicator>
+			<casdo:RoyaltyFeeIndicator>0</casdo:RoyaltyFeeIndicator>
+			<casdo:SubsequentResaleIndicator>0</casdo:SubsequentResaleIndicator>
+		</cacdo:BuyerSellerRoyaltyFeeDetails>
+	</cacdo:CVDMethod1Details>
+	<cacdo:CVDGoodsItemDetails>
+		<casdo:ConsignmentItemOrdinal>1</casdo:ConsignmentItemOrdinal>
+		<casdo:PageOrdinal>2</casdo:PageOrdinal>
+		<csdo:CommodityCode>2915310000</csdo:CommodityCode>
+		<casdo:ValuationMethodCode codeListId="2005">1</casdo:ValuationMethodCode>
+		<casdo:CustomsValueAmount currencyCode="KZT" currencyCodeListId="2022">17065348.27</casdo:CustomsValueAmount>
+		<casdo:CustomsValueAmount currencyCode="USD" currencyCodeListId="2022">37454.4</casdo:CustomsValueAmount>
+		<casdo:ExchangeRate currencyCode="KZT" currencyCodeListId="2022">455.63</casdo:ExchangeRate>
+		<cacdo:CVDMethod1CalculationDetails>
+			<cacdo:Method1BasisCalculationDetails>
+				<casdo:InvoicePriceAmount currencyCode="USD" currencyCodeListId="2022">37454.4</casdo:InvoicePriceAmount>
+				<casdo:NationalInvoicePriceAmount currencyCode="KZT" currencyCodeListId="2022">17065348.27</casdo:NationalInvoicePriceAmount>
+				<casdo:PriceCurrencyRate currencyCode="USD" currencyCodeListId="2022">455.63</casdo:PriceCurrencyRate>
+				<casdo:TotalAmount currencyCode="KZT" currencyCodeListId="2022">17065348.27</casdo:TotalAmount>
+			</cacdo:Method1BasisCalculationDetails>
+			<cacdo:Method1AddCostsDetails>
+				<casdo:PlaceName>АЛМАТЫ</casdo:PlaceName>
+				<casdo:TotalAmount currencyCode="KZT" currencyCodeListId="2022">0</casdo:TotalAmount>
+			</cacdo:Method1AddCostsDetails>
+		</cacdo:CVDMethod1CalculationDetails>
+	</cacdo:CVDGoodsItemDetails>
+	<cacdo:SignatoryPersonV2Details></cacdo:SignatoryPersonV2Details>
+</cvd:CustomsValueDeclaration>

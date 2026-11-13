@@ -1,0 +1,610 @@
+{
+  "version": "0.1.0",
+  "status": "partial-sample-profile",
+  "validFrom": null,
+  "validUntil": null,
+  "autoAcceptUnknownCodes": false,
+  "unknownCodePolicy": "manual-with-explicit-basis-and-format-check",
+  "lists": {
+    "countries": [
+      {
+        "code": "KZ",
+        "label": "Казахстан",
+        "source": "reference/expected-output/S116510021328.xml",
+        "status": "sample-observed",
+        "verifiedOn": "2026-11-12",
+        "aliases": [
+          "KAZAKHSTAN",
+          "КАЗАХСТАН"
+        ]
+      },
+      {
+        "code": "CN",
+        "label": "Китай",
+        "source": "reference/expected-output/S116510021328.xml",
+        "status": "sample-observed",
+        "verifiedOn": "2026-11-12",
+        "aliases": [
+          "CHINA",
+          "КИТАЙ",
+          "中国"
+        ]
+      },
+      {
+        "code": "DE",
+        "label": "Германия",
+        "source": "reference/expected-output/S116510021328.xml",
+        "status": "sample-observed",
+        "verifiedOn": "2026-11-12",
+        "aliases": [
+          "GERMANY",
+          "Deutschland",
+          "ГЕРМАНИЯ"
+        ]
+      },
+      {
+        "code": "TR",
+        "label": "Турция",
+        "source": "reference/expected-output/S116510021328.xml",
+        "status": "sample-observed",
+        "verifiedOn": "2026-11-12",
+        "aliases": [
+          "TURKEY",
+          "TURKIYE",
+          "ТУРЦИЯ"
+        ]
+      }
+    ],
+    "currencies": [
+      {
+        "code": "KZT",
+        "numeric": "398",
+        "label": "Тенге",
+        "source": "reference/expected-output/ и первичные документы двух наборов",
+        "status": "sample-observed",
+        "quotationNominal": null
+      },
+      {
+        "code": "USD",
+        "numeric": "840",
+        "label": "Доллар США",
+        "source": "reference/expected-output/ и первичные документы двух наборов",
+        "status": "sample-observed",
+        "quotationNominal": null
+      },
+      {
+        "code": "EUR",
+        "numeric": "978",
+        "label": "Евро",
+        "source": "reference/expected-output/ и первичные документы двух наборов",
+        "status": "sample-observed",
+        "quotationNominal": null
+      },
+      {
+        "code": "CNY",
+        "numeric": "156",
+        "label": "Юань",
+        "source": "reference/expected-output/ и первичные документы двух наборов",
+        "status": "sample-observed",
+        "quotationNominal": null
+      }
+    ],
+    "transportModes": [
+      {
+        "code": "31",
+        "label": "Автомобильный транспорт",
+        "source": "reference/expected-output/S116510021328.xml",
+        "status": "sample-observed",
+        "verifiedOn": "2026-11-12"
+      },
+      {
+        "code": "40",
+        "label": "Воздушный транспорт",
+        "source": "reference/expected-output/S116510021328.xml",
+        "status": "sample-observed",
+        "verifiedOn": "2026-11-12"
+      }
+    ],
+    "transportTypes": [
+      {
+        "code": "312",
+        "label": "Прицеп/полуприцеп в примере",
+        "source": "reference/expected-output/S116510021328.xml",
+        "status": "sample-observed",
+        "verifiedOn": "2026-11-12"
+      }
+    ],
+    "customsOffices": [
+      {
+        "code": "55411",
+        "label": "Орган оформления из первого примера",
+        "source": "reference/expected-output/S116510021328.xml",
+        "status": "sample-observed",
+        "verifiedOn": "2026-11-12"
+      },
+      {
+        "code": "57503",
+        "label": "Орган въезда первого примера",
+        "source": "reference/expected-output/S116510021328.xml",
+        "status": "sample-observed",
+        "verifiedOn": "2026-11-12"
+      },
+      {
+        "code": "55400",
+        "label": "Орган в отметках хранения первого примера",
+        "source": "reference/expected-output/S116510021328.xml",
+        "status": "sample-observed",
+        "verifiedOn": "2026-11-12"
+      },
+      {
+        "code": "55301",
+        "label": "Орган второго примера",
+        "source": "reference/expected-output/S116510021328.xml",
+        "status": "sample-observed",
+        "verifiedOn": "2026-11-12"
+      },
+      {
+        "code": "55300",
+        "label": "Орган места хранения второго примера",
+        "source": "reference/expected-output/S116510021328.xml",
+        "status": "sample-observed",
+        "verifiedOn": "2026-11-12"
+      }
+    ],
+    "units": [
+      {
+        "code": "166",
+        "label": "Килограмм",
+        "source": "reference/expected-output/S116510021328.xml",
+        "status": "sample-observed",
+        "verifiedOn": "2026-11-12",
+        "aliases": [
+          "kg",
+          "кг"
+        ]
+      }
+    ],
+    "packages": [
+      {
+        "code": "CK",
+        "label": "Бочки из первого примера",
+        "source": "reference/expected-output/S116510021328.xml",
+        "status": "sample-observed",
+        "verifiedOn": "2026-11-12"
+      },
+      {
+        "code": "PX",
+        "label": "Паллеты из второго примера",
+        "source": "reference/expected-output/S116510021328.xml",
+        "status": "sample-observed",
+        "verifiedOn": "2026-11-12"
+      }
+    ],
+    "deliveryTerms": [
+      {
+        "code": "CPT",
+        "label": "Перевозка оплачена до указанного места",
+        "source": "reference/expected-output/S116510021328.xml",
+        "status": "sample-observed",
+        "verifiedOn": "2026-11-12"
+      },
+      {
+        "code": "FCA",
+        "label": "Франко-перевозчик в указанном месте",
+        "source": "reference/expected-output/S116510021328.xml",
+        "status": "sample-observed",
+        "verifiedOn": "2026-11-12"
+      }
+    ],
+    "procedures": [
+      {
+        "code": "40",
+        "label": "Выпуск для внутреннего потребления",
+        "source": "reference/expected-output/S116510021328.xml",
+        "status": "sample-observed",
+        "verifiedOn": "2026-11-12"
+      },
+      {
+        "code": "00",
+        "label": "Отсутствие предшествующей процедуры в примерах",
+        "source": "reference/expected-output/S116510021328.xml",
+        "status": "sample-observed",
+        "verifiedOn": "2026-11-12"
+      }
+    ],
+    "movementFeatures": [
+      {
+        "code": "000",
+        "label": "Особенность перемещения из примеров",
+        "source": "reference/expected-output/S116510021328.xml",
+        "status": "sample-observed",
+        "verifiedOn": "2026-11-12"
+      }
+    ],
+    "transactions": [
+      {
+        "code": "021",
+        "label": "Характер сделки из примеров",
+        "source": "reference/expected-output/S116510021328.xml",
+        "status": "sample-observed",
+        "verifiedOn": "2026-11-12"
+      }
+    ],
+    "transactionFeatures": [
+      {
+        "code": "00",
+        "label": "Особенность первого примера",
+        "source": "reference/expected-output/S116510021328.xml",
+        "status": "sample-observed",
+        "verifiedOn": "2026-11-12"
+      },
+      {
+        "code": "30",
+        "label": "Особенность второго примера",
+        "source": "reference/expected-output/S116510021328.xml",
+        "status": "sample-observed",
+        "verifiedOn": "2026-11-12"
+      }
+    ],
+    "documentKinds": [
+      {
+        "code": "01999",
+        "label": "Иные документы о соблюдении запретов и ограничений",
+        "source": "reference/expected-output/S116510021328.xml",
+        "status": "sample-observed",
+        "verifiedOn": "2026-11-12",
+        "dateRequired": true,
+        "dateRuleStatus": "provisional-profile"
+      },
+      {
+        "code": "01206",
+        "label": "Свидетельство о государственной регистрации",
+        "source": "reference/expected-output/S116510021328.xml",
+        "status": "sample-observed",
+        "verifiedOn": "2026-11-12",
+        "dateRequired": true,
+        "dateRuleStatus": "provisional-profile"
+      },
+      {
+        "code": "02015",
+        "label": "CMR",
+        "source": "reference/expected-output/S116510021328.xml",
+        "status": "sample-observed",
+        "verifiedOn": "2026-11-12",
+        "dateRequired": false,
+        "dateRuleStatus": "provisional-profile"
+      },
+      {
+        "code": "03011",
+        "label": "Контракт",
+        "source": "reference/expected-output/S116510021328.xml",
+        "status": "sample-observed",
+        "verifiedOn": "2026-11-12",
+        "dateRequired": true,
+        "dateRuleStatus": "provisional-profile"
+      },
+      {
+        "code": "03012",
+        "label": "Дополнение к контракту",
+        "source": "reference/expected-output/S116510021328.xml",
+        "status": "sample-observed",
+        "verifiedOn": "2026-11-12",
+        "dateRequired": true,
+        "dateRuleStatus": "provisional-profile"
+      },
+      {
+        "code": "03031",
+        "label": "Документ валютного контроля / УНК",
+        "source": "reference/expected-output/S116510021328.xml",
+        "status": "sample-observed",
+        "verifiedOn": "2026-11-12",
+        "dateRequired": true,
+        "dateRuleStatus": "provisional-profile"
+      },
+      {
+        "code": "04021",
+        "label": "Инвойс",
+        "source": "reference/expected-output/S116510021328.xml",
+        "status": "sample-observed",
+        "verifiedOn": "2026-11-12",
+        "dateRequired": true,
+        "dateRuleStatus": "provisional-profile"
+      },
+      {
+        "code": "04023",
+        "label": "Документ оплаты стоимости товара",
+        "source": "reference/expected-output/S116510021328.xml",
+        "status": "sample-observed",
+        "verifiedOn": "2026-11-12",
+        "dateRequired": true,
+        "dateRuleStatus": "provisional-profile"
+      },
+      {
+        "code": "04131",
+        "label": "Упаковочный лист",
+        "source": "reference/expected-output/S116510021328.xml",
+        "status": "sample-observed",
+        "verifiedOn": "2026-11-12",
+        "dateRequired": true,
+        "dateRuleStatus": "provisional-profile"
+      },
+      {
+        "code": "06999",
+        "label": "Иной документ о происхождении",
+        "source": "reference/expected-output/S116510021328.xml",
+        "status": "sample-observed",
+        "verifiedOn": "2026-11-12",
+        "dateRequired": true,
+        "dateRuleStatus": "provisional-profile"
+      },
+      {
+        "code": "09013",
+        "label": "Транзитная декларация",
+        "source": "reference/expected-output/S116510021328.xml",
+        "status": "sample-observed",
+        "verifiedOn": "2026-11-12",
+        "dateRequired": true,
+        "dateRuleStatus": "provisional-profile"
+      },
+      {
+        "code": "09015",
+        "label": "Иностранный таможенный документ",
+        "source": "reference/expected-output/S116510021328.xml",
+        "status": "sample-observed",
+        "verifiedOn": "2026-11-12",
+        "dateRequired": true,
+        "dateRuleStatus": "provisional-profile"
+      },
+      {
+        "code": "09025",
+        "label": "Завершение транзита",
+        "source": "reference/expected-output/S116510021328.xml",
+        "status": "sample-observed",
+        "verifiedOn": "2026-11-12",
+        "dateRequired": true,
+        "dateRuleStatus": "provisional-profile"
+      },
+      {
+        "code": "09026",
+        "label": "Документы временного хранения",
+        "source": "reference/expected-output/S116510021328.xml",
+        "status": "sample-observed",
+        "verifiedOn": "2026-11-12",
+        "dateRequired": true,
+        "dateRuleStatus": "provisional-profile"
+      },
+      {
+        "code": "09034",
+        "label": "Реестр таможенного представителя",
+        "source": "reference/expected-output/S116510021328.xml",
+        "status": "sample-observed",
+        "verifiedOn": "2026-11-12",
+        "dateRequired": true,
+        "dateRuleStatus": "provisional-profile"
+      },
+      {
+        "code": "11002",
+        "label": "Договор с представителем",
+        "source": "reference/expected-output/S116510021328.xml",
+        "status": "sample-observed",
+        "verifiedOn": "2026-11-12",
+        "dateRequired": true,
+        "dateRuleStatus": "provisional-profile"
+      },
+      {
+        "code": "11004",
+        "label": "Доверенность",
+        "source": "reference/expected-output/S116510021328.xml",
+        "status": "sample-observed",
+        "verifiedOn": "2026-11-12",
+        "dateRequired": true,
+        "dateRuleStatus": "provisional-profile"
+      }
+    ],
+    "presentationCodes": [
+      {
+        "code": "0",
+        "label": "Не представляется",
+        "source": "reference/rules/DT_2026.docx:15(42)",
+        "status": "sample-observed",
+        "verifiedOn": "2026-11-12"
+      },
+      {
+        "code": "1",
+        "label": "Представляется",
+        "source": "reference/rules/DT_2026.docx:15(42)",
+        "status": "sample-observed",
+        "verifiedOn": "2026-11-12"
+      },
+      {
+        "code": "2",
+        "label": "Представлен ранее",
+        "source": "reference/rules/DT_2026.docx:15(42)",
+        "status": "sample-observed",
+        "verifiedOn": "2026-11-12"
+      },
+      {
+        "code": "3",
+        "label": "Представляется после выпуска",
+        "source": "reference/rules/DT_2026.docx:15(42)",
+        "status": "sample-observed",
+        "verifiedOn": "2026-11-12"
+      }
+    ],
+    "preferences": [
+      {
+        "code": "ОО",
+        "label": "Преференция не заявлена (кириллица)",
+        "source": "reference/expected-output/S116510021328.xml",
+        "status": "sample-observed",
+        "verifiedOn": "2026-11-12"
+      },
+      {
+        "code": "Z",
+        "label": "Признак акциза из примеров",
+        "source": "reference/expected-output/S116510021328.xml",
+        "status": "sample-observed",
+        "verifiedOn": "2026-11-12"
+      }
+    ],
+    "payments": [
+      {
+        "code": "1010",
+        "label": "Таможенный сбор",
+        "source": "reference/expected-output/S116510021328.xml",
+        "status": "sample-observed",
+        "verifiedOn": "2026-11-12"
+      },
+      {
+        "code": "2010",
+        "label": "Ввозная таможенная пошлина",
+        "source": "reference/expected-output/S116510021328.xml",
+        "status": "sample-observed",
+        "verifiedOn": "2026-11-12"
+      },
+      {
+        "code": "5060",
+        "label": "НДС",
+        "source": "reference/expected-output/S116510021328.xml",
+        "status": "sample-observed",
+        "verifiedOn": "2026-11-12"
+      }
+    ],
+    "paymentFeatures": [
+      {
+        "code": "ИУ",
+        "label": "Особенность платежа из примеров",
+        "source": "reference/expected-output/S116510021328.xml",
+        "status": "sample-observed",
+        "verifiedOn": "2026-11-12"
+      }
+    ],
+    "paymentMethods": [
+      {
+        "code": "НР",
+        "label": "Способ из XML-примера; не присваивается автоматически",
+        "source": "reference/expected-output/S116510021328.xml",
+        "status": "sample-observed",
+        "verifiedOn": "2026-11-12"
+      }
+    ],
+    "restrictions": [
+      {
+        "code": "C0300",
+        "label": "Мера C0300",
+        "source": "reference/expected-output/S116510021328.xml",
+        "status": "sample-observed",
+        "verifiedOn": "2026-11-12"
+      },
+      {
+        "code": "C1300",
+        "label": "Мера C1300",
+        "source": "reference/expected-output/S116510021328.xml",
+        "status": "sample-observed",
+        "verifiedOn": "2026-11-12"
+      },
+      {
+        "code": "D0100",
+        "label": "Мера D0100",
+        "source": "reference/expected-output/S116510021328.xml",
+        "status": "sample-observed",
+        "verifiedOn": "2026-11-12"
+      },
+      {
+        "code": "E0100",
+        "label": "Мера E0100",
+        "source": "reference/expected-output/S116510021328.xml",
+        "status": "sample-observed",
+        "verifiedOn": "2026-11-12"
+      },
+      {
+        "code": "F0100",
+        "label": "Мера F0100",
+        "source": "reference/expected-output/S116510021328.xml",
+        "status": "sample-observed",
+        "verifiedOn": "2026-11-12"
+      },
+      {
+        "code": "E0110",
+        "label": "Мера E0110",
+        "source": "reference/expected-output/S116510021328.xml",
+        "status": "sample-observed",
+        "verifiedOn": "2026-11-12"
+      }
+    ],
+    "intellectualProperty": [
+      {
+        "code": "N",
+        "label": "Признак N из примеров",
+        "source": "reference/expected-output/S116510021328.xml",
+        "status": "sample-observed",
+        "verifiedOn": "2026-11-12"
+      }
+    ],
+    "kedenRateTypes": [
+      {
+        "code": "ETT",
+        "label": "Значение профиля примера",
+        "source": "reference/expected-output/S116510021328.xml",
+        "status": "sample-observed",
+        "verifiedOn": "2026-11-12"
+      }
+    ],
+    "kedenFillerTypes": [
+      {
+        "code": "FILLER_CUSTOMS_REPRESENTATIVE",
+        "label": "Таможенный представитель из примера",
+        "source": "reference/expected-output/S116510021328.xml",
+        "status": "sample-observed",
+        "verifiedOn": "2026-11-12"
+      }
+    ],
+    "kedenFilledBy": [
+      {
+        "code": "EMPLOYEE",
+        "label": "Работник из примера",
+        "source": "reference/expected-output/S116510021328.xml",
+        "status": "sample-observed",
+        "verifiedOn": "2026-11-12"
+      }
+    ]
+  },
+  "fieldCatalogs": {
+    "declaration.dispatchCountry": "countries",
+    "declaration.destinationCountry": "countries",
+    "declaration.tradeCountry": "countries",
+    "declaration.borderOfficeCountry": "countries",
+    "declaration.locationCountry": "countries",
+    "declaration.deliveryCode": "deliveryTerms",
+    "declaration.invoiceCurrency": "currencies",
+    "declaration.transactionCode": "transactions",
+    "declaration.transactionFeature": "transactionFeatures",
+    "declaration.borderOfficeCode": "customsOffices",
+    "declaration.locationOfficeCode": "customsOffices",
+    "party.country": "countries",
+    "goods.originCountry": "countries",
+    "goods.packageKind": "packages",
+    "goods.additionalUnit": "units",
+    "goods.quotaUnit": "units",
+    "goods.previousProcedure": "procedures",
+    "goods.movementFeature": "movementFeatures",
+    "goods.preferenceFee": "preferences",
+    "goods.preferenceDuty": "preferences",
+    "goods.preferenceExcise": "preferences",
+    "goods.preferenceVat": "preferences",
+    "goods.prohibitionCodes": "restrictions",
+    "goods.intellectualPropertyCode": "intellectualProperty",
+    "transport.mode": "transportModes",
+    "transport.country": "countries",
+    "transport.transportType": "transportTypes",
+    "document.kind": "documentKinds",
+    "document.presentationCode": "presentationCodes",
+    "cost.currency": "currencies",
+    "rate.currency": "currencies",
+    "payment.code": "payments",
+    "keden.officeCode": "customsOffices",
+    "keden.rateType": "kedenRateTypes",
+    "keden.fillerType": "kedenFillerTypes",
+    "keden.filledBy": "kedenFilledBy"
+  }
+}

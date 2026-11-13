@@ -1,0 +1,91 @@
+<?php
+declare(strict_types=1);
+
+namespace Customs\Domain;
+
+use Customs\Http\ApiError;
+
+final class Draft
+{
+    public function __construct(private readonly Registry $registry) {}
+
+    public function empty(): array
+    {
+        $draft = ['declaration' => $this->row('declaration'), 'keden' => $this->row('keden'), 'parties' => [], 'goods' => [], 'transports' => [], 'documents' => [], 'costs' => [], 'rates' => [], 'payments' => [], 'sourceLines' => [], 'packages' => [], 'fieldStates' => [], 'entityAliases' => []];
+        foreach (['seller','buyer','consignor','consignee','declarant','financial'] as $role) $draft['parties'][] = ['id' => 'party-' . $role, ...$this->row('party'), 'role' => $role];
+        foreach (['arrival','border'] as $stage) $draft['transports'][] = ['id' => 'transport-' . $stage, ...$this->row('transport'), 'stage' => $stage];
+        $draft['goods'][] = ['id' => 'goods-1', ...$this->row('goods')];
+        return $draft;
+    }
+
+    public function row(string $scope): array
+    {
+        $row = [];
+        foreach ($this->registry->fields() as $field) if ($field['scope'] === $scope) $row[$field['key']] = $field['fixedValue'] ?? (str_ends_with($field['type'], '-list') ? [] : null);
+        return $row;
+    }
+
+    public function &entity(array &$draft, string $scope, ?string $entityId): array
+    {
+        $collection = $this->registry->data()['scopes'][$scope]['collection'] ?? null;
+        if ($collection === null) {
+            if (!isset($draft[$scope])) throw new ApiError('ENTITY_UNKNOWN', 'Раздел не найден.');
+            return $draft[$scope];
+        }
+        foreach ($draft[$collection] as &$row) if ($row['id'] === $entityId) return $row;
+        unset($row);
+        throw new ApiError('ENTITY_UNKNOWN', 'Строка формы не найдена.');
+    }
+
+    public function collection(string $scope): string
+    {
+        return $this->registry->data()['scopes'][$scope]['collection'] ?? throw new ApiError('ENTITY_SCOPE', 'Этот раздел не является списком.');
+    }
+
+    public static function address(string $scope, ?string $entityId, string $key): string { return $scope . '/' . ($entityId ?? '_') . '/' . $key; }
+
+    public function edit(array $state, string $fieldId, ?string $entityId, mixed $value, ?string $candidateId = null): array
+    {
+        $field = $this->registry->field($fieldId);
+        if (in_array('calculated', $field['acquisition'], true) || isset($field['fixedValue'])) throw new ApiError('FIELD_READ_ONLY', 'Измените исходные параметры этого поля.');
+        $address = self::address($field['scope'], $entityId, $field['key']);
+        $evidenceIds = [];
+        $status = 'manual';
+        if ($candidateId !== null) {
+            $candidate = $state['candidates'][$candidateId] ?? throw new ApiError('CANDIDATE_UNKNOWN', 'Предложение больше недоступно.');
+            if ($candidate['address'] !== $address) throw new ApiError('CANDIDATE_FIELD', 'Предложение относится к другому полю.');
+            $value = $candidate['value']; $evidenceIds = $candidate['evidenceIds']; $status = 'selected';
+        } else $value = $this->manualValue($field, $value);
+        $row =& $this->entity($state['draft'], $field['scope'], $entityId);
+        $row[$field['key']] = $value;
+        if ($fieldId === 'document.kind') {
+            $row['dateRequired'] = true;
+            foreach (Registry::resource('catalogs')['lists']['documentKinds'] as $kind) if ($kind['code'] === $value) $row['dateRequired'] = $kind['dateRequired'];
+        }
+        $reviewed = [];
+        foreach ($state['candidates'] as $candidate) if ($candidate['address'] === $address) $reviewed[] = $candidate['id'];
+        $state['draft']['fieldStates'][$address] = ['status' => $status,'candidateId' => $candidateId,'evidenceIds' => $evidenceIds,'reviewedCandidateIds' => $reviewed,'conflict' => false,'needsReview' => false];
+        return $state;
+    }
+
+    private function manualValue(array $field, mixed $value): mixed
+    {
+        if ($value === null || $value === '') return null;
+        $type = $field['type'];
+        if ($type === 'boolean' && !is_bool($value)) throw new ApiError('FIELD_VALUE', 'Ожидается явный ответ да/нет.');
+        if ($type === 'boolean') return $value;
+        if (str_ends_with($type, '-list')) {
+            if (!is_array($value) || count($value) > 1000 || array_filter($value, fn($item): bool => !is_string($item))) throw new ApiError('FIELD_VALUE', 'Ожидается список строк.');
+            return array_values(array_unique($value));
+        }
+        if ($type === 'integer') {
+            if (!is_int($value) || $value < 0) throw new ApiError('FIELD_VALUE', 'Ожидается неотрицательное целое число.');
+            return $value;
+        }
+        if (!is_string($value) || mb_strlen($value) > 10000) throw new ApiError('FIELD_VALUE', 'Ожидается строковое значение допустимой длины.');
+        if ($type === 'decimal') return (new Normalizer())->value($field, $value, ($field['unit'] ?? '') === 'kg' ? 'kg' : null, 'kg');
+        if ($type === 'date') return (new Normalizer())->date($value);
+        if ($type === 'enum' && isset($field['values']) && !in_array($value, $field['values'], true)) throw new ApiError('FIELD_VALUE', 'Неизвестный вариант значения.');
+        return trim($value);
+    }
+}

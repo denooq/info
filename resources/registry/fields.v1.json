@@ -1,0 +1,8162 @@
+{
+  "version": "0.1.0",
+  "effectiveFrom": "2026-11-12",
+  "status": "provisional-mvp",
+  "jurisdiction": "KZ",
+  "procedure": "40",
+  "valuationMethods": [
+    "1"
+  ],
+  "ruleSource": "reference/rules/DT_2026.docx",
+  "xmlAliases": {
+    "D": "gdgdc:GoodsDeclaration",
+    "S": "D/cacdo:GDGoodsShipmentDetails",
+    "I": "S/cacdo:GDGoodsItemDetails",
+    "V": "cvd:CustomsValueDeclaration",
+    "VI": "V/cacdo:CVDGoodsItemDetails"
+  },
+  "scopes": {
+    "declaration": {
+      "collection": null
+    },
+    "party": {
+      "collection": "parties"
+    },
+    "goods": {
+      "collection": "goods"
+    },
+    "transport": {
+      "collection": "transports"
+    },
+    "document": {
+      "collection": "documents"
+    },
+    "cost": {
+      "collection": "costs"
+    },
+    "rate": {
+      "collection": "rates"
+    },
+    "payment": {
+      "collection": "payments"
+    },
+    "keden": {
+      "collection": null
+    }
+  },
+  "matrixCoverage": [
+    {
+      "id": "DT-01",
+      "graphs": [
+        "1"
+      ],
+      "fieldIds": [
+        "declaration.kind",
+        "declaration.procedure",
+        "declaration.format"
+      ]
+    },
+    {
+      "id": "DT-02",
+      "graphs": [
+        "2"
+      ],
+      "fieldIds": [
+        "party.role",
+        "party.name",
+        "party.briefName",
+        "party.country",
+        "party.region",
+        "party.city",
+        "party.street",
+        "party.postalCode",
+        "party.taxId",
+        "party.identifierKind"
+      ]
+    },
+    {
+      "id": "DT-03",
+      "graphs": [
+        "3"
+      ],
+      "fieldIds": [
+        "declaration.sheetCount",
+        "goods.sheetOrdinal"
+      ]
+    },
+    {
+      "id": "DT-04",
+      "graphs": [
+        "4"
+      ],
+      "fieldIds": [
+        "declaration.specificationsApplicable",
+        "declaration.specificationSheets"
+      ]
+    },
+    {
+      "id": "DT-05",
+      "graphs": [
+        "5"
+      ],
+      "fieldIds": [
+        "declaration.goodsCount"
+      ]
+    },
+    {
+      "id": "DT-06",
+      "graphs": [
+        "6"
+      ],
+      "fieldIds": [
+        "declaration.shipmentPackageIds",
+        "declaration.packageCount"
+      ]
+    },
+    {
+      "id": "DT-07",
+      "graphs": [
+        "7"
+      ],
+      "fieldIds": [
+        "declaration.referenceApplicable",
+        "declaration.referenceNumber"
+      ]
+    },
+    {
+      "id": "DT-08-09-14",
+      "graphs": [
+        "8",
+        "9",
+        "14"
+      ],
+      "fieldIds": [
+        "party.role",
+        "party.sameAsRole",
+        "party.name",
+        "party.briefName",
+        "party.country",
+        "party.region",
+        "party.city",
+        "party.street",
+        "party.postalCode",
+        "party.taxId",
+        "party.identifierKind"
+      ]
+    },
+    {
+      "id": "DT-11",
+      "graphs": [
+        "11"
+      ],
+      "fieldIds": [
+        "declaration.tradeCountry"
+      ]
+    },
+    {
+      "id": "DT-12",
+      "graphs": [
+        "12"
+      ],
+      "fieldIds": [
+        "declaration.customsValue"
+      ]
+    },
+    {
+      "id": "DT-15-17",
+      "graphs": [
+        "15",
+        "17"
+      ],
+      "fieldIds": [
+        "declaration.dispatchCountry",
+        "declaration.destinationCountry"
+      ]
+    },
+    {
+      "id": "DT-16-34",
+      "graphs": [
+        "16",
+        "34"
+      ],
+      "fieldIds": [
+        "goods.originCountry",
+        "declaration.originCountry"
+      ]
+    },
+    {
+      "id": "DT-18-21",
+      "graphs": [
+        "18",
+        "21"
+      ],
+      "fieldIds": [
+        "transport.stage",
+        "transport.mode",
+        "transport.country",
+        "transport.registration",
+        "transport.transportType"
+      ]
+    },
+    {
+      "id": "DT-19",
+      "graphs": [
+        "19"
+      ],
+      "fieldIds": [
+        "declaration.container"
+      ]
+    },
+    {
+      "id": "DT-20",
+      "graphs": [
+        "20"
+      ],
+      "fieldIds": [
+        "declaration.deliveryCode",
+        "declaration.deliveryPlace"
+      ]
+    },
+    {
+      "id": "DT-22",
+      "graphs": [
+        "22"
+      ],
+      "fieldIds": [
+        "declaration.invoiceCurrency",
+        "declaration.invoiceTotal"
+      ]
+    },
+    {
+      "id": "DT-23",
+      "graphs": [
+        "23"
+      ],
+      "fieldIds": [
+        "declaration.calculationDate",
+        "rate.currency",
+        "rate.value",
+        "rate.nominal",
+        "rate.date",
+        "rate.source",
+        "rate.confirmed"
+      ]
+    },
+    {
+      "id": "DT-24",
+      "graphs": [
+        "24"
+      ],
+      "fieldIds": [
+        "declaration.transactionCode",
+        "declaration.transactionFeature"
+      ]
+    },
+    {
+      "id": "DT-25-26",
+      "graphs": [
+        "25",
+        "26"
+      ],
+      "fieldIds": [
+        "transport.stage",
+        "transport.mode",
+        "transport.country",
+        "transport.registration",
+        "transport.transportType"
+      ]
+    },
+    {
+      "id": "DT-29",
+      "graphs": [
+        "29"
+      ],
+      "fieldIds": [
+        "declaration.borderOfficeCode",
+        "declaration.borderOfficeCountry",
+        "declaration.borderOfficeName"
+      ]
+    },
+    {
+      "id": "DT-30",
+      "graphs": [
+        "30"
+      ],
+      "fieldIds": [
+        "declaration.locationCode",
+        "declaration.locationRegistration",
+        "declaration.locationCountry",
+        "declaration.locationOfficeCode",
+        "declaration.locationAddress"
+      ]
+    },
+    {
+      "id": "DT-31",
+      "graphs": [
+        "31"
+      ],
+      "fieldIds": [
+        "declaration.containerNumbers",
+        "goods.description",
+        "goods.sourceLineIds",
+        "goods.packageIds",
+        "goods.packageKind",
+        "goods.packageQuantity",
+        "goods.manufacturer",
+        "goods.tradeMark",
+        "goods.brand",
+        "goods.model",
+        "goods.article"
+      ]
+    },
+    {
+      "id": "DT-32",
+      "graphs": [
+        "32"
+      ],
+      "fieldIds": [
+        "goods.ordinal"
+      ]
+    },
+    {
+      "id": "DT-33",
+      "graphs": [
+        "33"
+      ],
+      "fieldIds": [
+        "goods.commodityCode",
+        "goods.prohibitionCodes",
+        "goods.intellectualPropertyCode"
+      ]
+    },
+    {
+      "id": "DT-35-38",
+      "graphs": [
+        "35",
+        "38"
+      ],
+      "fieldIds": [
+        "goods.grossMass",
+        "goods.netMass"
+      ]
+    },
+    {
+      "id": "DT-36",
+      "graphs": [
+        "36"
+      ],
+      "fieldIds": [
+        "goods.preferenceFee",
+        "goods.preferenceDuty",
+        "goods.preferenceExcise",
+        "goods.preferenceVat",
+        "goods.hasPreference",
+        "goods.preferenceBasis"
+      ]
+    },
+    {
+      "id": "DT-37",
+      "graphs": [
+        "37"
+      ],
+      "fieldIds": [
+        "goods.previousProcedure",
+        "goods.movementFeature"
+      ]
+    },
+    {
+      "id": "DT-39",
+      "graphs": [
+        "39"
+      ],
+      "fieldIds": [
+        "goods.hasQuota",
+        "goods.quotaQuantity",
+        "goods.quotaUnit"
+      ]
+    },
+    {
+      "id": "DT-40",
+      "graphs": [
+        "40"
+      ],
+      "fieldIds": [
+        "goods.hasPreviousDocument",
+        "goods.previousDocNumber",
+        "goods.previousItemNumber"
+      ]
+    },
+    {
+      "id": "DT-41",
+      "graphs": [
+        "41"
+      ],
+      "fieldIds": [
+        "goods.additionalUnitRequired",
+        "goods.additionalQuantity",
+        "goods.additionalUnit"
+      ]
+    },
+    {
+      "id": "DT-42",
+      "graphs": [
+        "42"
+      ],
+      "fieldIds": [
+        "goods.invoiceValue"
+      ]
+    },
+    {
+      "id": "DT-43",
+      "graphs": [
+        "43"
+      ],
+      "fieldIds": [
+        "goods.valuationMethod"
+      ]
+    },
+    {
+      "id": "DT-44",
+      "graphs": [
+        "44"
+      ],
+      "fieldIds": [
+        "document.kind",
+        "document.name",
+        "document.number",
+        "document.date",
+        "document.dateRequired",
+        "document.validFrom",
+        "document.validUntil",
+        "document.presentationCode",
+        "document.goodsIds",
+        "document.documentIds"
+      ]
+    },
+    {
+      "id": "DT-45",
+      "graphs": [
+        "45"
+      ],
+      "fieldIds": [
+        "goods.customsValue",
+        "cost.kind",
+        "cost.direction",
+        "cost.amount",
+        "cost.currency",
+        "cost.includedInPrice",
+        "cost.basis",
+        "cost.evidenceIds",
+        "cost.allocationBasis",
+        "cost.allocationConfirmed",
+        "cost.goodsIds"
+      ]
+    },
+    {
+      "id": "DT-46",
+      "graphs": [
+        "46"
+      ],
+      "fieldIds": [
+        "goods.statisticalValue",
+        "goods.statisticalAddition",
+        "goods.statisticalDeduction",
+        "goods.statisticalBasisConfirmed"
+      ]
+    },
+    {
+      "id": "DT-47",
+      "graphs": [
+        "47"
+      ],
+      "fieldIds": [
+        "declaration.calculationDate",
+        "goods.dutyRate",
+        "goods.vatRate",
+        "declaration.feeBase",
+        "declaration.feeAdditional",
+        "goods.rateBasis",
+        "goods.ratesDate"
+      ]
+    },
+    {
+      "id": "DT-B",
+      "graphs": [
+        "B"
+      ],
+      "fieldIds": [
+        "payment.code",
+        "payment.amount",
+        "payment.source",
+        "payment.documentNumber",
+        "payment.date",
+        "declaration.paymentFactsAvailable"
+      ]
+    },
+    {
+      "id": "DT-48",
+      "graphs": [
+        "48"
+      ],
+      "fieldIds": [
+        "declaration.deferment",
+        "declaration.deferredPaymentCode",
+        "declaration.deferredDeadlines"
+      ]
+    },
+    {
+      "id": "DT-54",
+      "graphs": [
+        "54"
+      ],
+      "fieldIds": [
+        "declaration.calculationDate",
+        "declaration.signatureDate",
+        "declaration.representativeUsed",
+        "declaration.representativeRegistry",
+        "declaration.representativeContractNumber",
+        "declaration.representativeContractDate",
+        "declaration.signatoryFirstName",
+        "declaration.signatoryLastName",
+        "declaration.signatoryMiddleName",
+        "declaration.signatoryPosition",
+        "declaration.signatoryContact",
+        "declaration.signatoryPlace",
+        "declaration.authorityRequired",
+        "declaration.authorityNumber",
+        "declaration.authorityDate",
+        "declaration.authorityValidUntil"
+      ]
+    }
+  ],
+  "nonApplicable": [
+    {
+      "graphs": [
+        "10",
+        "13",
+        "27",
+        "28",
+        "49",
+        "50",
+        "51",
+        "52",
+        "53"
+      ],
+      "reason": "Не обязательный пользовательский ввод импортной ДТ KZ по принятому профилю; графа 52 в перечне инструкции относится к Беларуси."
+    },
+    {
+      "graphs": [
+        "A",
+        "C",
+        "D"
+      ],
+      "reason": "Служебные графы таможни, регистрация/выпуск/ЭП не присваиваются приложением."
+    }
+  ],
+  "fields": [
+    {
+      "id": "declaration.kind",
+      "key": "kind",
+      "scope": "declaration",
+      "label": "Тип декларации",
+      "type": "code",
+      "acquisition": [
+        "reference"
+      ],
+      "dtGraphs": [
+        "1"
+      ],
+      "rule": "DT:15(1)",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "1"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-observed",
+          "path": "D/DeclarationKindCode"
+        }
+      },
+      "fixedValue": "ИМ",
+      "section": "shipment"
+    },
+    {
+      "id": "declaration.procedure",
+      "key": "procedure",
+      "scope": "declaration",
+      "label": "Таможенная процедура",
+      "type": "code",
+      "acquisition": [
+        "reference"
+      ],
+      "dtGraphs": [
+        "1"
+      ],
+      "rule": "DT:15(1)",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "1"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-observed",
+          "path": "D/CustomsProcedureCode"
+        }
+      },
+      "fixedValue": "40",
+      "section": "shipment"
+    },
+    {
+      "id": "declaration.format",
+      "key": "format",
+      "scope": "declaration",
+      "label": "Форма декларации",
+      "type": "code",
+      "acquisition": [
+        "reference"
+      ],
+      "dtGraphs": [
+        "1"
+      ],
+      "rule": "DT:15(1)",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "1"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-observed",
+          "path": "D/EDocIndicatorCode"
+        }
+      },
+      "fixedValue": "ЭД",
+      "section": "shipment"
+    },
+    {
+      "id": "declaration.calculationDate",
+      "key": "calculationDate",
+      "scope": "declaration",
+      "label": "Дата для расчёта",
+      "type": "date",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [
+        "23",
+        "47",
+        "54"
+      ],
+      "rule": "DT:15(23),(45),(49)",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "23",
+          "47",
+          "54"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Элемент не подтверждён предоставленным XML; требуется сверка официальной XSD."
+        }
+      },
+      "section": "calculation"
+    },
+    {
+      "id": "declaration.signatureDate",
+      "key": "signatureDate",
+      "scope": "declaration",
+      "label": "Дата составления",
+      "type": "date",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [
+        "54"
+      ],
+      "rule": "DT:15(49)",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "invoice",
+            "contract",
+            "transport",
+            "warehouse-document"
+          ],
+          "requisite": "Дата составления",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": false
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "54"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-observed",
+          "path": "D/SignatoryPersonV2Details/SigningDetails/SigningDate"
+        }
+      },
+      "section": "signatory"
+    },
+    {
+      "id": "declaration.dispatchCountry",
+      "key": "dispatchCountry",
+      "scope": "declaration",
+      "label": "Страна отправления",
+      "type": "code",
+      "acquisition": [
+        "extract",
+        "reference",
+        "manual"
+      ],
+      "dtGraphs": [
+        "15"
+      ],
+      "rule": "DT:15(13)",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "invoice",
+            "contract",
+            "transport",
+            "warehouse-document"
+          ],
+          "requisite": "Страна отправления",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": false
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "15"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-observed",
+          "path": "S/DepartureCountryDetails/CACountryCode"
+        }
+      },
+      "section": "shipment"
+    },
+    {
+      "id": "declaration.destinationCountry",
+      "key": "destinationCountry",
+      "scope": "declaration",
+      "label": "Страна назначения",
+      "type": "code",
+      "acquisition": [
+        "extract",
+        "reference",
+        "manual"
+      ],
+      "dtGraphs": [
+        "17"
+      ],
+      "rule": "DT:15(16)",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "invoice",
+            "contract",
+            "transport",
+            "warehouse-document"
+          ],
+          "requisite": "Страна назначения",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": false
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "17"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-observed",
+          "path": "S/DestinationCountryDetails/CACountryCode"
+        }
+      },
+      "section": "shipment"
+    },
+    {
+      "id": "declaration.tradeCountry",
+      "key": "tradeCountry",
+      "scope": "declaration",
+      "label": "Торгующая страна",
+      "type": "code",
+      "acquisition": [
+        "extract",
+        "reference",
+        "manual"
+      ],
+      "dtGraphs": [
+        "11"
+      ],
+      "rule": "DT:15(10)",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "invoice",
+            "contract",
+            "transport",
+            "warehouse-document"
+          ],
+          "requisite": "Торгующая страна",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": false
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "11"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-observed",
+          "path": "S/TradeCountryDetails/CACountryCode"
+        }
+      },
+      "section": "shipment"
+    },
+    {
+      "id": "declaration.deliveryCode",
+      "key": "deliveryCode",
+      "scope": "declaration",
+      "label": "Условия поставки",
+      "type": "code",
+      "acquisition": [
+        "extract",
+        "reference",
+        "manual"
+      ],
+      "dtGraphs": [
+        "20"
+      ],
+      "rule": "DT:15(20)",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "invoice",
+            "contract",
+            "transport",
+            "warehouse-document"
+          ],
+          "requisite": "Условия поставки",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": false
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "20"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-observed",
+          "path": "S/DeliveryTermsDetails/DeliveryTermsCode"
+        }
+      },
+      "section": "shipment"
+    },
+    {
+      "id": "declaration.deliveryPlace",
+      "key": "deliveryPlace",
+      "scope": "declaration",
+      "label": "Место поставки",
+      "type": "string",
+      "acquisition": [
+        "extract",
+        "manual"
+      ],
+      "dtGraphs": [
+        "20"
+      ],
+      "rule": "DT:15(20)",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "invoice",
+            "contract",
+            "transport",
+            "warehouse-document"
+          ],
+          "requisite": "Место поставки",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": false
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "20"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-observed",
+          "path": "S/DeliveryTermsDetails/PlaceName"
+        }
+      },
+      "section": "shipment"
+    },
+    {
+      "id": "declaration.invoiceCurrency",
+      "key": "invoiceCurrency",
+      "scope": "declaration",
+      "label": "Валюта инвойса",
+      "type": "code",
+      "acquisition": [
+        "extract",
+        "reference",
+        "manual"
+      ],
+      "dtGraphs": [
+        "22"
+      ],
+      "rule": "DT:15(22)",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "invoice",
+            "contract",
+            "transport",
+            "warehouse-document"
+          ],
+          "requisite": "Валюта инвойса",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": false
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "22"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-observed",
+          "path": "S/CAValueAmount/@currencyCode"
+        }
+      },
+      "section": "shipment"
+    },
+    {
+      "id": "declaration.transactionCode",
+      "key": "transactionCode",
+      "scope": "declaration",
+      "label": "Характер сделки",
+      "type": "code",
+      "acquisition": [
+        "reference",
+        "manual"
+      ],
+      "dtGraphs": [
+        "24"
+      ],
+      "rule": "DT:15(24)",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "24"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-observed",
+          "path": "S/TransactionNatureDetails/TransactionNatureCode"
+        }
+      },
+      "section": "shipment"
+    },
+    {
+      "id": "declaration.transactionFeature",
+      "key": "transactionFeature",
+      "scope": "declaration",
+      "label": "Особенность сделки",
+      "type": "code",
+      "acquisition": [
+        "reference",
+        "manual"
+      ],
+      "dtGraphs": [
+        "24"
+      ],
+      "rule": "DT:15(24)",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "24"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-observed",
+          "path": "S/TransactionNatureDetails/TransactionFeatureCode"
+        }
+      },
+      "section": "shipment"
+    },
+    {
+      "id": "declaration.borderOfficeCode",
+      "key": "borderOfficeCode",
+      "scope": "declaration",
+      "label": "Орган въезда — код",
+      "type": "code",
+      "acquisition": [
+        "extract",
+        "reference",
+        "manual"
+      ],
+      "dtGraphs": [
+        "29"
+      ],
+      "rule": "DT:15(27)",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "invoice",
+            "contract",
+            "transport",
+            "warehouse-document"
+          ],
+          "requisite": "Орган въезда — код",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": false
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "29"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-observed",
+          "path": "S/GDConsignmentDetails/BorderCustomsOfficeDetails/CustomsOfficeCode"
+        }
+      },
+      "section": "shipment"
+    },
+    {
+      "id": "declaration.borderOfficeCountry",
+      "key": "borderOfficeCountry",
+      "scope": "declaration",
+      "label": "Орган въезда — страна",
+      "type": "code",
+      "acquisition": [
+        "extract",
+        "reference",
+        "manual"
+      ],
+      "dtGraphs": [
+        "29"
+      ],
+      "rule": "DT:15(27)",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "invoice",
+            "contract",
+            "transport",
+            "warehouse-document"
+          ],
+          "requisite": "Орган въезда — страна",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": false
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "29"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-observed",
+          "path": "S/GDConsignmentDetails/BorderCustomsOfficeDetails/UnifiedCountryCode"
+        }
+      },
+      "section": "shipment"
+    },
+    {
+      "id": "declaration.locationCode",
+      "key": "locationCode",
+      "scope": "declaration",
+      "label": "Код местонахождения",
+      "type": "code",
+      "acquisition": [
+        "reference",
+        "manual"
+      ],
+      "dtGraphs": [
+        "30"
+      ],
+      "rule": "DT:15(28)",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "30"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-observed",
+          "path": "S/GoodsLocationDetails/GoodsLocationCode"
+        }
+      },
+      "section": "shipment"
+    },
+    {
+      "id": "declaration.locationRegistration",
+      "key": "locationRegistration",
+      "scope": "declaration",
+      "label": "Реестровый номер места хранения",
+      "type": "string",
+      "acquisition": [
+        "extract",
+        "manual"
+      ],
+      "dtGraphs": [
+        "30"
+      ],
+      "rule": "DT:15(28)",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "invoice",
+            "contract",
+            "transport",
+            "warehouse-document"
+          ],
+          "requisite": "Реестровый номер места хранения",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": false
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "30"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-observed",
+          "path": "S/GoodsLocationDetails/RegisterDocumentIdDetails/RegistrationNumberId"
+        }
+      },
+      "section": "shipment"
+    },
+    {
+      "id": "declaration.locationCountry",
+      "key": "locationCountry",
+      "scope": "declaration",
+      "label": "Страна местонахождения",
+      "type": "code",
+      "acquisition": [
+        "extract",
+        "reference",
+        "manual"
+      ],
+      "dtGraphs": [
+        "30"
+      ],
+      "rule": "DT:15(28)",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "invoice",
+            "contract",
+            "transport",
+            "warehouse-document"
+          ],
+          "requisite": "Страна местонахождения",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": false
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "30"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-observed",
+          "path": "S/GoodsLocationDetails/RegisterDocumentIdDetails/UnifiedCountryCode"
+        }
+      },
+      "section": "shipment"
+    },
+    {
+      "id": "declaration.borderOfficeName",
+      "key": "borderOfficeName",
+      "scope": "declaration",
+      "label": "Наименование органа въезда",
+      "type": "string",
+      "acquisition": [
+        "extract",
+        "manual"
+      ],
+      "dtGraphs": [
+        "29"
+      ],
+      "rule": "DT:15(27)",
+      "requiredWhen": false,
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "invoice",
+            "contract",
+            "transport",
+            "warehouse-document"
+          ],
+          "requisite": "Наименование органа въезда",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": false
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "29"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-observed",
+          "path": "S/GDConsignmentDetails/BorderCustomsOfficeDetails/CustomsOfficeName"
+        }
+      },
+      "section": "shipment"
+    },
+    {
+      "id": "declaration.locationOfficeCode",
+      "key": "locationOfficeCode",
+      "scope": "declaration",
+      "label": "Таможенный орган места хранения",
+      "type": "code",
+      "acquisition": [
+        "extract",
+        "manual"
+      ],
+      "dtGraphs": [
+        "30"
+      ],
+      "rule": "DT:15(28)",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "invoice",
+            "contract",
+            "transport",
+            "warehouse-document"
+          ],
+          "requisite": "Таможенный орган места хранения",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": false
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "30"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Элемент не подтверждён предоставленным XML; требуется сверка официальной XSD."
+        }
+      },
+      "section": "shipment"
+    },
+    {
+      "id": "declaration.locationAddress",
+      "key": "locationAddress",
+      "scope": "declaration",
+      "label": "Адрес местонахождения товаров",
+      "type": "string",
+      "acquisition": [
+        "extract",
+        "manual"
+      ],
+      "dtGraphs": [
+        "30"
+      ],
+      "rule": "DT:15(28)",
+      "requiredWhen": {
+        "op": "eq",
+        "field": "locationCode",
+        "value": "other"
+      },
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "invoice",
+            "contract",
+            "transport",
+            "warehouse-document"
+          ],
+          "requisite": "Адрес местонахождения товаров",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": false
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "30"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Элемент не подтверждён предоставленным XML; требуется сверка официальной XSD."
+        }
+      },
+      "section": "shipment"
+    },
+    {
+      "id": "declaration.container",
+      "key": "container",
+      "scope": "declaration",
+      "label": "Перевозка в контейнере",
+      "type": "boolean",
+      "acquisition": [
+        "extract",
+        "manual"
+      ],
+      "dtGraphs": [
+        "19"
+      ],
+      "rule": "DT:15(19)",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "invoice",
+            "contract",
+            "transport",
+            "warehouse-document"
+          ],
+          "requisite": "Перевозка в контейнере",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": false
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "19"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-observed",
+          "path": "S/GDConsignmentDetails/ContainerIndicator"
+        }
+      },
+      "section": "shipment"
+    },
+    {
+      "id": "declaration.containerNumbers",
+      "key": "containerNumbers",
+      "scope": "declaration",
+      "label": "Номера контейнеров",
+      "type": "string-list",
+      "acquisition": [
+        "extract",
+        "manual"
+      ],
+      "dtGraphs": [
+        "31"
+      ],
+      "rule": "DT:15(19),(29)",
+      "requiredWhen": {
+        "op": "eq",
+        "field": "container",
+        "value": true
+      },
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "invoice",
+            "contract",
+            "transport",
+            "warehouse-document"
+          ],
+          "requisite": "Номера контейнеров",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": false
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "31"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Элемент не подтверждён предоставленным XML; требуется сверка официальной XSD."
+        }
+      },
+      "section": "shipment"
+    },
+    {
+      "id": "declaration.shipmentPackageIds",
+      "key": "shipmentPackageIds",
+      "scope": "declaration",
+      "label": "Грузовые места поставки",
+      "type": "string-list",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [
+        "6"
+      ],
+      "rule": "DT:15(6)",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "invoice",
+            "contract",
+            "transport",
+            "warehouse-document"
+          ],
+          "requisite": "Грузовые места поставки",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": false
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "6"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Элемент не подтверждён предоставленным XML; требуется сверка официальной XSD."
+        }
+      },
+      "section": "shipment",
+      "bindingStatus": "model-only"
+    },
+    {
+      "id": "declaration.specificationsApplicable",
+      "key": "specificationsApplicable",
+      "scope": "declaration",
+      "label": "Заполнение графы 4 применимо",
+      "type": "boolean",
+      "acquisition": [
+        "extract",
+        "manual"
+      ],
+      "dtGraphs": [
+        "4"
+      ],
+      "rule": "DT:15(4),(7),(47)",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "invoice",
+            "contract",
+            "transport",
+            "warehouse-document"
+          ],
+          "requisite": "Заполнение графы 4 применимо",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": false
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "4"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "rule-only",
+          "path": null,
+          "reason": "Признак применимости управляет обязательностью; не самостоятельный элемент XML."
+        }
+      },
+      "section": "shipment"
+    },
+    {
+      "id": "declaration.referenceApplicable",
+      "key": "referenceApplicable",
+      "scope": "declaration",
+      "label": "Справочный номер применим",
+      "type": "boolean",
+      "acquisition": [
+        "extract",
+        "manual"
+      ],
+      "dtGraphs": [
+        "7"
+      ],
+      "rule": "DT:15(4),(7),(47)",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "invoice",
+            "contract",
+            "transport",
+            "warehouse-document"
+          ],
+          "requisite": "Справочный номер применим",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": false
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "7"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "rule-only",
+          "path": null,
+          "reason": "Признак применимости управляет обязательностью; не самостоятельный элемент XML."
+        }
+      },
+      "section": "shipment"
+    },
+    {
+      "id": "declaration.deferment",
+      "key": "deferment",
+      "scope": "declaration",
+      "label": "Предоставлена отсрочка/рассрочка",
+      "type": "boolean",
+      "acquisition": [
+        "extract",
+        "manual"
+      ],
+      "dtGraphs": [
+        "48"
+      ],
+      "rule": "DT:15(4),(7),(47)",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "invoice",
+            "contract",
+            "transport",
+            "warehouse-document"
+          ],
+          "requisite": "Предоставлена отсрочка/рассрочка",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": false
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "48"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "rule-only",
+          "path": null,
+          "reason": "Признак применимости управляет обязательностью; не самостоятельный элемент XML."
+        }
+      },
+      "section": "shipment"
+    },
+    {
+      "id": "declaration.specificationSheets",
+      "key": "specificationSheets",
+      "scope": "declaration",
+      "label": "Число листов спецификаций",
+      "type": "integer",
+      "acquisition": [
+        "extract",
+        "manual"
+      ],
+      "dtGraphs": [
+        "4"
+      ],
+      "rule": "DT:15(4)",
+      "requiredWhen": {
+        "op": "eq",
+        "field": "specificationsApplicable",
+        "value": true
+      },
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "invoice",
+            "contract",
+            "transport",
+            "warehouse-document"
+          ],
+          "requisite": "Число листов спецификаций",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": false
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "4"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Элемент не подтверждён предоставленным XML; требуется сверка официальной XSD."
+        }
+      },
+      "section": "shipment"
+    },
+    {
+      "id": "declaration.referenceNumber",
+      "key": "referenceNumber",
+      "scope": "declaration",
+      "label": "Справочный номер",
+      "type": "string",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [
+        "7"
+      ],
+      "rule": "DT:15(7)",
+      "requiredWhen": {
+        "op": "eq",
+        "field": "referenceApplicable",
+        "value": true
+      },
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "invoice",
+            "contract",
+            "transport",
+            "warehouse-document"
+          ],
+          "requisite": "Справочный номер",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": false
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "7"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Элемент не подтверждён предоставленным XML; требуется сверка официальной XSD."
+        }
+      },
+      "section": "shipment"
+    },
+    {
+      "id": "declaration.deferredPaymentCode",
+      "key": "deferredPaymentCode",
+      "scope": "declaration",
+      "label": "Вид отсроченного платежа",
+      "type": "code",
+      "acquisition": [
+        "extract",
+        "manual"
+      ],
+      "dtGraphs": [
+        "48"
+      ],
+      "rule": "DT:15(47)",
+      "requiredWhen": {
+        "op": "eq",
+        "field": "deferment",
+        "value": true
+      },
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "invoice",
+            "contract",
+            "transport",
+            "warehouse-document"
+          ],
+          "requisite": "Вид отсроченного платежа",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": false
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "48"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Элемент не подтверждён предоставленным XML; требуется сверка официальной XSD."
+        }
+      },
+      "section": "calculation"
+    },
+    {
+      "id": "declaration.deferredDeadlines",
+      "key": "deferredDeadlines",
+      "scope": "declaration",
+      "label": "Сроки отсрочки/рассрочки",
+      "type": "date-list",
+      "acquisition": [
+        "extract",
+        "manual"
+      ],
+      "dtGraphs": [
+        "48"
+      ],
+      "rule": "DT:15(47)",
+      "requiredWhen": {
+        "op": "eq",
+        "field": "deferment",
+        "value": true
+      },
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "invoice",
+            "contract",
+            "transport",
+            "warehouse-document"
+          ],
+          "requisite": "Сроки отсрочки/рассрочки",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": false
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "48"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Элемент не подтверждён предоставленным XML; требуется сверка официальной XSD."
+        }
+      },
+      "section": "calculation"
+    },
+    {
+      "id": "declaration.goodsCount",
+      "key": "goodsCount",
+      "scope": "declaration",
+      "label": "Всего товаров",
+      "type": "integer",
+      "acquisition": [
+        "calculated"
+      ],
+      "dtGraphs": [
+        "5"
+      ],
+      "rule": "DT:15(3),(5),(6),(11),(22)",
+      "requiredWhen": false,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "5"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-observed",
+          "path": "D/GoodsQuantity"
+        }
+      },
+      "section": "totals",
+      "unit": "1"
+    },
+    {
+      "id": "declaration.sheetCount",
+      "key": "sheetCount",
+      "scope": "declaration",
+      "label": "Всего листов ДТ",
+      "type": "integer",
+      "acquisition": [
+        "calculated"
+      ],
+      "dtGraphs": [
+        "3"
+      ],
+      "rule": "DT:15(3),(5),(6),(11),(22)",
+      "requiredWhen": false,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "3"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-observed",
+          "path": "D/PageQuantity"
+        }
+      },
+      "section": "totals",
+      "unit": "1"
+    },
+    {
+      "id": "declaration.packageCount",
+      "key": "packageCount",
+      "scope": "declaration",
+      "label": "Всего грузовых мест",
+      "type": "integer",
+      "acquisition": [
+        "calculated"
+      ],
+      "dtGraphs": [
+        "6"
+      ],
+      "rule": "DT:15(3),(5),(6),(11),(22)",
+      "requiredWhen": false,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "6"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-observed",
+          "path": "D/CargoQuantity"
+        }
+      },
+      "section": "totals",
+      "unit": "1"
+    },
+    {
+      "id": "declaration.invoiceTotal",
+      "key": "invoiceTotal",
+      "scope": "declaration",
+      "label": "Сумма инвойсов",
+      "type": "decimal",
+      "acquisition": [
+        "calculated"
+      ],
+      "dtGraphs": [
+        "22"
+      ],
+      "rule": "DT:15(3),(5),(6),(11),(22)",
+      "requiredWhen": false,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "22"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-observed",
+          "path": "S/CAValueAmount"
+        }
+      },
+      "section": "totals",
+      "unit": "invoiceCurrency"
+    },
+    {
+      "id": "declaration.customsValue",
+      "key": "customsValue",
+      "scope": "declaration",
+      "label": "Общая таможенная стоимость",
+      "type": "decimal",
+      "acquisition": [
+        "calculated"
+      ],
+      "dtGraphs": [
+        "12"
+      ],
+      "rule": "DT:15(3),(5),(6),(11),(22)",
+      "requiredWhen": false,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "12"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-observed",
+          "path": "S/CustomsValueAmount"
+        }
+      },
+      "section": "totals",
+      "unit": "KZT"
+    },
+    {
+      "id": "party.role",
+      "key": "role",
+      "scope": "party",
+      "label": "Роль участника",
+      "type": "enum",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [
+        "2",
+        "8",
+        "9",
+        "14"
+      ],
+      "rule": "DT:15(2),(8),(9),(12);DTS-1:1,2",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "2",
+          "8",
+          "9",
+          "14"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "model-only",
+          "path": null
+        },
+        "dts": {
+          "status": "model-only",
+          "path": null
+        }
+      },
+      "values": [
+        "seller",
+        "buyer",
+        "consignor",
+        "consignee",
+        "declarant",
+        "financial"
+      ]
+    },
+    {
+      "id": "party.sameAsRole",
+      "key": "sameAsRole",
+      "scope": "party",
+      "label": "Совпадает с участником",
+      "type": "enum",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [
+        "8",
+        "9"
+      ],
+      "rule": "DT:15(8),(9)",
+      "requiredWhen": false,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "8",
+          "9"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-observed",
+          "path": "S/ConsigneeDetails/EqualIndicator",
+          "note": "Значение кодируется по конкретной роли, не как произвольная строка."
+        }
+      },
+      "values": [
+        "seller",
+        "buyer",
+        "consignor",
+        "consignee",
+        "declarant",
+        "financial"
+      ],
+      "nullable": true
+    },
+    {
+      "id": "party.name",
+      "key": "name",
+      "scope": "party",
+      "label": "Наименование",
+      "type": "string",
+      "acquisition": [
+        "extract",
+        "manual"
+      ],
+      "dtGraphs": [
+        "2",
+        "8",
+        "9",
+        "14"
+      ],
+      "rule": "DT:14¹,14²;15(2),(8),(9),(12)",
+      "requiredWhen": {
+        "op": "eq",
+        "field": "sameAsRole",
+        "value": null
+      },
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "contract",
+            "invoice",
+            "transport"
+          ],
+          "requisite": "Наименование",
+          "requiresRoleMatch": true,
+          "requiresGoodsMatch": false
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "2",
+          "8",
+          "9",
+          "14"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-family",
+          "path": "PARTY/SubjectName",
+          "roleRoots": {
+            "consignor": "S/ConsignorDetails",
+            "declarant": "D/DeclarantDetails",
+            "consignee": "S/ConsigneeDetails",
+            "financial": "S/FinancialSettlementSubjectDetails"
+          }
+        },
+        "dts": {
+          "status": "sample-family",
+          "path": "PARTY/SubjectName",
+          "roleRoots": {
+            "seller": "V/SellerDetails",
+            "buyer": "V/BuyerDetails",
+            "declarant": "V/DeclarantDetails"
+          }
+        }
+      }
+    },
+    {
+      "id": "party.briefName",
+      "key": "briefName",
+      "scope": "party",
+      "label": "Краткое наименование",
+      "type": "string",
+      "acquisition": [
+        "extract",
+        "manual"
+      ],
+      "dtGraphs": [
+        "2",
+        "8",
+        "9",
+        "14"
+      ],
+      "rule": "DT:14¹,14²;15(2),(8),(9),(12)",
+      "requiredWhen": false,
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "contract",
+            "invoice",
+            "transport"
+          ],
+          "requisite": "Краткое наименование",
+          "requiresRoleMatch": true,
+          "requiresGoodsMatch": false
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "2",
+          "8",
+          "9",
+          "14"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-family",
+          "path": "PARTY/SubjectBriefName",
+          "roleRoots": {
+            "consignor": "S/ConsignorDetails",
+            "declarant": "D/DeclarantDetails",
+            "consignee": "S/ConsigneeDetails",
+            "financial": "S/FinancialSettlementSubjectDetails"
+          }
+        },
+        "dts": {
+          "status": "sample-family",
+          "path": "PARTY/SubjectBriefName",
+          "roleRoots": {
+            "seller": "V/SellerDetails",
+            "buyer": "V/BuyerDetails",
+            "declarant": "V/DeclarantDetails"
+          }
+        }
+      }
+    },
+    {
+      "id": "party.country",
+      "key": "country",
+      "scope": "party",
+      "label": "Страна",
+      "type": "code",
+      "acquisition": [
+        "extract",
+        "reference",
+        "manual"
+      ],
+      "dtGraphs": [
+        "2",
+        "8",
+        "9",
+        "14"
+      ],
+      "rule": "DT:14¹,14²;15(2),(8),(9),(12)",
+      "requiredWhen": {
+        "op": "eq",
+        "field": "sameAsRole",
+        "value": null
+      },
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "contract",
+            "invoice",
+            "transport"
+          ],
+          "requisite": "Страна",
+          "requiresRoleMatch": true,
+          "requiresGoodsMatch": false
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "2",
+          "8",
+          "9",
+          "14"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-family",
+          "path": "PARTY/SubjectAddressDetails/UnifiedCountryCode",
+          "roleRoots": {
+            "consignor": "S/ConsignorDetails",
+            "declarant": "D/DeclarantDetails",
+            "consignee": "S/ConsigneeDetails",
+            "financial": "S/FinancialSettlementSubjectDetails"
+          }
+        },
+        "dts": {
+          "status": "sample-family",
+          "path": "PARTY/SubjectAddressDetails/UnifiedCountryCode",
+          "roleRoots": {
+            "seller": "V/SellerDetails",
+            "buyer": "V/BuyerDetails",
+            "declarant": "V/DeclarantDetails"
+          }
+        }
+      }
+    },
+    {
+      "id": "party.region",
+      "key": "region",
+      "scope": "party",
+      "label": "Область/район",
+      "type": "string",
+      "acquisition": [
+        "extract",
+        "manual"
+      ],
+      "dtGraphs": [
+        "2",
+        "8",
+        "9",
+        "14"
+      ],
+      "rule": "DT:14¹,14²;15(2),(8),(9),(12)",
+      "requiredWhen": false,
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "contract",
+            "invoice",
+            "transport"
+          ],
+          "requisite": "Область/район",
+          "requiresRoleMatch": true,
+          "requiresGoodsMatch": false
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "2",
+          "8",
+          "9",
+          "14"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-family",
+          "path": "PARTY/SubjectAddressDetails/RegionName",
+          "roleRoots": {
+            "consignor": "S/ConsignorDetails",
+            "declarant": "D/DeclarantDetails",
+            "consignee": "S/ConsigneeDetails",
+            "financial": "S/FinancialSettlementSubjectDetails"
+          }
+        },
+        "dts": {
+          "status": "sample-family",
+          "path": "PARTY/SubjectAddressDetails/RegionName",
+          "roleRoots": {
+            "seller": "V/SellerDetails",
+            "buyer": "V/BuyerDetails",
+            "declarant": "V/DeclarantDetails"
+          }
+        }
+      }
+    },
+    {
+      "id": "party.city",
+      "key": "city",
+      "scope": "party",
+      "label": "Населённый пункт",
+      "type": "string",
+      "acquisition": [
+        "extract",
+        "manual"
+      ],
+      "dtGraphs": [
+        "2",
+        "8",
+        "9",
+        "14"
+      ],
+      "rule": "DT:14¹,14²;15(2),(8),(9),(12)",
+      "requiredWhen": {
+        "op": "eq",
+        "field": "sameAsRole",
+        "value": null
+      },
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "contract",
+            "invoice",
+            "transport"
+          ],
+          "requisite": "Населённый пункт",
+          "requiresRoleMatch": true,
+          "requiresGoodsMatch": false
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "2",
+          "8",
+          "9",
+          "14"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-family",
+          "path": "PARTY/SubjectAddressDetails/CityName",
+          "roleRoots": {
+            "consignor": "S/ConsignorDetails",
+            "declarant": "D/DeclarantDetails",
+            "consignee": "S/ConsigneeDetails",
+            "financial": "S/FinancialSettlementSubjectDetails"
+          }
+        },
+        "dts": {
+          "status": "sample-family",
+          "path": "PARTY/SubjectAddressDetails/CityName",
+          "roleRoots": {
+            "seller": "V/SellerDetails",
+            "buyer": "V/BuyerDetails",
+            "declarant": "V/DeclarantDetails"
+          }
+        }
+      }
+    },
+    {
+      "id": "party.street",
+      "key": "street",
+      "scope": "party",
+      "label": "Улица и дом",
+      "type": "string",
+      "acquisition": [
+        "extract",
+        "manual"
+      ],
+      "dtGraphs": [
+        "2",
+        "8",
+        "9",
+        "14"
+      ],
+      "rule": "DT:14¹,14²;15(2),(8),(9),(12)",
+      "requiredWhen": {
+        "op": "eq",
+        "field": "sameAsRole",
+        "value": null
+      },
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "contract",
+            "invoice",
+            "transport"
+          ],
+          "requisite": "Улица и дом",
+          "requiresRoleMatch": true,
+          "requiresGoodsMatch": false
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "2",
+          "8",
+          "9",
+          "14"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-family",
+          "path": "PARTY/SubjectAddressDetails/StreetName",
+          "roleRoots": {
+            "consignor": "S/ConsignorDetails",
+            "declarant": "D/DeclarantDetails",
+            "consignee": "S/ConsigneeDetails",
+            "financial": "S/FinancialSettlementSubjectDetails"
+          }
+        },
+        "dts": {
+          "status": "sample-family",
+          "path": "PARTY/SubjectAddressDetails/StreetName",
+          "roleRoots": {
+            "seller": "V/SellerDetails",
+            "buyer": "V/BuyerDetails",
+            "declarant": "V/DeclarantDetails"
+          }
+        }
+      }
+    },
+    {
+      "id": "party.postalCode",
+      "key": "postalCode",
+      "scope": "party",
+      "label": "Почтовый индекс",
+      "type": "string",
+      "acquisition": [
+        "extract",
+        "manual"
+      ],
+      "dtGraphs": [
+        "2",
+        "8",
+        "9",
+        "14"
+      ],
+      "rule": "DT:14¹,14²;15(2),(8),(9),(12)",
+      "requiredWhen": false,
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "contract",
+            "invoice",
+            "transport"
+          ],
+          "requisite": "Почтовый индекс",
+          "requiresRoleMatch": true,
+          "requiresGoodsMatch": false
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "2",
+          "8",
+          "9",
+          "14"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Проверить подполье по XSD."
+        }
+      }
+    },
+    {
+      "id": "party.taxId",
+      "key": "taxId",
+      "scope": "party",
+      "label": "БИН/ИИН или иной идентификатор",
+      "type": "identifier",
+      "acquisition": [
+        "extract",
+        "manual"
+      ],
+      "dtGraphs": [
+        "2",
+        "8",
+        "9",
+        "14"
+      ],
+      "rule": "DT:14¹,14²;15(2),(8),(9),(12)",
+      "requiredWhen": {
+        "op": "all",
+        "args": [
+          {
+            "op": "eq",
+            "field": "sameAsRole",
+            "value": null
+          },
+          {
+            "op": "eq",
+            "field": "country",
+            "value": "KZ"
+          }
+        ]
+      },
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "contract",
+            "invoice",
+            "transport"
+          ],
+          "requisite": "БИН/ИИН или иной идентификатор",
+          "requiresRoleMatch": true,
+          "requiresGoodsMatch": false
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "2",
+          "8",
+          "9",
+          "14"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-family",
+          "path": "PARTY/TaxpayerId",
+          "roleRoots": {
+            "consignor": "S/ConsignorDetails",
+            "declarant": "D/DeclarantDetails",
+            "consignee": "S/ConsigneeDetails",
+            "financial": "S/FinancialSettlementSubjectDetails"
+          }
+        },
+        "dts": {
+          "status": "sample-family",
+          "path": "PARTY/TaxpayerId",
+          "roleRoots": {
+            "seller": "V/SellerDetails",
+            "buyer": "V/BuyerDetails",
+            "declarant": "V/DeclarantDetails"
+          }
+        }
+      }
+    },
+    {
+      "id": "party.identifierKind",
+      "key": "identifierKind",
+      "scope": "party",
+      "label": "Вид идентификатора",
+      "type": "code",
+      "acquisition": [
+        "extract",
+        "reference",
+        "manual"
+      ],
+      "dtGraphs": [
+        "2",
+        "8",
+        "9",
+        "14"
+      ],
+      "rule": "DT:14¹,14²;15(2),(8),(9),(12)",
+      "requiredWhen": false,
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "contract",
+            "invoice",
+            "transport"
+          ],
+          "requisite": "Вид идентификатора",
+          "requiresRoleMatch": true,
+          "requiresGoodsMatch": false
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "2",
+          "8",
+          "9",
+          "14"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-family",
+          "path": "PARTY/CAUniqueCustomsNumberId",
+          "roleRoots": {
+            "consignor": "S/ConsignorDetails",
+            "declarant": "D/DeclarantDetails",
+            "consignee": "S/ConsigneeDetails",
+            "financial": "S/FinancialSettlementSubjectDetails"
+          }
+        },
+        "dts": {
+          "status": "sample-family",
+          "path": "PARTY/CAUniqueCustomsNumberId",
+          "roleRoots": {
+            "seller": "V/SellerDetails",
+            "buyer": "V/BuyerDetails",
+            "declarant": "V/DeclarantDetails"
+          }
+        }
+      }
+    },
+    {
+      "id": "declaration.representativeUsed",
+      "key": "representativeUsed",
+      "scope": "declaration",
+      "label": "Декларация составляется представителем",
+      "type": "boolean",
+      "acquisition": [
+        "extract",
+        "manual"
+      ],
+      "dtGraphs": [
+        "54"
+      ],
+      "rule": "DT:15(49)",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "invoice",
+            "contract",
+            "transport",
+            "warehouse-document"
+          ],
+          "requisite": "Декларация составляется представителем",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": false
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "54"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Элемент не подтверждён предоставленным XML; требуется сверка официальной XSD."
+        }
+      },
+      "section": "signatory"
+    },
+    {
+      "id": "declaration.representativeRegistry",
+      "key": "representativeRegistry",
+      "scope": "declaration",
+      "label": "Номер реестра представителя",
+      "type": "string",
+      "acquisition": [
+        "extract",
+        "manual"
+      ],
+      "dtGraphs": [
+        "54"
+      ],
+      "rule": "DT:15(49)",
+      "requiredWhen": {
+        "op": "eq",
+        "field": "representativeUsed",
+        "value": true
+      },
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "invoice",
+            "contract",
+            "transport",
+            "warehouse-document"
+          ],
+          "requisite": "Номер реестра представителя",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": false
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "54"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-observed",
+          "path": "D/SignatoryRepresentativeDetails/RegisterDocumentIdDetails/RegistrationNumberId"
+        }
+      },
+      "section": "signatory"
+    },
+    {
+      "id": "declaration.representativeContractNumber",
+      "key": "representativeContractNumber",
+      "scope": "declaration",
+      "label": "Договор с представителем — номер",
+      "type": "string",
+      "acquisition": [
+        "extract",
+        "manual"
+      ],
+      "dtGraphs": [
+        "54"
+      ],
+      "rule": "DT:15(49)",
+      "requiredWhen": {
+        "op": "eq",
+        "field": "representativeUsed",
+        "value": true
+      },
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "invoice",
+            "contract",
+            "transport",
+            "warehouse-document"
+          ],
+          "requisite": "Договор с представителем — номер",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": false
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "54"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Элемент не подтверждён предоставленным XML; требуется сверка официальной XSD."
+        }
+      },
+      "section": "signatory"
+    },
+    {
+      "id": "declaration.representativeContractDate",
+      "key": "representativeContractDate",
+      "scope": "declaration",
+      "label": "Договор с представителем — дата",
+      "type": "date",
+      "acquisition": [
+        "extract",
+        "manual"
+      ],
+      "dtGraphs": [
+        "54"
+      ],
+      "rule": "DT:15(49)",
+      "requiredWhen": {
+        "op": "eq",
+        "field": "representativeUsed",
+        "value": true
+      },
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "invoice",
+            "contract",
+            "transport",
+            "warehouse-document"
+          ],
+          "requisite": "Договор с представителем — дата",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": false
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "54"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Элемент не подтверждён предоставленным XML; требуется сверка официальной XSD."
+        }
+      },
+      "section": "signatory"
+    },
+    {
+      "id": "declaration.signatoryFirstName",
+      "key": "signatoryFirstName",
+      "scope": "declaration",
+      "label": "Имя составителя",
+      "type": "string",
+      "acquisition": [
+        "extract",
+        "manual"
+      ],
+      "dtGraphs": [
+        "54"
+      ],
+      "rule": "DT:15(49)",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "invoice",
+            "contract",
+            "transport",
+            "warehouse-document"
+          ],
+          "requisite": "Имя составителя",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": false
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "54"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-observed",
+          "path": "D/SignatoryPersonV2Details/SigningDetails/FullNameDetails/FirstName"
+        }
+      },
+      "section": "signatory"
+    },
+    {
+      "id": "declaration.signatoryLastName",
+      "key": "signatoryLastName",
+      "scope": "declaration",
+      "label": "Фамилия составителя",
+      "type": "string",
+      "acquisition": [
+        "extract",
+        "manual"
+      ],
+      "dtGraphs": [
+        "54"
+      ],
+      "rule": "DT:15(49)",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "invoice",
+            "contract",
+            "transport",
+            "warehouse-document"
+          ],
+          "requisite": "Фамилия составителя",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": false
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "54"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-observed",
+          "path": "D/SignatoryPersonV2Details/SigningDetails/FullNameDetails/LastName"
+        }
+      },
+      "section": "signatory"
+    },
+    {
+      "id": "declaration.signatoryMiddleName",
+      "key": "signatoryMiddleName",
+      "scope": "declaration",
+      "label": "Отчество составителя",
+      "type": "string",
+      "acquisition": [
+        "extract",
+        "manual"
+      ],
+      "dtGraphs": [
+        "54"
+      ],
+      "rule": "DT:15(49)",
+      "requiredWhen": false,
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "invoice",
+            "contract",
+            "transport",
+            "warehouse-document"
+          ],
+          "requisite": "Отчество составителя",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": false
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "54"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-observed",
+          "path": "D/SignatoryPersonV2Details/SigningDetails/FullNameDetails/MiddleName"
+        }
+      },
+      "section": "signatory"
+    },
+    {
+      "id": "declaration.signatoryPosition",
+      "key": "signatoryPosition",
+      "scope": "declaration",
+      "label": "Должность составителя",
+      "type": "string",
+      "acquisition": [
+        "extract",
+        "manual"
+      ],
+      "dtGraphs": [
+        "54"
+      ],
+      "rule": "DT:15(49)",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "invoice",
+            "contract",
+            "transport",
+            "warehouse-document"
+          ],
+          "requisite": "Должность составителя",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": false
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "54"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-observed",
+          "path": "D/SignatoryPersonV2Details/SigningDetails/PositionName"
+        }
+      },
+      "section": "signatory"
+    },
+    {
+      "id": "declaration.signatoryContact",
+      "key": "signatoryContact",
+      "scope": "declaration",
+      "label": "Контакт составителя",
+      "type": "string",
+      "acquisition": [
+        "extract",
+        "manual"
+      ],
+      "dtGraphs": [
+        "54"
+      ],
+      "rule": "DT:15(49)",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "invoice",
+            "contract",
+            "transport",
+            "warehouse-document"
+          ],
+          "requisite": "Контакт составителя",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": false
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "54"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-observed",
+          "path": "D/SignatoryPersonV2Details/SigningDetails/CommunicationDetails/CommunicationChannelId"
+        }
+      },
+      "section": "signatory"
+    },
+    {
+      "id": "declaration.signatoryPlace",
+      "key": "signatoryPlace",
+      "scope": "declaration",
+      "label": "Место составления",
+      "type": "string",
+      "acquisition": [
+        "extract",
+        "manual"
+      ],
+      "dtGraphs": [
+        "54"
+      ],
+      "rule": "DT:15(49)",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "invoice",
+            "contract",
+            "transport",
+            "warehouse-document"
+          ],
+          "requisite": "Место составления",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": false
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "54"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Элемент не подтверждён предоставленным XML; требуется сверка официальной XSD."
+        }
+      },
+      "section": "signatory"
+    },
+    {
+      "id": "declaration.authorityRequired",
+      "key": "authorityRequired",
+      "scope": "declaration",
+      "label": "Полномочия подтверждаются доверенностью",
+      "type": "boolean",
+      "acquisition": [
+        "extract",
+        "manual"
+      ],
+      "dtGraphs": [
+        "54"
+      ],
+      "rule": "DT:15(49)",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "invoice",
+            "contract",
+            "transport",
+            "warehouse-document"
+          ],
+          "requisite": "Полномочия подтверждаются доверенностью",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": false
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "54"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Элемент не подтверждён предоставленным XML; требуется сверка официальной XSD."
+        }
+      },
+      "section": "signatory"
+    },
+    {
+      "id": "declaration.authorityNumber",
+      "key": "authorityNumber",
+      "scope": "declaration",
+      "label": "Доверенность — номер",
+      "type": "string",
+      "acquisition": [
+        "extract",
+        "manual"
+      ],
+      "dtGraphs": [
+        "54"
+      ],
+      "rule": "DT:15(49)",
+      "requiredWhen": {
+        "op": "eq",
+        "field": "authorityRequired",
+        "value": true
+      },
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "invoice",
+            "contract",
+            "transport",
+            "warehouse-document"
+          ],
+          "requisite": "Доверенность — номер",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": false
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "54"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-observed",
+          "path": "D/SignatoryPersonV2Details/PowerOfAttorneyDetails/DocId"
+        }
+      },
+      "section": "signatory"
+    },
+    {
+      "id": "declaration.authorityDate",
+      "key": "authorityDate",
+      "scope": "declaration",
+      "label": "Доверенность — дата",
+      "type": "date",
+      "acquisition": [
+        "extract",
+        "manual"
+      ],
+      "dtGraphs": [
+        "54"
+      ],
+      "rule": "DT:15(49)",
+      "requiredWhen": {
+        "op": "eq",
+        "field": "authorityRequired",
+        "value": true
+      },
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "invoice",
+            "contract",
+            "transport",
+            "warehouse-document"
+          ],
+          "requisite": "Доверенность — дата",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": false
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "54"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-observed",
+          "path": "D/SignatoryPersonV2Details/PowerOfAttorneyDetails/DocCreationDate"
+        }
+      },
+      "section": "signatory"
+    },
+    {
+      "id": "declaration.authorityValidUntil",
+      "key": "authorityValidUntil",
+      "scope": "declaration",
+      "label": "Доверенность — срок действия",
+      "type": "date",
+      "acquisition": [
+        "extract",
+        "manual"
+      ],
+      "dtGraphs": [
+        "54"
+      ],
+      "rule": "DT:15(49)",
+      "requiredWhen": {
+        "op": "eq",
+        "field": "authorityRequired",
+        "value": true
+      },
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "invoice",
+            "contract",
+            "transport",
+            "warehouse-document"
+          ],
+          "requisite": "Доверенность — срок действия",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": false
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "54"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-observed",
+          "path": "D/SignatoryPersonV2Details/PowerOfAttorneyDetails/DocValidityDate"
+        }
+      },
+      "section": "signatory"
+    },
+    {
+      "id": "goods.description",
+      "key": "description",
+      "scope": "goods",
+      "label": "Описание товара",
+      "type": "string",
+      "acquisition": [
+        "extract",
+        "manual"
+      ],
+      "dtGraphs": [
+        "31"
+      ],
+      "rule": "DT:15(29)",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "invoice",
+            "specification",
+            "packing-list",
+            "export-declaration",
+            "spreadsheet"
+          ],
+          "requisite": "Описание товара",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": true
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "31"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-observed",
+          "path": "I/GoodsDescriptionText"
+        }
+      }
+    },
+    {
+      "id": "goods.commodityCode",
+      "key": "commodityCode",
+      "scope": "goods",
+      "label": "Код ТН ВЭД",
+      "type": "code",
+      "acquisition": [
+        "extract",
+        "manual"
+      ],
+      "dtGraphs": [
+        "33"
+      ],
+      "rule": "DT:15(31)",
+      "requiredWhen": true,
+      "validWhen": [
+        {
+          "op": "pattern",
+          "value": "^[0-9]{10}$"
+        }
+      ],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "invoice",
+            "specification",
+            "packing-list",
+            "export-declaration",
+            "spreadsheet"
+          ],
+          "requisite": "Код ТН ВЭД",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": true
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "33"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-observed",
+          "path": "I/CommodityCode"
+        }
+      }
+    },
+    {
+      "id": "goods.originCountry",
+      "key": "originCountry",
+      "scope": "goods",
+      "label": "Страна происхождения",
+      "type": "code",
+      "acquisition": [
+        "extract",
+        "manual"
+      ],
+      "dtGraphs": [
+        "34"
+      ],
+      "rule": "DT:15(32)",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "invoice",
+            "specification",
+            "packing-list",
+            "export-declaration",
+            "spreadsheet"
+          ],
+          "requisite": "Страна происхождения",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": true
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "34"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-observed",
+          "path": "I/OriginCountryDetails/CACountryCode"
+        }
+      }
+    },
+    {
+      "id": "goods.grossMass",
+      "key": "grossMass",
+      "scope": "goods",
+      "label": "Вес брутто, кг",
+      "type": "decimal",
+      "acquisition": [
+        "extract",
+        "manual"
+      ],
+      "dtGraphs": [
+        "35"
+      ],
+      "rule": "DT:15(33)",
+      "requiredWhen": true,
+      "validWhen": [
+        {
+          "op": "decimal",
+          "min": "0",
+          "exclusiveMin": true
+        }
+      ],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "invoice",
+            "specification",
+            "packing-list",
+            "export-declaration",
+            "spreadsheet"
+          ],
+          "requisite": "Вес брутто, кг",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": true
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "35"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-observed",
+          "path": "I/UnifiedGrossMassMeasure"
+        }
+      },
+      "unit": "kg"
+    },
+    {
+      "id": "goods.netMass",
+      "key": "netMass",
+      "scope": "goods",
+      "label": "Вес нетто, кг",
+      "type": "decimal",
+      "acquisition": [
+        "extract",
+        "manual"
+      ],
+      "dtGraphs": [
+        "38"
+      ],
+      "rule": "DT:15(36)",
+      "requiredWhen": true,
+      "validWhen": [
+        {
+          "op": "decimal",
+          "min": "0",
+          "exclusiveMin": true
+        }
+      ],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "invoice",
+            "specification",
+            "packing-list",
+            "export-declaration",
+            "spreadsheet"
+          ],
+          "requisite": "Вес нетто, кг",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": true
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "38"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-observed",
+          "path": "I/UnifiedNetMassMeasure"
+        }
+      },
+      "unit": "kg"
+    },
+    {
+      "id": "goods.invoiceValue",
+      "key": "invoiceValue",
+      "scope": "goods",
+      "label": "Цена товара",
+      "type": "decimal",
+      "acquisition": [
+        "extract",
+        "manual"
+      ],
+      "dtGraphs": [
+        "42"
+      ],
+      "rule": "DT:15(40)",
+      "requiredWhen": true,
+      "validWhen": [
+        {
+          "op": "decimal",
+          "min": "0",
+          "exclusiveMin": true
+        }
+      ],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "invoice",
+            "specification",
+            "packing-list",
+            "export-declaration",
+            "spreadsheet"
+          ],
+          "requisite": "Цена товара",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": true
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "42"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-observed",
+          "path": "I/CAValueAmount"
+        }
+      },
+      "unit": "invoiceCurrency"
+    },
+    {
+      "id": "goods.sourceLineIds",
+      "key": "sourceLineIds",
+      "scope": "goods",
+      "label": "Исходные строки товара",
+      "type": "string-list",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [
+        "31"
+      ],
+      "rule": "DT:15(29)",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "invoice",
+            "specification",
+            "packing-list",
+            "export-declaration",
+            "spreadsheet"
+          ],
+          "requisite": "Исходные строки товара",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": true
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "31"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Элемент не подтверждён предоставленным XML; требуется сверка официальной XSD."
+        }
+      }
+    },
+    {
+      "id": "goods.packageIds",
+      "key": "packageIds",
+      "scope": "goods",
+      "label": "Грузовые места товара",
+      "type": "string-list",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [
+        "31"
+      ],
+      "rule": "DT:15(29)",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "invoice",
+            "specification",
+            "packing-list",
+            "export-declaration",
+            "spreadsheet"
+          ],
+          "requisite": "Грузовые места товара",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": true
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "31"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Элемент не подтверждён предоставленным XML; требуется сверка официальной XSD."
+        }
+      }
+    },
+    {
+      "id": "goods.packageKind",
+      "key": "packageKind",
+      "scope": "goods",
+      "label": "Код упаковки",
+      "type": "code",
+      "acquisition": [
+        "extract",
+        "manual"
+      ],
+      "dtGraphs": [
+        "31"
+      ],
+      "rule": "DT:15(29)",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "invoice",
+            "specification",
+            "packing-list",
+            "export-declaration",
+            "spreadsheet"
+          ],
+          "requisite": "Код упаковки",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": true
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "31"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-observed",
+          "path": "I/CargoPackagePalletDetails/PackagePalletDetails/PackageKindCode"
+        }
+      }
+    },
+    {
+      "id": "goods.packageQuantity",
+      "key": "packageQuantity",
+      "scope": "goods",
+      "label": "Количество мест товара",
+      "type": "integer",
+      "acquisition": [
+        "extract",
+        "manual"
+      ],
+      "dtGraphs": [
+        "31"
+      ],
+      "rule": "DT:15(29)",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "invoice",
+            "specification",
+            "packing-list",
+            "export-declaration",
+            "spreadsheet"
+          ],
+          "requisite": "Количество мест товара",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": true
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "31"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-observed",
+          "path": "I/CargoPackagePalletDetails/CargoQuantity"
+        }
+      }
+    },
+    {
+      "id": "goods.preferenceFee",
+      "key": "preferenceFee",
+      "scope": "goods",
+      "label": "Преференция сбора",
+      "type": "code",
+      "acquisition": [
+        "reference",
+        "manual"
+      ],
+      "dtGraphs": [
+        "36"
+      ],
+      "rule": "DT:15(34)",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "36"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-observed",
+          "path": "I/PreferenceDetails/CustomsClearanceChargesPrefCode"
+        }
+      }
+    },
+    {
+      "id": "goods.preferenceDuty",
+      "key": "preferenceDuty",
+      "scope": "goods",
+      "label": "Преференция пошлины",
+      "type": "code",
+      "acquisition": [
+        "reference",
+        "manual"
+      ],
+      "dtGraphs": [
+        "36"
+      ],
+      "rule": "DT:15(34)",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "36"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-observed",
+          "path": "I/PreferenceDetails/CustomsDutyPrefCode"
+        }
+      }
+    },
+    {
+      "id": "goods.preferenceExcise",
+      "key": "preferenceExcise",
+      "scope": "goods",
+      "label": "Преференция акциза",
+      "type": "code",
+      "acquisition": [
+        "reference",
+        "manual"
+      ],
+      "dtGraphs": [
+        "36"
+      ],
+      "rule": "DT:15(34)",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "36"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-observed",
+          "path": "I/PreferenceDetails/ExcisePrefCode"
+        }
+      }
+    },
+    {
+      "id": "goods.preferenceVat",
+      "key": "preferenceVat",
+      "scope": "goods",
+      "label": "Преференция НДС",
+      "type": "code",
+      "acquisition": [
+        "reference",
+        "manual"
+      ],
+      "dtGraphs": [
+        "36"
+      ],
+      "rule": "DT:15(34)",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "36"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-observed",
+          "path": "I/PreferenceDetails/VATPrefCode"
+        }
+      }
+    },
+    {
+      "id": "goods.previousProcedure",
+      "key": "previousProcedure",
+      "scope": "goods",
+      "label": "Предшествующая процедура",
+      "type": "code",
+      "acquisition": [
+        "reference",
+        "manual"
+      ],
+      "dtGraphs": [
+        "37"
+      ],
+      "rule": "DT:15(35)",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "37"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-observed",
+          "path": "I/CustomsProcedureDetails/PreviousCustomsProcedureModeCode"
+        }
+      }
+    },
+    {
+      "id": "goods.movementFeature",
+      "key": "movementFeature",
+      "scope": "goods",
+      "label": "Особенность перемещения",
+      "type": "code",
+      "acquisition": [
+        "reference",
+        "manual"
+      ],
+      "dtGraphs": [
+        "37"
+      ],
+      "rule": "DT:15(35)",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "37"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-observed",
+          "path": "I/CustomsProcedureDetails/GoodsMoveFeatureCode"
+        }
+      }
+    },
+    {
+      "id": "goods.prohibitionCodes",
+      "key": "prohibitionCodes",
+      "scope": "goods",
+      "label": "Коды применимых мер",
+      "type": "code-list",
+      "acquisition": [
+        "reference",
+        "manual"
+      ],
+      "dtGraphs": [
+        "33"
+      ],
+      "rule": "DT:15(31)",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "33"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-observed",
+          "path": "I/ProhibitionCode"
+        }
+      }
+    },
+    {
+      "id": "goods.intellectualPropertyCode",
+      "key": "intellectualPropertyCode",
+      "scope": "goods",
+      "label": "Признак интеллектуальной собственности",
+      "type": "code",
+      "acquisition": [
+        "reference",
+        "manual"
+      ],
+      "dtGraphs": [
+        "33"
+      ],
+      "rule": "DT:15(31)",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "33"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-observed",
+          "path": "I/IPOCode"
+        }
+      }
+    },
+    {
+      "id": "goods.manufacturer",
+      "key": "manufacturer",
+      "scope": "goods",
+      "label": "Производитель",
+      "type": "string",
+      "acquisition": [
+        "extract",
+        "manual"
+      ],
+      "dtGraphs": [
+        "31"
+      ],
+      "rule": "DT:15(29)",
+      "requiredWhen": false,
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "invoice",
+            "specification",
+            "packing-list",
+            "export-declaration",
+            "spreadsheet"
+          ],
+          "requisite": "Производитель",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": true
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "31"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-observed",
+          "path": "I/GoodsItemGroupDetails/CommodityGroupItemDetails/ManufacturerDetails/SubjectName"
+        }
+      }
+    },
+    {
+      "id": "goods.tradeMark",
+      "key": "tradeMark",
+      "scope": "goods",
+      "label": "Товарный знак",
+      "type": "string",
+      "acquisition": [
+        "extract",
+        "manual"
+      ],
+      "dtGraphs": [
+        "31"
+      ],
+      "rule": "DT:15(29)",
+      "requiredWhen": false,
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "invoice",
+            "specification",
+            "packing-list",
+            "export-declaration",
+            "spreadsheet"
+          ],
+          "requisite": "Товарный знак",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": true
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "31"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-observed",
+          "path": "I/GoodsItemGroupDetails/CommodityGroupItemDetails/CommodityDescriptionDetails/TradeMarkName"
+        }
+      }
+    },
+    {
+      "id": "goods.brand",
+      "key": "brand",
+      "scope": "goods",
+      "label": "Марка",
+      "type": "string",
+      "acquisition": [
+        "extract",
+        "manual"
+      ],
+      "dtGraphs": [
+        "31"
+      ],
+      "rule": "DT:15(29)",
+      "requiredWhen": false,
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "invoice",
+            "specification",
+            "packing-list",
+            "export-declaration",
+            "spreadsheet"
+          ],
+          "requisite": "Марка",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": true
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "31"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-observed",
+          "path": "I/GoodsItemGroupDetails/CommodityGroupItemDetails/CommodityDescriptionDetails/ProductMarkName"
+        }
+      }
+    },
+    {
+      "id": "goods.model",
+      "key": "model",
+      "scope": "goods",
+      "label": "Модель",
+      "type": "string",
+      "acquisition": [
+        "extract",
+        "manual"
+      ],
+      "dtGraphs": [
+        "31"
+      ],
+      "rule": "DT:15(29)",
+      "requiredWhen": false,
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "invoice",
+            "specification",
+            "packing-list",
+            "export-declaration",
+            "spreadsheet"
+          ],
+          "requisite": "Модель",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": true
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "31"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-observed",
+          "path": "I/GoodsItemGroupDetails/CommodityGroupItemDetails/CommodityDescriptionDetails/ProductModelName"
+        }
+      }
+    },
+    {
+      "id": "goods.article",
+      "key": "article",
+      "scope": "goods",
+      "label": "Артикул",
+      "type": "string",
+      "acquisition": [
+        "extract",
+        "manual"
+      ],
+      "dtGraphs": [
+        "31"
+      ],
+      "rule": "DT:15(29)",
+      "requiredWhen": false,
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "invoice",
+            "specification",
+            "packing-list",
+            "export-declaration",
+            "spreadsheet"
+          ],
+          "requisite": "Артикул",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": true
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "31"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-observed",
+          "path": "I/GoodsItemGroupDetails/CommodityGroupItemDetails/CommodityDescriptionDetails/ProductId"
+        }
+      }
+    },
+    {
+      "id": "goods.hasQuota",
+      "key": "hasQuota",
+      "scope": "goods",
+      "label": "Применяется квота",
+      "type": "boolean",
+      "acquisition": [
+        "extract",
+        "manual"
+      ],
+      "dtGraphs": [
+        "39"
+      ],
+      "rule": "DT:15(34),(37),(38),(39)",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "invoice",
+            "specification",
+            "packing-list",
+            "export-declaration",
+            "spreadsheet"
+          ],
+          "requisite": "Применяется квота",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": true
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "39"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "rule-only",
+          "path": null
+        }
+      }
+    },
+    {
+      "id": "goods.hasPreviousDocument",
+      "key": "hasPreviousDocument",
+      "scope": "goods",
+      "label": "Есть предшествующий документ",
+      "type": "boolean",
+      "acquisition": [
+        "extract",
+        "manual"
+      ],
+      "dtGraphs": [
+        "40"
+      ],
+      "rule": "DT:15(34),(37),(38),(39)",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "invoice",
+            "specification",
+            "packing-list",
+            "export-declaration",
+            "spreadsheet"
+          ],
+          "requisite": "Есть предшествующий документ",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": true
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "40"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "rule-only",
+          "path": null
+        }
+      }
+    },
+    {
+      "id": "goods.additionalUnitRequired",
+      "key": "additionalUnitRequired",
+      "scope": "goods",
+      "label": "Требуется дополнительная единица",
+      "type": "boolean",
+      "acquisition": [
+        "extract",
+        "manual"
+      ],
+      "dtGraphs": [
+        "41"
+      ],
+      "rule": "DT:15(34),(37),(38),(39)",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "invoice",
+            "specification",
+            "packing-list",
+            "export-declaration",
+            "spreadsheet"
+          ],
+          "requisite": "Требуется дополнительная единица",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": true
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "41"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "rule-only",
+          "path": null
+        }
+      }
+    },
+    {
+      "id": "goods.hasPreference",
+      "key": "hasPreference",
+      "scope": "goods",
+      "label": "Заявлена льгота/преференция",
+      "type": "boolean",
+      "acquisition": [
+        "extract",
+        "manual"
+      ],
+      "dtGraphs": [
+        "36"
+      ],
+      "rule": "DT:15(34),(37),(38),(39)",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "invoice",
+            "specification",
+            "packing-list",
+            "export-declaration",
+            "spreadsheet"
+          ],
+          "requisite": "Заявлена льгота/преференция",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": true
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "36"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "rule-only",
+          "path": null
+        }
+      }
+    },
+    {
+      "id": "goods.quotaQuantity",
+      "key": "quotaQuantity",
+      "scope": "goods",
+      "label": "Количество по квоте",
+      "type": "decimal",
+      "acquisition": [
+        "extract",
+        "manual"
+      ],
+      "dtGraphs": [
+        "39"
+      ],
+      "rule": "DT:15(34),(37),(38),(39)",
+      "requiredWhen": {
+        "op": "eq",
+        "field": "hasQuota",
+        "value": true
+      },
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "invoice",
+            "specification",
+            "packing-list",
+            "export-declaration",
+            "spreadsheet"
+          ],
+          "requisite": "Количество по квоте",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": true
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "39"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Элемент не подтверждён предоставленным XML; требуется сверка официальной XSD."
+        }
+      },
+      "unit": "additionalUnit"
+    },
+    {
+      "id": "goods.quotaUnit",
+      "key": "quotaUnit",
+      "scope": "goods",
+      "label": "Единица квоты",
+      "type": "code",
+      "acquisition": [
+        "extract",
+        "manual"
+      ],
+      "dtGraphs": [
+        "39"
+      ],
+      "rule": "DT:15(34),(37),(38),(39)",
+      "requiredWhen": {
+        "op": "eq",
+        "field": "hasQuota",
+        "value": true
+      },
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "invoice",
+            "specification",
+            "packing-list",
+            "export-declaration",
+            "spreadsheet"
+          ],
+          "requisite": "Единица квоты",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": true
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "39"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Элемент не подтверждён предоставленным XML; требуется сверка официальной XSD."
+        }
+      }
+    },
+    {
+      "id": "goods.previousDocNumber",
+      "key": "previousDocNumber",
+      "scope": "goods",
+      "label": "Предшествующий документ",
+      "type": "string",
+      "acquisition": [
+        "extract",
+        "manual"
+      ],
+      "dtGraphs": [
+        "40"
+      ],
+      "rule": "DT:15(34),(37),(38),(39)",
+      "requiredWhen": {
+        "op": "eq",
+        "field": "hasPreviousDocument",
+        "value": true
+      },
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "invoice",
+            "specification",
+            "packing-list",
+            "export-declaration",
+            "spreadsheet"
+          ],
+          "requisite": "Предшествующий документ",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": true
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "40"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Элемент не подтверждён предоставленным XML; требуется сверка официальной XSD."
+        }
+      }
+    },
+    {
+      "id": "goods.previousItemNumber",
+      "key": "previousItemNumber",
+      "scope": "goods",
+      "label": "Товар предшествующего документа",
+      "type": "integer",
+      "acquisition": [
+        "extract",
+        "manual"
+      ],
+      "dtGraphs": [
+        "40"
+      ],
+      "rule": "DT:15(34),(37),(38),(39)",
+      "requiredWhen": {
+        "op": "eq",
+        "field": "hasPreviousDocument",
+        "value": true
+      },
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "invoice",
+            "specification",
+            "packing-list",
+            "export-declaration",
+            "spreadsheet"
+          ],
+          "requisite": "Товар предшествующего документа",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": true
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "40"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Элемент не подтверждён предоставленным XML; требуется сверка официальной XSD."
+        }
+      }
+    },
+    {
+      "id": "goods.additionalQuantity",
+      "key": "additionalQuantity",
+      "scope": "goods",
+      "label": "Количество в дополнительной единице",
+      "type": "decimal",
+      "acquisition": [
+        "extract",
+        "manual"
+      ],
+      "dtGraphs": [
+        "41"
+      ],
+      "rule": "DT:15(34),(37),(38),(39)",
+      "requiredWhen": {
+        "op": "eq",
+        "field": "additionalUnitRequired",
+        "value": true
+      },
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "invoice",
+            "specification",
+            "packing-list",
+            "export-declaration",
+            "spreadsheet"
+          ],
+          "requisite": "Количество в дополнительной единице",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": true
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "41"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Элемент не подтверждён предоставленным XML; требуется сверка официальной XSD."
+        }
+      },
+      "unit": "additionalUnit"
+    },
+    {
+      "id": "goods.additionalUnit",
+      "key": "additionalUnit",
+      "scope": "goods",
+      "label": "Дополнительная единица",
+      "type": "code",
+      "acquisition": [
+        "extract",
+        "manual"
+      ],
+      "dtGraphs": [
+        "41"
+      ],
+      "rule": "DT:15(34),(37),(38),(39)",
+      "requiredWhen": {
+        "op": "eq",
+        "field": "additionalUnitRequired",
+        "value": true
+      },
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "invoice",
+            "specification",
+            "packing-list",
+            "export-declaration",
+            "spreadsheet"
+          ],
+          "requisite": "Дополнительная единица",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": true
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "41"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Элемент не подтверждён предоставленным XML; требуется сверка официальной XSD."
+        }
+      }
+    },
+    {
+      "id": "goods.preferenceBasis",
+      "key": "preferenceBasis",
+      "scope": "goods",
+      "label": "Основание льготы/преференции",
+      "type": "string",
+      "acquisition": [
+        "extract",
+        "manual"
+      ],
+      "dtGraphs": [
+        "36"
+      ],
+      "rule": "DT:15(34),(37),(38),(39)",
+      "requiredWhen": {
+        "op": "eq",
+        "field": "hasPreference",
+        "value": true
+      },
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "invoice",
+            "specification",
+            "packing-list",
+            "export-declaration",
+            "spreadsheet"
+          ],
+          "requisite": "Основание льготы/преференции",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": true
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "36"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Элемент не подтверждён предоставленным XML; требуется сверка официальной XSD."
+        }
+      }
+    },
+    {
+      "id": "goods.ordinal",
+      "key": "ordinal",
+      "scope": "goods",
+      "label": "Порядковый номер",
+      "type": "integer",
+      "acquisition": [
+        "calculated"
+      ],
+      "dtGraphs": [
+        "32"
+      ],
+      "rule": "DT:15(3),(30),(43),(44)",
+      "requiredWhen": false,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "32"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-observed",
+          "path": "I/ConsignmentItemOrdinal"
+        }
+      },
+      "unit": "1"
+    },
+    {
+      "id": "goods.sheetOrdinal",
+      "key": "sheetOrdinal",
+      "scope": "goods",
+      "label": "Номер листа ДТ",
+      "type": "integer",
+      "acquisition": [
+        "calculated"
+      ],
+      "dtGraphs": [
+        "3"
+      ],
+      "rule": "DT:15(3),(30),(43),(44)",
+      "requiredWhen": false,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "3"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-observed",
+          "path": "I/PageOrdinal"
+        }
+      },
+      "unit": "1"
+    },
+    {
+      "id": "goods.customsValue",
+      "key": "customsValue",
+      "scope": "goods",
+      "label": "Таможенная стоимость",
+      "type": "decimal",
+      "acquisition": [
+        "calculated"
+      ],
+      "dtGraphs": [
+        "45"
+      ],
+      "rule": "DT:15(3),(30),(43),(44)",
+      "requiredWhen": false,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "45"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-observed",
+          "path": "I/CustomsValueAmount"
+        }
+      },
+      "unit": "KZT"
+    },
+    {
+      "id": "goods.statisticalValue",
+      "key": "statisticalValue",
+      "scope": "goods",
+      "label": "Статистическая стоимость",
+      "type": "decimal",
+      "acquisition": [
+        "calculated"
+      ],
+      "dtGraphs": [
+        "46"
+      ],
+      "rule": "DT:15(3),(30),(43),(44)",
+      "requiredWhen": false,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "46"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-observed",
+          "path": "I/StatisticValueAmount"
+        }
+      },
+      "unit": "USD"
+    },
+    {
+      "id": "goods.valuationMethod",
+      "key": "valuationMethod",
+      "scope": "goods",
+      "label": "Метод оценки",
+      "type": "code",
+      "acquisition": [
+        "reference"
+      ],
+      "dtGraphs": [
+        "43"
+      ],
+      "rule": "DT:15(41)",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "43"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-observed",
+          "path": "I/ValuationMethodCode"
+        }
+      },
+      "fixedValue": "1"
+    },
+    {
+      "id": "transport.stage",
+      "key": "stage",
+      "scope": "transport",
+      "label": "Этап перевозки",
+      "type": "enum",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [
+        "18",
+        "21",
+        "25",
+        "26"
+      ],
+      "rule": "DT:15(18),(21),(25),(26)",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "18",
+          "21",
+          "25",
+          "26"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "model-only",
+          "path": null
+        }
+      },
+      "values": [
+        "arrival",
+        "border"
+      ]
+    },
+    {
+      "id": "transport.mode",
+      "key": "mode",
+      "scope": "transport",
+      "label": "Вид транспорта",
+      "type": "code",
+      "acquisition": [
+        "extract",
+        "reference",
+        "manual"
+      ],
+      "dtGraphs": [
+        "18",
+        "21",
+        "25",
+        "26"
+      ],
+      "rule": "DT:15(18),(21),(25),(26)",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "CMR",
+            "AWB",
+            "transit-inventory"
+          ],
+          "requisite": "Вид транспорта",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": false
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "18",
+          "21",
+          "25",
+          "26"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-family",
+          "path": "TRANSPORT/UnifiedTransportModeCode",
+          "stageRoots": {
+            "arrival": "S/GDConsignmentDetails/ArrivalDepartureTransportDetails",
+            "border": "S/GDConsignmentDetails/BorderTransportDetails"
+          }
+        }
+      }
+    },
+    {
+      "id": "transport.country",
+      "key": "country",
+      "scope": "transport",
+      "label": "Страна регистрации",
+      "type": "code",
+      "acquisition": [
+        "extract",
+        "reference",
+        "manual"
+      ],
+      "dtGraphs": [
+        "18",
+        "21",
+        "25",
+        "26"
+      ],
+      "rule": "DT:15(18),(21),(25),(26)",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "CMR",
+            "AWB",
+            "transit-inventory"
+          ],
+          "requisite": "Страна регистрации",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": false
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "18",
+          "21",
+          "25",
+          "26"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-family",
+          "path": "TRANSPORT/RegistrationNationalityCode",
+          "stageRoots": {
+            "arrival": "S/GDConsignmentDetails/ArrivalDepartureTransportDetails",
+            "border": "S/GDConsignmentDetails/BorderTransportDetails"
+          }
+        }
+      }
+    },
+    {
+      "id": "transport.registration",
+      "key": "registration",
+      "scope": "transport",
+      "label": "Номер транспортного средства/рейса",
+      "type": "string",
+      "acquisition": [
+        "extract",
+        "manual"
+      ],
+      "dtGraphs": [
+        "18",
+        "21",
+        "25",
+        "26"
+      ],
+      "rule": "DT:15(18),(21),(25),(26)",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "CMR",
+            "AWB",
+            "transit-inventory"
+          ],
+          "requisite": "Номер транспортного средства/рейса",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": false
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "18",
+          "21",
+          "25",
+          "26"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-family",
+          "path": "TRANSPORT/TransportMeansItemDetails/TransportMeansRegId",
+          "stageRoots": {
+            "arrival": "S/GDConsignmentDetails/ArrivalDepartureTransportDetails",
+            "border": "S/GDConsignmentDetails/BorderTransportDetails"
+          }
+        }
+      }
+    },
+    {
+      "id": "transport.transportType",
+      "key": "transportType",
+      "scope": "transport",
+      "label": "Тип транспортного средства",
+      "type": "code",
+      "acquisition": [
+        "extract",
+        "reference",
+        "manual"
+      ],
+      "dtGraphs": [
+        "18",
+        "21",
+        "25",
+        "26"
+      ],
+      "rule": "DT:15(18),(21),(25),(26)",
+      "requiredWhen": false,
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "CMR",
+            "AWB",
+            "transit-inventory"
+          ],
+          "requisite": "Тип транспортного средства",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": false
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "18",
+          "21",
+          "25",
+          "26"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-family",
+          "path": "TRANSPORT/TransportMeansItemDetails/TransportTypeCode",
+          "stageRoots": {
+            "arrival": "S/GDConsignmentDetails/ArrivalDepartureTransportDetails",
+            "border": "S/GDConsignmentDetails/BorderTransportDetails"
+          }
+        }
+      }
+    },
+    {
+      "id": "document.kind",
+      "key": "kind",
+      "scope": "document",
+      "label": "Код вида документа",
+      "type": "code",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [
+        "44"
+      ],
+      "rule": "DT:15(42)",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "document-header",
+            "document-stamp"
+          ],
+          "requisite": "Код вида документа",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": false
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "44"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-observed",
+          "path": "I/PresentedDocDetails/DocKindCode"
+        }
+      }
+    },
+    {
+      "id": "document.name",
+      "key": "name",
+      "scope": "document",
+      "label": "Название документа",
+      "type": "string",
+      "acquisition": [
+        "extract",
+        "manual"
+      ],
+      "dtGraphs": [
+        "44"
+      ],
+      "rule": "DT:15(42)",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "document-header",
+            "document-stamp"
+          ],
+          "requisite": "Название документа",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": false
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "44"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-observed",
+          "path": "I/PresentedDocDetails/DocName"
+        }
+      }
+    },
+    {
+      "id": "document.number",
+      "key": "number",
+      "scope": "document",
+      "label": "Номер документа",
+      "type": "string",
+      "acquisition": [
+        "extract",
+        "manual"
+      ],
+      "dtGraphs": [
+        "44"
+      ],
+      "rule": "DT:15(42)",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "document-header",
+            "document-stamp"
+          ],
+          "requisite": "Номер документа",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": false
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "44"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-observed",
+          "path": "I/PresentedDocDetails/DocId"
+        }
+      }
+    },
+    {
+      "id": "document.date",
+      "key": "date",
+      "scope": "document",
+      "label": "Дата документа",
+      "type": "date",
+      "acquisition": [
+        "extract",
+        "manual"
+      ],
+      "dtGraphs": [
+        "44"
+      ],
+      "rule": "DT:15(42)",
+      "requiredWhen": {
+        "op": "eq",
+        "field": "dateRequired",
+        "value": true
+      },
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "document-header",
+            "document-stamp"
+          ],
+          "requisite": "Дата документа",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": false
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "44"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-observed",
+          "path": "I/PresentedDocDetails/DocCreationDate"
+        }
+      }
+    },
+    {
+      "id": "document.dateRequired",
+      "key": "dateRequired",
+      "scope": "document",
+      "label": "Дата обязательна для этого вида",
+      "type": "boolean",
+      "acquisition": [
+        "reference"
+      ],
+      "dtGraphs": [
+        "44"
+      ],
+      "rule": "DT:15(42)",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "document-header",
+            "document-stamp"
+          ],
+          "requisite": "Дата обязательна для этого вида",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": false
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "44"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Элемент не подтверждён предоставленным XML; требуется сверка официальной XSD."
+        }
+      }
+    },
+    {
+      "id": "document.validFrom",
+      "key": "validFrom",
+      "scope": "document",
+      "label": "Начало действия",
+      "type": "date",
+      "acquisition": [
+        "extract",
+        "manual"
+      ],
+      "dtGraphs": [
+        "44"
+      ],
+      "rule": "DT:15(42)",
+      "requiredWhen": false,
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "document-header",
+            "document-stamp"
+          ],
+          "requisite": "Начало действия",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": false
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "44"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-observed",
+          "path": "I/PresentedDocDetails/DocStartDate"
+        }
+      }
+    },
+    {
+      "id": "document.validUntil",
+      "key": "validUntil",
+      "scope": "document",
+      "label": "Конец действия",
+      "type": "date",
+      "acquisition": [
+        "extract",
+        "manual"
+      ],
+      "dtGraphs": [
+        "44"
+      ],
+      "rule": "DT:15(42)",
+      "requiredWhen": false,
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "document-header",
+            "document-stamp"
+          ],
+          "requisite": "Конец действия",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": false
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "44"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-observed",
+          "path": "I/PresentedDocDetails/DocValidityDate"
+        }
+      }
+    },
+    {
+      "id": "document.presentationCode",
+      "key": "presentationCode",
+      "scope": "document",
+      "label": "Код представления",
+      "type": "code",
+      "acquisition": [
+        "reference",
+        "manual"
+      ],
+      "dtGraphs": [
+        "44"
+      ],
+      "rule": "DT:15(42)",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "44"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-observed",
+          "path": "I/PresentedDocDetails/DocumentPresentingDetails/DocPresentKindCode"
+        }
+      }
+    },
+    {
+      "id": "document.goodsIds",
+      "key": "goodsIds",
+      "scope": "document",
+      "label": "Связанные товары",
+      "type": "string-list",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [
+        "44"
+      ],
+      "rule": "DT:15(42)",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "document-header",
+            "document-stamp"
+          ],
+          "requisite": "Связанные товары",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": false
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "44"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Элемент не подтверждён предоставленным XML; требуется сверка официальной XSD."
+        }
+      }
+    },
+    {
+      "id": "document.documentIds",
+      "key": "documentIds",
+      "scope": "document",
+      "label": "Файлы-источники",
+      "type": "string-list",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [
+        "44"
+      ],
+      "rule": "DT:15(42)",
+      "requiredWhen": false,
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "document-header",
+            "document-stamp"
+          ],
+          "requisite": "Файлы-источники",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": false
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "44"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Элемент не подтверждён предоставленным XML; требуется сверка официальной XSD."
+        }
+      }
+    },
+    {
+      "id": "declaration.relatedParties",
+      "key": "relatedParties",
+      "scope": "declaration",
+      "label": "Продавец и покупатель взаимосвязаны",
+      "type": "boolean",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [],
+      "rule": "DTS-1:7a",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": null,
+        "graphs": []
+      },
+      "xml": {
+        "dts": {
+          "status": "sample-observed",
+          "path": "V/CVDMethod1Details/BuyerSellerRelationDetails/RelationIndicator"
+        }
+      },
+      "section": "valuation",
+      "dtsFields": [
+        "7a"
+      ]
+    },
+    {
+      "id": "declaration.relationshipAffectedPrice",
+      "key": "relationshipAffectedPrice",
+      "scope": "declaration",
+      "label": "Взаимосвязь повлияла на цену",
+      "type": "boolean",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [],
+      "rule": "DTS-1:7б",
+      "requiredWhen": {
+        "op": "eq",
+        "field": "relatedParties",
+        "value": true
+      },
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": null,
+        "graphs": []
+      },
+      "xml": {
+        "dts": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Подполе отсутствует в образце; требуется официальная XSD R.038."
+        }
+      },
+      "section": "valuation",
+      "dtsFields": [
+        "7б"
+      ]
+    },
+    {
+      "id": "declaration.relationshipEvidence",
+      "key": "relationshipEvidence",
+      "scope": "declaration",
+      "label": "Обоснование приемлемости цены",
+      "type": "string",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [],
+      "rule": "DTS-1:7в",
+      "requiredWhen": {
+        "op": "eq",
+        "field": "relatedParties",
+        "value": true
+      },
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": null,
+        "graphs": []
+      },
+      "xml": {
+        "dts": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Подполе отсутствует в образце; требуется официальная XSD R.038."
+        }
+      },
+      "section": "valuation",
+      "dtsFields": [
+        "7в"
+      ]
+    },
+    {
+      "id": "declaration.useRestrictions",
+      "key": "useRestrictions",
+      "scope": "declaration",
+      "label": "Есть ограничения распоряжения/использования",
+      "type": "boolean",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [],
+      "rule": "DTS-1:8a",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": null,
+        "graphs": []
+      },
+      "xml": {
+        "dts": {
+          "status": "sample-observed",
+          "path": "V/CVDMethod1Details/GoodsUseRestrictionDetails/RestrictionIndicator"
+        }
+      },
+      "section": "valuation",
+      "dtsFields": [
+        "8a"
+      ]
+    },
+    {
+      "id": "declaration.restrictionsCompatible",
+      "key": "restrictionsCompatible",
+      "scope": "declaration",
+      "label": "Ограничения допускают метод 1",
+      "type": "boolean",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [],
+      "rule": "DTS-1:8a",
+      "requiredWhen": {
+        "op": "eq",
+        "field": "useRestrictions",
+        "value": true
+      },
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": null,
+        "graphs": []
+      },
+      "xml": {
+        "dts": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Подполе отсутствует в образце; требуется официальная XSD R.038."
+        }
+      },
+      "section": "valuation",
+      "dtsFields": [
+        "8a"
+      ]
+    },
+    {
+      "id": "declaration.valueConditions",
+      "key": "valueConditions",
+      "scope": "declaration",
+      "label": "Цена зависит от иных условий",
+      "type": "boolean",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [],
+      "rule": "DTS-1:8б",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": null,
+        "graphs": []
+      },
+      "xml": {
+        "dts": {
+          "status": "sample-observed",
+          "path": "V/CVDMethod1Details/GoodsUseRestrictionDetails/ValueConditionIndicator"
+        }
+      },
+      "section": "valuation",
+      "dtsFields": [
+        "8б"
+      ]
+    },
+    {
+      "id": "declaration.conditionsQuantifiable",
+      "key": "conditionsQuantifiable",
+      "scope": "declaration",
+      "label": "Условия поддаются стоимостной оценке",
+      "type": "boolean",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [],
+      "rule": "DTS-1:8б",
+      "requiredWhen": {
+        "op": "eq",
+        "field": "valueConditions",
+        "value": true
+      },
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": null,
+        "graphs": []
+      },
+      "xml": {
+        "dts": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Подполе отсутствует в образце; требуется официальная XSD R.038."
+        }
+      },
+      "section": "valuation",
+      "dtsFields": [
+        "8б"
+      ]
+    },
+    {
+      "id": "declaration.royaltyContract",
+      "key": "royaltyContract",
+      "scope": "declaration",
+      "label": "Есть лицензионные условия",
+      "type": "boolean",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [],
+      "rule": "DTS-1:9a",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": null,
+        "graphs": []
+      },
+      "xml": {
+        "dts": {
+          "status": "sample-observed",
+          "path": "V/CVDMethod1Details/BuyerSellerRoyaltyFeeDetails/RoyaltyContractIndicator"
+        }
+      },
+      "section": "valuation",
+      "dtsFields": [
+        "9a"
+      ]
+    },
+    {
+      "id": "declaration.royaltyFees",
+      "key": "royaltyFees",
+      "scope": "declaration",
+      "label": "Есть роялти/лицензионные платежи",
+      "type": "boolean",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [],
+      "rule": "DTS-1:9a",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": null,
+        "graphs": []
+      },
+      "xml": {
+        "dts": {
+          "status": "sample-observed",
+          "path": "V/CVDMethod1Details/BuyerSellerRoyaltyFeeDetails/RoyaltyFeeIndicator"
+        }
+      },
+      "section": "valuation",
+      "dtsFields": [
+        "9a"
+      ]
+    },
+    {
+      "id": "declaration.subsequentProceeds",
+      "key": "subsequentProceeds",
+      "scope": "declaration",
+      "label": "Продавцу причитается часть последующей выручки",
+      "type": "boolean",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [],
+      "rule": "DTS-1:9б",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": null,
+        "graphs": []
+      },
+      "xml": {
+        "dts": {
+          "status": "sample-observed",
+          "path": "V/CVDMethod1Details/BuyerSellerRoyaltyFeeDetails/SubsequentResaleIndicator"
+        }
+      },
+      "section": "valuation",
+      "dtsFields": [
+        "9б"
+      ]
+    },
+    {
+      "id": "declaration.methodOneConfirmed",
+      "key": "methodOneConfirmed",
+      "scope": "declaration",
+      "label": "Применимость метода 1 подтверждена",
+      "type": "boolean",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [],
+      "rule": "DTS-1:7-9",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": null,
+        "graphs": []
+      },
+      "xml": {
+        "dts": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Подполе отсутствует в образце; требуется официальная XSD R.038."
+        }
+      },
+      "section": "valuation",
+      "dtsFields": [
+        "7-9"
+      ]
+    },
+    {
+      "id": "declaration.valuationPlace",
+      "key": "valuationPlace",
+      "scope": "declaration",
+      "label": "Место ввоза для оценки",
+      "type": "string",
+      "acquisition": [
+        "extract",
+        "manual"
+      ],
+      "dtGraphs": [],
+      "rule": "DTS-1:17-19",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "invoice",
+            "contract",
+            "transport",
+            "warehouse-document"
+          ],
+          "requisite": "Место ввоза для оценки",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": false
+        }
+      ],
+      "pdf": {
+        "document": null,
+        "graphs": []
+      },
+      "xml": {
+        "dts": {
+          "status": "sample-observed",
+          "path": "VI/CVDMethod1CalculationDetails/Method1AddCostsDetails/PlaceName"
+        }
+      },
+      "section": "valuation",
+      "dtsFields": [
+        "17-19"
+      ]
+    },
+    {
+      "id": "declaration.valuationDocumentIds",
+      "key": "valuationDocumentIds",
+      "scope": "declaration",
+      "label": "Документы-основания ДТС",
+      "type": "string-list",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [],
+      "rule": "DTS-1:4-6",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "invoice",
+            "contract",
+            "transport",
+            "warehouse-document"
+          ],
+          "requisite": "Документы-основания ДТС",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": false
+        }
+      ],
+      "pdf": {
+        "document": null,
+        "graphs": []
+      },
+      "xml": {
+        "dts": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Подполе отсутствует в образце; требуется официальная XSD R.038."
+        }
+      },
+      "section": "valuation",
+      "dtsFields": [
+        "4-6"
+      ]
+    },
+    {
+      "id": "declaration.indirectPaymentsApplicable",
+      "key": "indirectPaymentsApplicable",
+      "scope": "declaration",
+      "label": "Косвенные платежи — применимость",
+      "type": "boolean",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [],
+      "rule": "DTS-1:11б",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": null,
+        "graphs": []
+      },
+      "xml": {
+        "dts": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Подполе отсутствует в образце; требуется официальная XSD R.038."
+        }
+      },
+      "section": "valuation",
+      "dtsFields": [
+        "11б"
+      ],
+      "costKind": "indirectPayments"
+    },
+    {
+      "id": "declaration.sellingCommissionApplicable",
+      "key": "sellingCommissionApplicable",
+      "scope": "declaration",
+      "label": "Вознаграждения посредникам (кроме закупочных) — применимость",
+      "type": "boolean",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [],
+      "rule": "DTS-1:13a",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": null,
+        "graphs": []
+      },
+      "xml": {
+        "dts": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Подполе отсутствует в образце; требуется официальная XSD R.038."
+        }
+      },
+      "section": "valuation",
+      "dtsFields": [
+        "13a"
+      ],
+      "costKind": "sellingCommission"
+    },
+    {
+      "id": "declaration.containersCostApplicable",
+      "key": "containersCostApplicable",
+      "scope": "declaration",
+      "label": "Стоимость тары — применимость",
+      "type": "boolean",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [],
+      "rule": "DTS-1:13б",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": null,
+        "graphs": []
+      },
+      "xml": {
+        "dts": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Подполе отсутствует в образце; требуется официальная XSD R.038."
+        }
+      },
+      "section": "valuation",
+      "dtsFields": [
+        "13б"
+      ],
+      "costKind": "containersCost"
+    },
+    {
+      "id": "declaration.packingCostApplicable",
+      "key": "packingCostApplicable",
+      "scope": "declaration",
+      "label": "Стоимость упаковки — применимость",
+      "type": "boolean",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [],
+      "rule": "DTS-1:13в",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": null,
+        "graphs": []
+      },
+      "xml": {
+        "dts": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Подполе отсутствует в образце; требуется официальная XSD R.038."
+        }
+      },
+      "section": "valuation",
+      "dtsFields": [
+        "13в"
+      ],
+      "costKind": "packingCost"
+    },
+    {
+      "id": "declaration.buyerMaterialsApplicable",
+      "key": "buyerMaterialsApplicable",
+      "scope": "declaration",
+      "label": "Предоставленные материалы — применимость",
+      "type": "boolean",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [],
+      "rule": "DTS-1:14a",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": null,
+        "graphs": []
+      },
+      "xml": {
+        "dts": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Подполе отсутствует в образце; требуется официальная XSD R.038."
+        }
+      },
+      "section": "valuation",
+      "dtsFields": [
+        "14a"
+      ],
+      "costKind": "buyerMaterials"
+    },
+    {
+      "id": "declaration.buyerToolsApplicable",
+      "key": "buyerToolsApplicable",
+      "scope": "declaration",
+      "label": "Предоставленные инструменты — применимость",
+      "type": "boolean",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [],
+      "rule": "DTS-1:14б",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": null,
+        "graphs": []
+      },
+      "xml": {
+        "dts": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Подполе отсутствует в образце; требуется официальная XSD R.038."
+        }
+      },
+      "section": "valuation",
+      "dtsFields": [
+        "14б"
+      ],
+      "costKind": "buyerTools"
+    },
+    {
+      "id": "declaration.buyerConsumablesApplicable",
+      "key": "buyerConsumablesApplicable",
+      "scope": "declaration",
+      "label": "Предоставленные расходные материалы — применимость",
+      "type": "boolean",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [],
+      "rule": "DTS-1:14в",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": null,
+        "graphs": []
+      },
+      "xml": {
+        "dts": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Подполе отсутствует в образце; требуется официальная XSD R.038."
+        }
+      },
+      "section": "valuation",
+      "dtsFields": [
+        "14в"
+      ],
+      "costKind": "buyerConsumables"
+    },
+    {
+      "id": "declaration.buyerEngineeringApplicable",
+      "key": "buyerEngineeringApplicable",
+      "scope": "declaration",
+      "label": "Разработки и проектирование — применимость",
+      "type": "boolean",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [],
+      "rule": "DTS-1:14г",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": null,
+        "graphs": []
+      },
+      "xml": {
+        "dts": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Подполе отсутствует в образце; требуется официальная XSD R.038."
+        }
+      },
+      "section": "valuation",
+      "dtsFields": [
+        "14г"
+      ],
+      "costKind": "buyerEngineering"
+    },
+    {
+      "id": "declaration.royaltiesApplicable",
+      "key": "royaltiesApplicable",
+      "scope": "declaration",
+      "label": "Роялти, подлежащие добавлению — применимость",
+      "type": "boolean",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [],
+      "rule": "DTS-1:15",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": null,
+        "graphs": []
+      },
+      "xml": {
+        "dts": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Подполе отсутствует в образце; требуется официальная XSD R.038."
+        }
+      },
+      "section": "valuation",
+      "dtsFields": [
+        "15"
+      ],
+      "costKind": "royalties"
+    },
+    {
+      "id": "declaration.resaleProceedsApplicable",
+      "key": "resaleProceedsApplicable",
+      "scope": "declaration",
+      "label": "Доход продавца от последующей продажи — применимость",
+      "type": "boolean",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [],
+      "rule": "DTS-1:16",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": null,
+        "graphs": []
+      },
+      "xml": {
+        "dts": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Подполе отсутствует в образце; требуется официальная XSD R.038."
+        }
+      },
+      "section": "valuation",
+      "dtsFields": [
+        "16"
+      ],
+      "costKind": "resaleProceeds"
+    },
+    {
+      "id": "declaration.freightApplicable",
+      "key": "freightApplicable",
+      "scope": "declaration",
+      "label": "Перевозка до места ввоза — применимость",
+      "type": "boolean",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [],
+      "rule": "DTS-1:17",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": null,
+        "graphs": []
+      },
+      "xml": {
+        "dts": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Подполе отсутствует в образце; требуется официальная XSD R.038."
+        }
+      },
+      "section": "valuation",
+      "dtsFields": [
+        "17"
+      ],
+      "costKind": "freight"
+    },
+    {
+      "id": "declaration.loadingApplicable",
+      "key": "loadingApplicable",
+      "scope": "declaration",
+      "label": "Погрузка/перегрузка — применимость",
+      "type": "boolean",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [],
+      "rule": "DTS-1:18",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": null,
+        "graphs": []
+      },
+      "xml": {
+        "dts": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Подполе отсутствует в образце; требуется официальная XSD R.038."
+        }
+      },
+      "section": "valuation",
+      "dtsFields": [
+        "18"
+      ],
+      "costKind": "loading"
+    },
+    {
+      "id": "declaration.insuranceApplicable",
+      "key": "insuranceApplicable",
+      "scope": "declaration",
+      "label": "Страхование — применимость",
+      "type": "boolean",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [],
+      "rule": "DTS-1:19",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": null,
+        "graphs": []
+      },
+      "xml": {
+        "dts": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Подполе отсутствует в образце; требуется официальная XSD R.038."
+        }
+      },
+      "section": "valuation",
+      "dtsFields": [
+        "19"
+      ],
+      "costKind": "insurance"
+    },
+    {
+      "id": "declaration.postImportWorkApplicable",
+      "key": "postImportWorkApplicable",
+      "scope": "declaration",
+      "label": "Работы после ввоза — применимость",
+      "type": "boolean",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [],
+      "rule": "DTS-1:21",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": null,
+        "graphs": []
+      },
+      "xml": {
+        "dts": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Подполе отсутствует в образце; требуется официальная XSD R.038."
+        }
+      },
+      "section": "valuation",
+      "dtsFields": [
+        "21"
+      ],
+      "costKind": "postImportWork"
+    },
+    {
+      "id": "declaration.inlandTransportApplicable",
+      "key": "inlandTransportApplicable",
+      "scope": "declaration",
+      "label": "Перевозка после ввоза — применимость",
+      "type": "boolean",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [],
+      "rule": "DTS-1:22",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": null,
+        "graphs": []
+      },
+      "xml": {
+        "dts": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Подполе отсутствует в образце; требуется официальная XSD R.038."
+        }
+      },
+      "section": "valuation",
+      "dtsFields": [
+        "22"
+      ],
+      "costKind": "inlandTransport"
+    },
+    {
+      "id": "declaration.importTaxesApplicable",
+      "key": "importTaxesApplicable",
+      "scope": "declaration",
+      "label": "Включённые в цену налоги — применимость",
+      "type": "boolean",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [],
+      "rule": "DTS-1:23",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": null,
+        "graphs": []
+      },
+      "xml": {
+        "dts": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Подполе отсутствует в образце; требуется официальная XSD R.038."
+        }
+      },
+      "section": "valuation",
+      "dtsFields": [
+        "23"
+      ],
+      "costKind": "importTaxes"
+    },
+    {
+      "id": "cost.kind",
+      "key": "kind",
+      "scope": "cost",
+      "label": "Вид корректировки",
+      "type": "enum",
+      "acquisition": [
+        "extract",
+        "manual"
+      ],
+      "dtGraphs": [
+        "45"
+      ],
+      "rule": "DTS-1:11б,13-24",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "freight-invoice",
+            "insurance",
+            "contract",
+            "invoice"
+          ],
+          "requisite": "Вид корректировки"
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "45"
+        ]
+      },
+      "xml": {
+        "dts": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Требуется конкретный элемент корректировки из официальной XSD."
+        }
+      },
+      "unit": null,
+      "values": [
+        "indirectPayments",
+        "sellingCommission",
+        "containersCost",
+        "packingCost",
+        "buyerMaterials",
+        "buyerTools",
+        "buyerConsumables",
+        "buyerEngineering",
+        "royalties",
+        "resaleProceeds",
+        "freight",
+        "loading",
+        "insurance",
+        "postImportWork",
+        "inlandTransport",
+        "importTaxes"
+      ]
+    },
+    {
+      "id": "cost.direction",
+      "key": "direction",
+      "scope": "cost",
+      "label": "Начисление или вычет",
+      "type": "enum",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [
+        "45"
+      ],
+      "rule": "DTS-1:11б,13-24",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "45"
+        ]
+      },
+      "xml": {
+        "dts": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Требуется конкретный элемент корректировки из официальной XSD."
+        }
+      },
+      "unit": null,
+      "values": [
+        "indirect",
+        "addition",
+        "deduction"
+      ]
+    },
+    {
+      "id": "cost.amount",
+      "key": "amount",
+      "scope": "cost",
+      "label": "Сумма",
+      "type": "decimal",
+      "acquisition": [
+        "extract",
+        "manual"
+      ],
+      "dtGraphs": [
+        "45"
+      ],
+      "rule": "DTS-1:11б,13-24",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "freight-invoice",
+            "insurance",
+            "contract",
+            "invoice"
+          ],
+          "requisite": "Сумма"
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "45"
+        ]
+      },
+      "xml": {
+        "dts": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Требуется конкретный элемент корректировки из официальной XSD."
+        }
+      },
+      "unit": "currency"
+    },
+    {
+      "id": "cost.currency",
+      "key": "currency",
+      "scope": "cost",
+      "label": "Валюта",
+      "type": "code",
+      "acquisition": [
+        "extract",
+        "manual"
+      ],
+      "dtGraphs": [
+        "45"
+      ],
+      "rule": "DTS-1:11б,13-24",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "freight-invoice",
+            "insurance",
+            "contract",
+            "invoice"
+          ],
+          "requisite": "Валюта"
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "45"
+        ]
+      },
+      "xml": {
+        "dts": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Требуется конкретный элемент корректировки из официальной XSD."
+        }
+      },
+      "unit": null
+    },
+    {
+      "id": "cost.includedInPrice",
+      "key": "includedInPrice",
+      "scope": "cost",
+      "label": "Уже включено в цену",
+      "type": "boolean",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [
+        "45"
+      ],
+      "rule": "DTS-1:11б,13-24",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "45"
+        ]
+      },
+      "xml": {
+        "dts": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Требуется конкретный элемент корректировки из официальной XSD."
+        }
+      },
+      "unit": null
+    },
+    {
+      "id": "cost.basis",
+      "key": "basis",
+      "scope": "cost",
+      "label": "Основание и участок маршрута",
+      "type": "string",
+      "acquisition": [
+        "extract",
+        "manual"
+      ],
+      "dtGraphs": [
+        "45"
+      ],
+      "rule": "DTS-1:11б,13-24",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "freight-invoice",
+            "insurance",
+            "contract",
+            "invoice"
+          ],
+          "requisite": "Основание и участок маршрута"
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "45"
+        ]
+      },
+      "xml": {
+        "dts": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Требуется конкретный элемент корректировки из официальной XSD."
+        }
+      },
+      "unit": null
+    },
+    {
+      "id": "cost.evidenceIds",
+      "key": "evidenceIds",
+      "scope": "cost",
+      "label": "Подтверждающие источники",
+      "type": "string-list",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [
+        "45"
+      ],
+      "rule": "DTS-1:11б,13-24",
+      "requiredWhen": false,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "45"
+        ]
+      },
+      "xml": {
+        "dts": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Требуется конкретный элемент корректировки из официальной XSD."
+        }
+      },
+      "unit": null
+    },
+    {
+      "id": "cost.allocationBasis",
+      "key": "allocationBasis",
+      "scope": "cost",
+      "label": "База распределения",
+      "type": "enum",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [
+        "45"
+      ],
+      "rule": "DTS-1:11б,13-24",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "45"
+        ]
+      },
+      "xml": {
+        "dts": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Требуется конкретный элемент корректировки из официальной XSD."
+        }
+      },
+      "unit": null,
+      "values": [
+        "value",
+        "netMass",
+        "manual"
+      ]
+    },
+    {
+      "id": "cost.allocationConfirmed",
+      "key": "allocationConfirmed",
+      "scope": "cost",
+      "label": "Распределение подтверждено",
+      "type": "boolean",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [
+        "45"
+      ],
+      "rule": "DTS-1:11б,13-24",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "45"
+        ]
+      },
+      "xml": {
+        "dts": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Требуется конкретный элемент корректировки из официальной XSD."
+        }
+      },
+      "unit": null
+    },
+    {
+      "id": "cost.goodsIds",
+      "key": "goodsIds",
+      "scope": "cost",
+      "label": "Связанные товары",
+      "type": "string-list",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [
+        "45"
+      ],
+      "rule": "DTS-1:11б,13-24",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "45"
+        ]
+      },
+      "xml": {
+        "dts": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Требуется конкретный элемент корректировки из официальной XSD."
+        }
+      },
+      "unit": null
+    },
+    {
+      "id": "rate.currency",
+      "key": "currency",
+      "scope": "rate",
+      "label": "Валюта курса",
+      "type": "code",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [
+        "23"
+      ],
+      "rule": "DT:15(23);DTS-1:11",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "23"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Элемент не подтверждён предоставленным XML; требуется сверка официальной XSD."
+        }
+      },
+      "unit": null
+    },
+    {
+      "id": "rate.value",
+      "key": "value",
+      "scope": "rate",
+      "label": "Курс к KZT",
+      "type": "decimal",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [
+        "23"
+      ],
+      "rule": "DT:15(23);DTS-1:11",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "23"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Элемент не подтверждён предоставленным XML; требуется сверка официальной XSD."
+        }
+      },
+      "unit": "rate"
+    },
+    {
+      "id": "rate.nominal",
+      "key": "nominal",
+      "scope": "rate",
+      "label": "Кратность курса",
+      "type": "decimal",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [
+        "23"
+      ],
+      "rule": "DT:15(23);DTS-1:11",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "23"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Элемент не подтверждён предоставленным XML; требуется сверка официальной XSD."
+        }
+      },
+      "unit": "rate"
+    },
+    {
+      "id": "rate.date",
+      "key": "date",
+      "scope": "rate",
+      "label": "Дата курса",
+      "type": "date",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [
+        "23"
+      ],
+      "rule": "DT:15(23);DTS-1:11",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "23"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Элемент не подтверждён предоставленным XML; требуется сверка официальной XSD."
+        }
+      },
+      "unit": null
+    },
+    {
+      "id": "rate.source",
+      "key": "source",
+      "scope": "rate",
+      "label": "Источник курса",
+      "type": "string",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [
+        "23"
+      ],
+      "rule": "DT:15(23);DTS-1:11",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "23"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Элемент не подтверждён предоставленным XML; требуется сверка официальной XSD."
+        }
+      },
+      "unit": null
+    },
+    {
+      "id": "rate.confirmed",
+      "key": "confirmed",
+      "scope": "rate",
+      "label": "Курс подтверждён",
+      "type": "boolean",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [
+        "23"
+      ],
+      "rule": "DT:15(23);DTS-1:11",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "23"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Элемент не подтверждён предоставленным XML; требуется сверка официальной XSD."
+        }
+      },
+      "unit": null
+    },
+    {
+      "id": "goods.dutyRate",
+      "key": "dutyRate",
+      "scope": "goods",
+      "label": "Ставка пошлины, %",
+      "type": "decimal",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [
+        "47"
+      ],
+      "rule": "DT:15(45)",
+      "requiredWhen": true,
+      "validWhen": [
+        {
+          "op": "decimal",
+          "min": "0"
+        }
+      ],
+      "sourceHints": [],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "47"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Элемент не подтверждён предоставленным XML; требуется сверка официальной XSD."
+        }
+      },
+      "unit": "percent"
+    },
+    {
+      "id": "goods.vatRate",
+      "key": "vatRate",
+      "scope": "goods",
+      "label": "Ставка НДС, %",
+      "type": "decimal",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [
+        "47"
+      ],
+      "rule": "DT:15(45)",
+      "requiredWhen": true,
+      "validWhen": [
+        {
+          "op": "decimal",
+          "min": "0"
+        }
+      ],
+      "sourceHints": [],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "47"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Элемент не подтверждён предоставленным XML; требуется сверка официальной XSD."
+        }
+      },
+      "unit": "percent"
+    },
+    {
+      "id": "declaration.feeBase",
+      "key": "feeBase",
+      "scope": "declaration",
+      "label": "Сбор за основной лист, KZT",
+      "type": "decimal",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [
+        "47"
+      ],
+      "rule": "DT:15(45)",
+      "requiredWhen": true,
+      "validWhen": [
+        {
+          "op": "decimal",
+          "min": "0"
+        }
+      ],
+      "sourceHints": [],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "47"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Элемент не подтверждён предоставленным XML; требуется сверка официальной XSD."
+        }
+      },
+      "section": "calculation",
+      "unit": "KZT"
+    },
+    {
+      "id": "declaration.feeAdditional",
+      "key": "feeAdditional",
+      "scope": "declaration",
+      "label": "Сбор за добавочный лист, KZT",
+      "type": "decimal",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [
+        "47"
+      ],
+      "rule": "DT:15(45)",
+      "requiredWhen": true,
+      "validWhen": [
+        {
+          "op": "decimal",
+          "min": "0"
+        }
+      ],
+      "sourceHints": [],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "47"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Элемент не подтверждён предоставленным XML; требуется сверка официальной XSD."
+        }
+      },
+      "section": "calculation",
+      "unit": "KZT"
+    },
+    {
+      "id": "goods.rateBasis",
+      "key": "rateBasis",
+      "scope": "goods",
+      "label": "Основание ставок/льгот",
+      "type": "string",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [
+        "47"
+      ],
+      "rule": "DT:15(45)",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "47"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Элемент не подтверждён предоставленным XML; требуется сверка официальной XSD."
+        }
+      }
+    },
+    {
+      "id": "goods.ratesDate",
+      "key": "ratesDate",
+      "scope": "goods",
+      "label": "Дата ставок",
+      "type": "date",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [
+        "47"
+      ],
+      "rule": "DT:15(45)",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "47"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Элемент не подтверждён предоставленным XML; требуется сверка официальной XSD."
+        }
+      }
+    },
+    {
+      "id": "goods.statisticalAddition",
+      "key": "statisticalAddition",
+      "scope": "goods",
+      "label": "Добавления к статистическому базису, KZT",
+      "type": "decimal",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [
+        "46"
+      ],
+      "rule": "DT:15(44)",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "46"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Элемент не подтверждён предоставленным XML; требуется сверка официальной XSD."
+        }
+      },
+      "unit": "KZT"
+    },
+    {
+      "id": "goods.statisticalDeduction",
+      "key": "statisticalDeduction",
+      "scope": "goods",
+      "label": "Вычеты для статистического базиса, KZT",
+      "type": "decimal",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [
+        "46"
+      ],
+      "rule": "DT:15(44)",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "46"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Элемент не подтверждён предоставленным XML; требуется сверка официальной XSD."
+        }
+      },
+      "unit": "KZT"
+    },
+    {
+      "id": "goods.statisticalBasisConfirmed",
+      "key": "statisticalBasisConfirmed",
+      "scope": "goods",
+      "label": "Базис статистической стоимости подтверждён",
+      "type": "boolean",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [
+        "46"
+      ],
+      "rule": "DT:15(44)",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "46"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Элемент не подтверждён предоставленным XML; требуется сверка официальной XSD."
+        }
+      }
+    },
+    {
+      "id": "payment.code",
+      "key": "code",
+      "scope": "payment",
+      "label": "Вид уплаченного платежа",
+      "type": "code",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [
+        "B"
+      ],
+      "rule": "DT:15(46)",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "invoice",
+            "contract",
+            "transport",
+            "warehouse-document"
+          ],
+          "requisite": "Вид уплаченного платежа",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": false
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "B"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-observed",
+          "path": "S/GDFactPaymentDetails/CustomsTaxModeCode"
+        }
+      }
+    },
+    {
+      "id": "payment.amount",
+      "key": "amount",
+      "scope": "payment",
+      "label": "Фактически уплачено",
+      "type": "decimal",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [
+        "B"
+      ],
+      "rule": "DT:15(46)",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "invoice",
+            "contract",
+            "transport",
+            "warehouse-document"
+          ],
+          "requisite": "Фактически уплачено",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": false
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "B"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-observed",
+          "path": "S/GDFactPaymentDetails/CAPaymentNAmount"
+        }
+      },
+      "unit": "KZT"
+    },
+    {
+      "id": "payment.source",
+      "key": "source",
+      "scope": "payment",
+      "label": "Подтверждение уплаты",
+      "type": "string",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [
+        "B"
+      ],
+      "rule": "DT:15(46)",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "invoice",
+            "contract",
+            "transport",
+            "warehouse-document"
+          ],
+          "requisite": "Подтверждение уплаты",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": false
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "B"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Элемент не подтверждён предоставленным XML; требуется сверка официальной XSD."
+        }
+      }
+    },
+    {
+      "id": "payment.documentNumber",
+      "key": "documentNumber",
+      "scope": "payment",
+      "label": "Номер платёжного документа",
+      "type": "string",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [
+        "B"
+      ],
+      "rule": "DT:15(46)",
+      "requiredWhen": false,
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "invoice",
+            "contract",
+            "transport",
+            "warehouse-document"
+          ],
+          "requisite": "Номер платёжного документа",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": false
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "B"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Номер платёжного документа не представлен в образце; обязательность и путь проверяются по XSD/правилам KZ."
+        }
+      }
+    },
+    {
+      "id": "payment.date",
+      "key": "date",
+      "scope": "payment",
+      "label": "Дата уплаты",
+      "type": "date",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [
+        "B"
+      ],
+      "rule": "DT:15(46)",
+      "requiredWhen": false,
+      "validWhen": [],
+      "sourceHints": [
+        {
+          "documentKinds": [
+            "invoice",
+            "contract",
+            "transport",
+            "warehouse-document"
+          ],
+          "requisite": "Дата уплаты",
+          "requiresRoleMatch": false,
+          "requiresGoodsMatch": false
+        }
+      ],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "B"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-observed",
+          "path": "S/GDFactPaymentDetails/GDPaymentDocDetails/PaymentDate"
+        }
+      }
+    },
+    {
+      "id": "declaration.paymentFactsAvailable",
+      "key": "paymentFactsAvailable",
+      "scope": "declaration",
+      "label": "Есть подтверждённые сведения об уплате",
+      "type": "boolean",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [
+        "B"
+      ],
+      "rule": "DT:15(46)",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "B"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Элемент не подтверждён предоставленным XML; требуется сверка официальной XSD."
+        }
+      },
+      "section": "calculation"
+    },
+    {
+      "id": "keden.officeCode",
+      "key": "officeCode",
+      "scope": "keden",
+      "label": "Орган оформления",
+      "type": "code",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [],
+      "rule": "KEDEN:sample",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": null,
+        "graphs": []
+      },
+      "xml": {
+        "keden": {
+          "status": "sample-observed",
+          "path": "ccecd:KedenGoodsDeclaration/ccecd:CustomsOfficeCode"
+        }
+      }
+    },
+    {
+      "id": "keden.rateType",
+      "key": "rateType",
+      "scope": "keden",
+      "label": "Тип ставки в профиле",
+      "type": "code",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [],
+      "rule": "KEDEN:sample",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": null,
+        "graphs": []
+      },
+      "xml": {
+        "keden": {
+          "status": "sample-observed",
+          "path": "ccecd:KedenGoodsDeclaration/ccecd:RateType"
+        }
+      }
+    },
+    {
+      "id": "keden.fillerType",
+      "key": "fillerType",
+      "scope": "keden",
+      "label": "Тип заполняющего",
+      "type": "code",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [],
+      "rule": "KEDEN:sample",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": null,
+        "graphs": []
+      },
+      "xml": {
+        "keden": {
+          "status": "sample-observed",
+          "path": "ccecd:KedenGoodsDeclaration/ccecd:FillerInformation/ccecd:FillerType"
+        }
+      }
+    },
+    {
+      "id": "keden.filledBy",
+      "key": "filledBy",
+      "scope": "keden",
+      "label": "Кто заполняет",
+      "type": "code",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [],
+      "rule": "KEDEN:sample",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": null,
+        "graphs": []
+      },
+      "xml": {
+        "keden": {
+          "status": "sample-observed",
+          "path": "ccecd:KedenGoodsDeclaration/ccecd:FillerInformation/ccecd:FilledBy"
+        }
+      }
+    },
+    {
+      "id": "keden.personId",
+      "key": "personId",
+      "scope": "keden",
+      "label": "Идентификатор заполняющего",
+      "type": "code",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [],
+      "rule": "KEDEN:sample",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": null,
+        "graphs": []
+      },
+      "xml": {
+        "keden": {
+          "status": "sample-observed",
+          "path": "ccecd:KedenGoodsDeclaration/ccecd:FillerInformation/ccecd:PersonId"
+        }
+      }
+    },
+    {
+      "id": "goods.ntinCode",
+      "key": "ntinCode",
+      "scope": "goods",
+      "label": "Код НТИН (если применим)",
+      "type": "code",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [],
+      "rule": "KEDEN:sample",
+      "requiredWhen": false,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": null,
+        "graphs": []
+      },
+      "xml": {
+        "keden": {
+          "status": "sample-observed",
+          "path": "ccecd:KedenGoodsDeclaration/ccecd:KedenGoodsItemDetails/ccecd:Ntincode"
+        }
+      }
+    },
+    {
+      "id": "goods.basisValue",
+      "key": "basisValue",
+      "scope": "goods",
+      "label": "Основа ДТС в KZT",
+      "type": "decimal",
+      "unit": "KZT",
+      "acquisition": [
+        "calculated"
+      ],
+      "dtGraphs": [],
+      "dtsFields": [
+        "12"
+      ],
+      "rule": "DTS-1:12",
+      "requiredWhen": false,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": null,
+        "graphs": []
+      },
+      "xml": {
+        "dts": {
+          "status": "sample-observed",
+          "path": "VI/CVDMethod1CalculationDetails/Method1BasisCalculationDetails/TotalAmount"
+        }
+      }
+    },
+    {
+      "id": "goods.nationalInvoiceValue",
+      "key": "nationalInvoiceValue",
+      "scope": "goods",
+      "label": "Цена инвойса в KZT",
+      "type": "decimal",
+      "unit": "KZT",
+      "acquisition": [
+        "calculated"
+      ],
+      "dtGraphs": [],
+      "dtsFields": [
+        "11a"
+      ],
+      "rule": "DTS-1:11a",
+      "requiredWhen": false,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": null,
+        "graphs": []
+      },
+      "xml": {
+        "dts": {
+          "status": "sample-observed",
+          "path": "VI/CVDMethod1CalculationDetails/Method1BasisCalculationDetails/NationalInvoicePriceAmount"
+        }
+      }
+    },
+    {
+      "id": "goods.indirectValue",
+      "key": "indirectValue",
+      "scope": "goods",
+      "label": "Косвенные платежи в KZT",
+      "type": "decimal",
+      "unit": "KZT",
+      "acquisition": [
+        "calculated"
+      ],
+      "dtGraphs": [],
+      "dtsFields": [
+        "11б"
+      ],
+      "rule": "DTS-1:11б",
+      "requiredWhen": false,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": null,
+        "graphs": []
+      },
+      "xml": {
+        "dts": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Отсутствует в примере; требуется XSD."
+        }
+      }
+    },
+    {
+      "id": "goods.additionValue",
+      "key": "additionValue",
+      "scope": "goods",
+      "label": "Сумма добавлений ДТС",
+      "type": "decimal",
+      "unit": "KZT",
+      "acquisition": [
+        "calculated"
+      ],
+      "dtGraphs": [],
+      "dtsFields": [
+        "20"
+      ],
+      "rule": "DTS-1:20",
+      "requiredWhen": false,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": null,
+        "graphs": []
+      },
+      "xml": {
+        "dts": {
+          "status": "sample-observed",
+          "path": "VI/CVDMethod1CalculationDetails/Method1AddCostsDetails/TotalAmount"
+        }
+      }
+    },
+    {
+      "id": "goods.deductionValue",
+      "key": "deductionValue",
+      "scope": "goods",
+      "label": "Сумма вычетов ДТС",
+      "type": "decimal",
+      "unit": "KZT",
+      "acquisition": [
+        "calculated"
+      ],
+      "dtGraphs": [],
+      "dtsFields": [
+        "24"
+      ],
+      "rule": "DTS-1:24",
+      "requiredWhen": false,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": null,
+        "graphs": []
+      },
+      "xml": {
+        "dts": {
+          "status": "pending-xsd",
+          "path": null,
+          "reason": "Отсутствует в примере; требуется XSD."
+        }
+      }
+    },
+    {
+      "id": "goods.customsValueUsd",
+      "key": "customsValueUsd",
+      "scope": "goods",
+      "label": "Таможенная стоимость в USD",
+      "type": "decimal",
+      "unit": "USD",
+      "acquisition": [
+        "calculated"
+      ],
+      "dtGraphs": [],
+      "dtsFields": [
+        "25"
+      ],
+      "rule": "DTS-1:25",
+      "requiredWhen": false,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": null,
+        "graphs": []
+      },
+      "xml": {
+        "dts": {
+          "status": "sample-observed",
+          "path": "VI/CustomsValueAmount[@currencyCode='USD']"
+        }
+      }
+    },
+    {
+      "id": "goods.dtsPageOrdinal",
+      "key": "dtsPageOrdinal",
+      "scope": "goods",
+      "label": "Номер листа ДТС",
+      "type": "integer",
+      "unit": "1",
+      "acquisition": [
+        "calculated"
+      ],
+      "dtGraphs": [],
+      "dtsFields": [
+        "10a"
+      ],
+      "rule": "DTS-1:10a",
+      "requiredWhen": false,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": null,
+        "graphs": []
+      },
+      "xml": {
+        "dts": {
+          "status": "sample-observed",
+          "path": "VI/PageOrdinal"
+        }
+      }
+    },
+    {
+      "id": "declaration.originCountry",
+      "key": "originCountry",
+      "scope": "declaration",
+      "label": "Сводная страна происхождения",
+      "type": "code",
+      "acquisition": [
+        "calculated"
+      ],
+      "dtGraphs": [
+        "16"
+      ],
+      "rule": "DT:15(15)",
+      "requiredWhen": false,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "16"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-observed",
+          "path": "S/OriginCountryDetails/CACountryCode"
+        }
+      }
+    },
+    {
+      "id": "goods.groupConfirmed",
+      "key": "groupConfirmed",
+      "scope": "goods",
+      "label": "Состав товарной позиции подтверждён",
+      "type": "boolean",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [
+        "31",
+        "32"
+      ],
+      "rule": "DT:grouping;design:D7",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": null,
+        "graphs": []
+      },
+      "xml": {
+        "dt": {
+          "status": "rule-only",
+          "path": null
+        }
+      }
+    },
+    {
+      "id": "goods.dutyFormula",
+      "key": "dutyFormula",
+      "scope": "goods",
+      "label": "Формула пошлины",
+      "type": "enum",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [
+        "47"
+      ],
+      "rule": "MVP:payment-profile",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": null,
+        "graphs": []
+      },
+      "xml": {},
+      "values": [
+        "advalorem",
+        "specific",
+        "combined"
+      ]
+    },
+    {
+      "id": "goods.exciseApplicable",
+      "key": "exciseApplicable",
+      "scope": "goods",
+      "label": "Товар облагается акцизом",
+      "type": "boolean",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [
+        "47"
+      ],
+      "rule": "MVP:payment-profile",
+      "requiredWhen": true,
+      "validWhen": [],
+      "sourceHints": [],
+      "pdf": {
+        "document": null,
+        "graphs": []
+      },
+      "xml": {}
+    },
+    {
+      "id": "goods.paymentFeature",
+      "key": "paymentFeature",
+      "scope": "goods",
+      "label": "Способ уплаты платежей",
+      "type": "code",
+      "acquisition": [
+        "manual"
+      ],
+      "dtGraphs": [
+        "47"
+      ],
+      "rule": "DT:15(45)",
+      "requiredWhen": true,
+      "validWhen": [
+        {
+          "op": "pattern",
+          "value": "^.{2}$"
+        }
+      ],
+      "sourceHints": [],
+      "pdf": {
+        "document": "dt",
+        "graphs": [
+          "47"
+        ]
+      },
+      "xml": {
+        "dt": {
+          "status": "sample-observed",
+          "path": "I/cacdo:CustomsPaymentDetails/casdo:CustomsTaxPaymentFeatureCode"
+        }
+      }
+    }
+  ],
+  "dtsMatrixCoverage": [
+    {
+      "id": "DTS-1-2",
+      "fieldIds": [
+        "party.name",
+        "party.country",
+        "party.taxId"
+      ]
+    },
+    {
+      "id": "DTS-3",
+      "fieldIds": [
+        "declaration.deliveryCode",
+        "declaration.deliveryPlace"
+      ]
+    },
+    {
+      "id": "DTS-4-6",
+      "fieldIds": [
+        "declaration.valuationDocumentIds",
+        "document.kind",
+        "document.number",
+        "document.date"
+      ]
+    },
+    {
+      "id": "DTS-7",
+      "fieldIds": [
+        "declaration.relatedParties",
+        "declaration.relationshipAffectedPrice",
+        "declaration.relationshipEvidence"
+      ]
+    },
+    {
+      "id": "DTS-8",
+      "fieldIds": [
+        "declaration.useRestrictions",
+        "declaration.restrictionsCompatible",
+        "declaration.valueConditions",
+        "declaration.conditionsQuantifiable"
+      ]
+    },
+    {
+      "id": "DTS-9",
+      "fieldIds": [
+        "declaration.royaltyContract",
+        "declaration.royaltyFees",
+        "declaration.subsequentProceeds"
+      ]
+    },
+    {
+      "id": "DTS-10",
+      "fieldIds": [
+        "goods.dtsPageOrdinal",
+        "declaration.signatoryFirstName",
+        "declaration.signatoryLastName",
+        "declaration.signatureDate"
+      ]
+    },
+    {
+      "id": "DTS-11-12",
+      "fieldIds": [
+        "goods.invoiceValue",
+        "goods.nationalInvoiceValue",
+        "goods.indirectValue",
+        "goods.basisValue"
+      ]
+    },
+    {
+      "id": "DTS-13",
+      "fieldIds": [
+        "declaration.sellingCommissionApplicable",
+        "declaration.containersCostApplicable",
+        "declaration.packingCostApplicable",
+        "cost.amount"
+      ]
+    },
+    {
+      "id": "DTS-14",
+      "fieldIds": [
+        "declaration.buyerMaterialsApplicable",
+        "declaration.buyerToolsApplicable",
+        "declaration.buyerConsumablesApplicable",
+        "declaration.buyerEngineeringApplicable",
+        "cost.amount"
+      ]
+    },
+    {
+      "id": "DTS-15-16",
+      "fieldIds": [
+        "declaration.royaltiesApplicable",
+        "declaration.resaleProceedsApplicable",
+        "cost.amount"
+      ]
+    },
+    {
+      "id": "DTS-17-19",
+      "fieldIds": [
+        "declaration.valuationPlace",
+        "declaration.freightApplicable",
+        "declaration.loadingApplicable",
+        "declaration.insuranceApplicable",
+        "cost.amount"
+      ]
+    },
+    {
+      "id": "DTS-20",
+      "fieldIds": [
+        "goods.additionValue"
+      ]
+    },
+    {
+      "id": "DTS-21-24",
+      "fieldIds": [
+        "declaration.postImportWorkApplicable",
+        "declaration.inlandTransportApplicable",
+        "declaration.importTaxesApplicable",
+        "goods.deductionValue"
+      ]
+    },
+    {
+      "id": "DTS-25",
+      "fieldIds": [
+        "goods.customsValue",
+        "goods.customsValueUsd",
+        "goods.valuationMethod",
+        "goods.ordinal"
+      ]
+    }
+  ]
+}

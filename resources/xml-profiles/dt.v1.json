@@ -1,0 +1,1236 @@
+{
+  "id": "sample-dt-v1",
+  "source": "reference/expected-output/S116510021328.xml",
+  "sha256": "41d0c6030e1e59b09244f672cbd57ab8aded69aa520099fbbc49f56041f2a192",
+  "validation": "local-sample-profile-no-official-xsd",
+  "namespaces": {
+    "ccecd": "http://www.codecraft.kz/keden/ecd/v1",
+    "xsi": "http://www.w3.org/2001/XMLSchema-instance",
+    "cacdo": "urn:EEC:M:CA:ComplexDataObjects:v1.10.3",
+    "casdo": "urn:EEC:M:CA:SimpleDataObjects:v1.10.3",
+    "ccdo": "urn:EEC:M:ComplexDataObjects:v0.4.16",
+    "csdo": "urn:EEC:M:SimpleDataObjects:v0.4.16",
+    "gdgdc": "urn:EEC:R:055:GoodsDeclaration:v1.2.0"
+  },
+  "root": "ccecd:KedenGoodsDeclaration",
+  "nodes": {
+    "/ccecd:KedenGoodsDeclaration": {
+      "name": "ccecd:KedenGoodsDeclaration",
+      "children": [
+        "gdgdc:GoodsDeclaration",
+        "ccecd:KedenGoodsItemDetails",
+        "ccecd:CustomsOfficeCode",
+        "ccecd:RateType",
+        "ccecd:FillerInformation"
+      ],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration": {
+      "name": "gdgdc:GoodsDeclaration",
+      "children": [
+        "csdo:EDocCode",
+        "csdo:EDocId",
+        "csdo:EDocDateTime",
+        "casdo:DeclarationKindCode",
+        "casdo:CustomsProcedureCode",
+        "casdo:EDocIndicatorCode",
+        "csdo:PageQuantity",
+        "casdo:GoodsQuantity",
+        "casdo:CargoQuantity",
+        "cacdo:DeclarantDetails",
+        "cacdo:GDGoodsShipmentDetails",
+        "cacdo:SignatoryRepresentativeDetails",
+        "cacdo:SignatoryPersonV2Details"
+      ],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/csdo:EDocCode": {
+      "name": "csdo:EDocCode",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/csdo:EDocId": {
+      "name": "csdo:EDocId",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/csdo:EDocDateTime": {
+      "name": "csdo:EDocDateTime",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/casdo:DeclarationKindCode": {
+      "name": "casdo:DeclarationKindCode",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/casdo:CustomsProcedureCode": {
+      "name": "casdo:CustomsProcedureCode",
+      "children": [],
+      "attributes": {
+        "codeListId": "2002"
+      }
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/casdo:EDocIndicatorCode": {
+      "name": "casdo:EDocIndicatorCode",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/csdo:PageQuantity": {
+      "name": "csdo:PageQuantity",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/casdo:GoodsQuantity": {
+      "name": "casdo:GoodsQuantity",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/casdo:CargoQuantity": {
+      "name": "casdo:CargoQuantity",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:DeclarantDetails": {
+      "name": "cacdo:DeclarantDetails",
+      "children": [
+        "csdo:SubjectName",
+        "csdo:SubjectBriefName",
+        "casdo:CAUniqueCustomsNumberId",
+        "csdo:TaxpayerId",
+        "ccdo:SubjectAddressDetails"
+      ],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:DeclarantDetails/csdo:SubjectName": {
+      "name": "csdo:SubjectName",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:DeclarantDetails/csdo:SubjectBriefName": {
+      "name": "csdo:SubjectBriefName",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:DeclarantDetails/casdo:CAUniqueCustomsNumberId": {
+      "name": "casdo:CAUniqueCustomsNumberId",
+      "children": [],
+      "attributes": {
+        "countryCode": null,
+        "countryCodeListId": "2021"
+      }
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:DeclarantDetails/csdo:TaxpayerId": {
+      "name": "csdo:TaxpayerId",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:DeclarantDetails/ccdo:SubjectAddressDetails": {
+      "name": "ccdo:SubjectAddressDetails",
+      "children": [
+        "csdo:UnifiedCountryCode",
+        "csdo:RegionName",
+        "csdo:CityName",
+        "csdo:StreetName"
+      ],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:DeclarantDetails/ccdo:SubjectAddressDetails/csdo:UnifiedCountryCode": {
+      "name": "csdo:UnifiedCountryCode",
+      "children": [],
+      "attributes": {
+        "codeListId": "2021"
+      }
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:DeclarantDetails/ccdo:SubjectAddressDetails/csdo:RegionName": {
+      "name": "csdo:RegionName",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:DeclarantDetails/ccdo:SubjectAddressDetails/csdo:CityName": {
+      "name": "csdo:CityName",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:DeclarantDetails/ccdo:SubjectAddressDetails/csdo:StreetName": {
+      "name": "csdo:StreetName",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails": {
+      "name": "cacdo:GDGoodsShipmentDetails",
+      "children": [
+        "cacdo:DepartureCountryDetails",
+        "cacdo:DestinationCountryDetails",
+        "cacdo:TradeCountryDetails",
+        "cacdo:DeliveryTermsDetails",
+        "casdo:CAValueAmount",
+        "cacdo:ConsignorDetails",
+        "cacdo:ConsigneeDetails",
+        "cacdo:FinancialSettlementSubjectDetails",
+        "casdo:CustomsValueAmount",
+        "cacdo:OriginCountryDetails",
+        "cacdo:TransactionNatureDetails",
+        "cacdo:GDConsignmentDetails",
+        "cacdo:GoodsLocationDetails",
+        "cacdo:GDGoodsItemDetails",
+        "cacdo:GDFactPaymentDetails"
+      ],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:DepartureCountryDetails": {
+      "name": "cacdo:DepartureCountryDetails",
+      "children": [
+        "casdo:CACountryCode",
+        "casdo:ShortCountryName"
+      ],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:DepartureCountryDetails/casdo:CACountryCode": {
+      "name": "casdo:CACountryCode",
+      "children": [],
+      "attributes": {
+        "codeListId": "2021"
+      }
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:DepartureCountryDetails/casdo:ShortCountryName": {
+      "name": "casdo:ShortCountryName",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:DestinationCountryDetails": {
+      "name": "cacdo:DestinationCountryDetails",
+      "children": [
+        "casdo:CACountryCode",
+        "casdo:ShortCountryName"
+      ],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:DestinationCountryDetails/casdo:CACountryCode": {
+      "name": "casdo:CACountryCode",
+      "children": [],
+      "attributes": {
+        "codeListId": "2021"
+      }
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:DestinationCountryDetails/casdo:ShortCountryName": {
+      "name": "casdo:ShortCountryName",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:TradeCountryDetails": {
+      "name": "cacdo:TradeCountryDetails",
+      "children": [
+        "casdo:CACountryCode"
+      ],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:TradeCountryDetails/casdo:CACountryCode": {
+      "name": "casdo:CACountryCode",
+      "children": [],
+      "attributes": {
+        "codeListId": "2021"
+      }
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:DeliveryTermsDetails": {
+      "name": "cacdo:DeliveryTermsDetails",
+      "children": [
+        "casdo:DeliveryTermsCode",
+        "casdo:PlaceName"
+      ],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:DeliveryTermsDetails/casdo:DeliveryTermsCode": {
+      "name": "casdo:DeliveryTermsCode",
+      "children": [],
+      "attributes": {
+        "codeListId": "2014"
+      }
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:DeliveryTermsDetails/casdo:PlaceName": {
+      "name": "casdo:PlaceName",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/casdo:CAValueAmount": {
+      "name": "casdo:CAValueAmount",
+      "children": [],
+      "attributes": {
+        "currencyCode": null,
+        "currencyCodeListId": "2022"
+      }
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:ConsignorDetails": {
+      "name": "cacdo:ConsignorDetails",
+      "children": [
+        "csdo:SubjectName",
+        "csdo:SubjectBriefName",
+        "casdo:CAUniqueCustomsNumberId",
+        "ccdo:SubjectAddressDetails"
+      ],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:ConsignorDetails/csdo:SubjectName": {
+      "name": "csdo:SubjectName",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:ConsignorDetails/csdo:SubjectBriefName": {
+      "name": "csdo:SubjectBriefName",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:ConsignorDetails/casdo:CAUniqueCustomsNumberId": {
+      "name": "casdo:CAUniqueCustomsNumberId",
+      "children": [],
+      "attributes": {
+        "countryCode": null,
+        "countryCodeListId": "2021"
+      }
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:ConsignorDetails/ccdo:SubjectAddressDetails": {
+      "name": "ccdo:SubjectAddressDetails",
+      "children": [
+        "csdo:UnifiedCountryCode",
+        "csdo:CityName",
+        "csdo:StreetName"
+      ],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:ConsignorDetails/ccdo:SubjectAddressDetails/csdo:UnifiedCountryCode": {
+      "name": "csdo:UnifiedCountryCode",
+      "children": [],
+      "attributes": {
+        "codeListId": "2021"
+      }
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:ConsignorDetails/ccdo:SubjectAddressDetails/csdo:CityName": {
+      "name": "csdo:CityName",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:ConsignorDetails/ccdo:SubjectAddressDetails/csdo:StreetName": {
+      "name": "csdo:StreetName",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:ConsigneeDetails": {
+      "name": "cacdo:ConsigneeDetails",
+      "children": [
+        "casdo:EqualIndicator"
+      ],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:ConsigneeDetails/casdo:EqualIndicator": {
+      "name": "casdo:EqualIndicator",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:FinancialSettlementSubjectDetails": {
+      "name": "cacdo:FinancialSettlementSubjectDetails",
+      "children": [
+        "casdo:EqualIndicator"
+      ],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:FinancialSettlementSubjectDetails/casdo:EqualIndicator": {
+      "name": "casdo:EqualIndicator",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/casdo:CustomsValueAmount": {
+      "name": "casdo:CustomsValueAmount",
+      "children": [],
+      "attributes": {
+        "currencyCode": null,
+        "currencyCodeListId": "2022"
+      }
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:OriginCountryDetails": {
+      "name": "cacdo:OriginCountryDetails",
+      "children": [
+        "casdo:CACountryCode"
+      ],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:OriginCountryDetails/casdo:CACountryCode": {
+      "name": "casdo:CACountryCode",
+      "children": [],
+      "attributes": {
+        "codeListId": "2021"
+      }
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:TransactionNatureDetails": {
+      "name": "cacdo:TransactionNatureDetails",
+      "children": [
+        "casdo:TransactionNatureCode",
+        "casdo:TransactionFeatureCode"
+      ],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:TransactionNatureDetails/casdo:TransactionNatureCode": {
+      "name": "casdo:TransactionNatureCode",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:TransactionNatureDetails/casdo:TransactionFeatureCode": {
+      "name": "casdo:TransactionFeatureCode",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDConsignmentDetails": {
+      "name": "cacdo:GDConsignmentDetails",
+      "children": [
+        "casdo:ContainerIndicator",
+        "cacdo:BorderTransportDetails",
+        "cacdo:ArrivalDepartureTransportDetails",
+        "cacdo:BorderCustomsOfficeDetails"
+      ],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDConsignmentDetails/casdo:ContainerIndicator": {
+      "name": "casdo:ContainerIndicator",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDConsignmentDetails/cacdo:BorderTransportDetails": {
+      "name": "cacdo:BorderTransportDetails",
+      "children": [
+        "csdo:UnifiedTransportModeCode",
+        "casdo:RegistrationNationalityCode",
+        "casdo:TransportMeansQuantity",
+        "cacdo:TransportMeansItemDetails"
+      ],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDConsignmentDetails/cacdo:BorderTransportDetails/csdo:UnifiedTransportModeCode": {
+      "name": "csdo:UnifiedTransportModeCode",
+      "children": [],
+      "attributes": {
+        "codeListId": "2004"
+      }
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDConsignmentDetails/cacdo:BorderTransportDetails/casdo:RegistrationNationalityCode": {
+      "name": "casdo:RegistrationNationalityCode",
+      "children": [],
+      "attributes": {
+        "codeListId": "2021"
+      }
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDConsignmentDetails/cacdo:BorderTransportDetails/casdo:TransportMeansQuantity": {
+      "name": "casdo:TransportMeansQuantity",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDConsignmentDetails/cacdo:BorderTransportDetails/cacdo:TransportMeansItemDetails": {
+      "name": "cacdo:TransportMeansItemDetails",
+      "children": [
+        "csdo:ObjectOrdinal",
+        "csdo:TransportMeansRegId"
+      ],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDConsignmentDetails/cacdo:BorderTransportDetails/cacdo:TransportMeansItemDetails/csdo:ObjectOrdinal": {
+      "name": "csdo:ObjectOrdinal",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDConsignmentDetails/cacdo:BorderTransportDetails/cacdo:TransportMeansItemDetails/csdo:TransportMeansRegId": {
+      "name": "csdo:TransportMeansRegId",
+      "children": [],
+      "attributes": {
+        "countryCode": null,
+        "countryCodeListId": "2021"
+      }
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDConsignmentDetails/cacdo:ArrivalDepartureTransportDetails": {
+      "name": "cacdo:ArrivalDepartureTransportDetails",
+      "children": [
+        "csdo:UnifiedTransportModeCode",
+        "casdo:RegistrationNationalityCode",
+        "casdo:TransportMeansQuantity",
+        "cacdo:TransportMeansItemDetails"
+      ],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDConsignmentDetails/cacdo:ArrivalDepartureTransportDetails/csdo:UnifiedTransportModeCode": {
+      "name": "csdo:UnifiedTransportModeCode",
+      "children": [],
+      "attributes": {
+        "codeListId": "2004"
+      }
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDConsignmentDetails/cacdo:ArrivalDepartureTransportDetails/casdo:RegistrationNationalityCode": {
+      "name": "casdo:RegistrationNationalityCode",
+      "children": [],
+      "attributes": {
+        "codeListId": "2021"
+      }
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDConsignmentDetails/cacdo:ArrivalDepartureTransportDetails/casdo:TransportMeansQuantity": {
+      "name": "casdo:TransportMeansQuantity",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDConsignmentDetails/cacdo:ArrivalDepartureTransportDetails/cacdo:TransportMeansItemDetails": {
+      "name": "cacdo:TransportMeansItemDetails",
+      "children": [
+        "csdo:ObjectOrdinal",
+        "csdo:TransportMeansRegId",
+        "casdo:TransportTypeCode"
+      ],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDConsignmentDetails/cacdo:ArrivalDepartureTransportDetails/cacdo:TransportMeansItemDetails/csdo:ObjectOrdinal": {
+      "name": "csdo:ObjectOrdinal",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDConsignmentDetails/cacdo:ArrivalDepartureTransportDetails/cacdo:TransportMeansItemDetails/csdo:TransportMeansRegId": {
+      "name": "csdo:TransportMeansRegId",
+      "children": [],
+      "attributes": {
+        "countryCode": null,
+        "countryCodeListId": "2021"
+      }
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDConsignmentDetails/cacdo:ArrivalDepartureTransportDetails/cacdo:TransportMeansItemDetails/casdo:TransportTypeCode": {
+      "name": "casdo:TransportTypeCode",
+      "children": [],
+      "attributes": {
+        "codeListId": "2024"
+      }
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDConsignmentDetails/cacdo:BorderCustomsOfficeDetails": {
+      "name": "cacdo:BorderCustomsOfficeDetails",
+      "children": [
+        "csdo:CustomsOfficeCode",
+        "csdo:CustomsOfficeName",
+        "csdo:UnifiedCountryCode"
+      ],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDConsignmentDetails/cacdo:BorderCustomsOfficeDetails/csdo:CustomsOfficeCode": {
+      "name": "csdo:CustomsOfficeCode",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDConsignmentDetails/cacdo:BorderCustomsOfficeDetails/csdo:CustomsOfficeName": {
+      "name": "csdo:CustomsOfficeName",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDConsignmentDetails/cacdo:BorderCustomsOfficeDetails/csdo:UnifiedCountryCode": {
+      "name": "csdo:UnifiedCountryCode",
+      "children": [],
+      "attributes": {
+        "codeListId": "2021"
+      }
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GoodsLocationDetails": {
+      "name": "cacdo:GoodsLocationDetails",
+      "children": [
+        "casdo:GoodsLocationCode",
+        "cacdo:RegisterDocumentIdDetails"
+      ],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GoodsLocationDetails/casdo:GoodsLocationCode": {
+      "name": "casdo:GoodsLocationCode",
+      "children": [],
+      "attributes": {
+        "codeListId": "2013"
+      }
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GoodsLocationDetails/cacdo:RegisterDocumentIdDetails": {
+      "name": "cacdo:RegisterDocumentIdDetails",
+      "children": [
+        "csdo:UnifiedCountryCode",
+        "casdo:RegistrationNumberId"
+      ],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GoodsLocationDetails/cacdo:RegisterDocumentIdDetails/csdo:UnifiedCountryCode": {
+      "name": "csdo:UnifiedCountryCode",
+      "children": [],
+      "attributes": {
+        "codeListId": "2021"
+      }
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GoodsLocationDetails/cacdo:RegisterDocumentIdDetails/casdo:RegistrationNumberId": {
+      "name": "casdo:RegistrationNumberId",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDGoodsItemDetails": {
+      "name": "cacdo:GDGoodsItemDetails",
+      "children": [
+        "casdo:ConsignmentItemOrdinal",
+        "csdo:CommodityCode",
+        "casdo:GoodsDescriptionText",
+        "csdo:UnifiedGrossMassMeasure",
+        "csdo:UnifiedNetMassMeasure",
+        "casdo:PageOrdinal",
+        "casdo:ProhibitionCode",
+        "casdo:IPOCode",
+        "cacdo:GoodsItemGroupDetails",
+        "cacdo:CargoPackagePalletDetails",
+        "cacdo:OriginCountryDetails",
+        "cacdo:PreferenceDetails",
+        "cacdo:CustomsProcedureDetails",
+        "casdo:CAValueAmount",
+        "casdo:CustomsValueAmount",
+        "casdo:StatisticValueAmount",
+        "casdo:ValuationMethodCode",
+        "cacdo:PresentedDocDetails",
+        "cacdo:CustomsPaymentDetails"
+      ],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDGoodsItemDetails/casdo:ConsignmentItemOrdinal": {
+      "name": "casdo:ConsignmentItemOrdinal",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDGoodsItemDetails/csdo:CommodityCode": {
+      "name": "csdo:CommodityCode",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDGoodsItemDetails/casdo:GoodsDescriptionText": {
+      "name": "casdo:GoodsDescriptionText",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDGoodsItemDetails/csdo:UnifiedGrossMassMeasure": {
+      "name": "csdo:UnifiedGrossMassMeasure",
+      "children": [],
+      "attributes": {
+        "measurementUnitCode": null,
+        "measurementUnitCodeListId": "2016"
+      }
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDGoodsItemDetails/csdo:UnifiedNetMassMeasure": {
+      "name": "csdo:UnifiedNetMassMeasure",
+      "children": [],
+      "attributes": {
+        "measurementUnitCode": null,
+        "measurementUnitCodeListId": "2016"
+      }
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDGoodsItemDetails/casdo:PageOrdinal": {
+      "name": "casdo:PageOrdinal",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDGoodsItemDetails/casdo:ProhibitionCode": {
+      "name": "casdo:ProhibitionCode",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDGoodsItemDetails/casdo:IPOCode": {
+      "name": "casdo:IPOCode",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDGoodsItemDetails/cacdo:GoodsItemGroupDetails": {
+      "name": "cacdo:GoodsItemGroupDetails",
+      "children": [
+        "casdo:GoodsDescriptionText",
+        "cacdo:CommodityGroupItemDetails"
+      ],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDGoodsItemDetails/cacdo:GoodsItemGroupDetails/casdo:GoodsDescriptionText": {
+      "name": "casdo:GoodsDescriptionText",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDGoodsItemDetails/cacdo:GoodsItemGroupDetails/cacdo:CommodityGroupItemDetails": {
+      "name": "cacdo:CommodityGroupItemDetails",
+      "children": [
+        "cacdo:CommodityDescriptionDetails",
+        "cacdo:ManufacturerDetails",
+        "cacdo:GoodsMeasureDetails"
+      ],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDGoodsItemDetails/cacdo:GoodsItemGroupDetails/cacdo:CommodityGroupItemDetails/cacdo:CommodityDescriptionDetails": {
+      "name": "cacdo:CommodityDescriptionDetails",
+      "children": [
+        "casdo:TradeMarkName",
+        "csdo:ProductMarkName",
+        "csdo:ProductModelName",
+        "csdo:ProductId"
+      ],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDGoodsItemDetails/cacdo:GoodsItemGroupDetails/cacdo:CommodityGroupItemDetails/cacdo:CommodityDescriptionDetails/casdo:TradeMarkName": {
+      "name": "casdo:TradeMarkName",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDGoodsItemDetails/cacdo:GoodsItemGroupDetails/cacdo:CommodityGroupItemDetails/cacdo:CommodityDescriptionDetails/csdo:ProductMarkName": {
+      "name": "csdo:ProductMarkName",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDGoodsItemDetails/cacdo:GoodsItemGroupDetails/cacdo:CommodityGroupItemDetails/cacdo:CommodityDescriptionDetails/csdo:ProductModelName": {
+      "name": "csdo:ProductModelName",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDGoodsItemDetails/cacdo:GoodsItemGroupDetails/cacdo:CommodityGroupItemDetails/cacdo:CommodityDescriptionDetails/csdo:ProductId": {
+      "name": "csdo:ProductId",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDGoodsItemDetails/cacdo:GoodsItemGroupDetails/cacdo:CommodityGroupItemDetails/cacdo:ManufacturerDetails": {
+      "name": "cacdo:ManufacturerDetails",
+      "children": [
+        "csdo:SubjectName"
+      ],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDGoodsItemDetails/cacdo:GoodsItemGroupDetails/cacdo:CommodityGroupItemDetails/cacdo:ManufacturerDetails/csdo:SubjectName": {
+      "name": "csdo:SubjectName",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDGoodsItemDetails/cacdo:GoodsItemGroupDetails/cacdo:CommodityGroupItemDetails/cacdo:GoodsMeasureDetails": {
+      "name": "cacdo:GoodsMeasureDetails",
+      "children": [
+        "casdo:GoodsMeasure"
+      ],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDGoodsItemDetails/cacdo:GoodsItemGroupDetails/cacdo:CommodityGroupItemDetails/cacdo:GoodsMeasureDetails/casdo:GoodsMeasure": {
+      "name": "casdo:GoodsMeasure",
+      "children": [],
+      "attributes": {
+        "measurementUnitCode": null,
+        "measurementUnitCodeListId": "2016"
+      }
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDGoodsItemDetails/cacdo:CargoPackagePalletDetails": {
+      "name": "cacdo:CargoPackagePalletDetails",
+      "children": [
+        "casdo:PackageAvailabilityCode",
+        "casdo:CargoQuantity",
+        "cacdo:PackagePalletDetails"
+      ],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDGoodsItemDetails/cacdo:CargoPackagePalletDetails/casdo:PackageAvailabilityCode": {
+      "name": "casdo:PackageAvailabilityCode",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDGoodsItemDetails/cacdo:CargoPackagePalletDetails/casdo:CargoQuantity": {
+      "name": "casdo:CargoQuantity",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDGoodsItemDetails/cacdo:CargoPackagePalletDetails/cacdo:PackagePalletDetails": {
+      "name": "cacdo:PackagePalletDetails",
+      "children": [
+        "casdo:InformationKindCode",
+        "csdo:PackageKindCode",
+        "csdo:PackageQuantity"
+      ],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDGoodsItemDetails/cacdo:CargoPackagePalletDetails/cacdo:PackagePalletDetails/casdo:InformationKindCode": {
+      "name": "casdo:InformationKindCode",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDGoodsItemDetails/cacdo:CargoPackagePalletDetails/cacdo:PackagePalletDetails/csdo:PackageKindCode": {
+      "name": "csdo:PackageKindCode",
+      "children": [],
+      "attributes": {
+        "codeListId": "2013"
+      }
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDGoodsItemDetails/cacdo:CargoPackagePalletDetails/cacdo:PackagePalletDetails/csdo:PackageQuantity": {
+      "name": "csdo:PackageQuantity",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDGoodsItemDetails/cacdo:OriginCountryDetails": {
+      "name": "cacdo:OriginCountryDetails",
+      "children": [
+        "casdo:CACountryCode",
+        "casdo:ShortCountryName"
+      ],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDGoodsItemDetails/cacdo:OriginCountryDetails/casdo:CACountryCode": {
+      "name": "casdo:CACountryCode",
+      "children": [],
+      "attributes": {
+        "codeListId": "2021"
+      }
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDGoodsItemDetails/cacdo:OriginCountryDetails/casdo:ShortCountryName": {
+      "name": "casdo:ShortCountryName",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDGoodsItemDetails/cacdo:PreferenceDetails": {
+      "name": "cacdo:PreferenceDetails",
+      "children": [
+        "casdo:CustomsClearanceChargesPrefCode",
+        "casdo:CustomsDutyPrefCode",
+        "casdo:ExcisePrefCode",
+        "casdo:VATPrefCode"
+      ],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDGoodsItemDetails/cacdo:PreferenceDetails/casdo:CustomsClearanceChargesPrefCode": {
+      "name": "casdo:CustomsClearanceChargesPrefCode",
+      "children": [],
+      "attributes": {
+        "codeListId": "2008"
+      }
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDGoodsItemDetails/cacdo:PreferenceDetails/casdo:CustomsDutyPrefCode": {
+      "name": "casdo:CustomsDutyPrefCode",
+      "children": [],
+      "attributes": {
+        "codeListId": "2008"
+      }
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDGoodsItemDetails/cacdo:PreferenceDetails/casdo:ExcisePrefCode": {
+      "name": "casdo:ExcisePrefCode",
+      "children": [],
+      "attributes": {
+        "codeListId": "2008"
+      }
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDGoodsItemDetails/cacdo:PreferenceDetails/casdo:VATPrefCode": {
+      "name": "casdo:VATPrefCode",
+      "children": [],
+      "attributes": {
+        "codeListId": "2008"
+      }
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDGoodsItemDetails/cacdo:CustomsProcedureDetails": {
+      "name": "cacdo:CustomsProcedureDetails",
+      "children": [
+        "casdo:CustomsProcedureCode",
+        "casdo:PreviousCustomsProcedureModeCode",
+        "casdo:GoodsMoveFeatureCode"
+      ],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDGoodsItemDetails/cacdo:CustomsProcedureDetails/casdo:CustomsProcedureCode": {
+      "name": "casdo:CustomsProcedureCode",
+      "children": [],
+      "attributes": {
+        "codeListId": "2002"
+      }
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDGoodsItemDetails/cacdo:CustomsProcedureDetails/casdo:PreviousCustomsProcedureModeCode": {
+      "name": "casdo:PreviousCustomsProcedureModeCode",
+      "children": [],
+      "attributes": {
+        "codeListId": "2002"
+      }
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDGoodsItemDetails/cacdo:CustomsProcedureDetails/casdo:GoodsMoveFeatureCode": {
+      "name": "casdo:GoodsMoveFeatureCode",
+      "children": [],
+      "attributes": {
+        "codeListId": "2003"
+      }
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDGoodsItemDetails/casdo:CAValueAmount": {
+      "name": "casdo:CAValueAmount",
+      "children": [],
+      "attributes": {
+        "currencyCode": null,
+        "currencyCodeListId": "2022"
+      }
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDGoodsItemDetails/casdo:CustomsValueAmount": {
+      "name": "casdo:CustomsValueAmount",
+      "children": [],
+      "attributes": {
+        "currencyCode": null,
+        "currencyCodeListId": "2022"
+      }
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDGoodsItemDetails/casdo:StatisticValueAmount": {
+      "name": "casdo:StatisticValueAmount",
+      "children": [],
+      "attributes": {
+        "currencyCode": null,
+        "currencyCodeListId": "2022"
+      }
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDGoodsItemDetails/casdo:ValuationMethodCode": {
+      "name": "casdo:ValuationMethodCode",
+      "children": [],
+      "attributes": {
+        "codeListId": "2005"
+      }
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDGoodsItemDetails/cacdo:PresentedDocDetails": {
+      "name": "cacdo:PresentedDocDetails",
+      "children": [
+        "csdo:DocKindCode",
+        "csdo:DocName",
+        "csdo:DocId",
+        "csdo:DocCreationDate",
+        "csdo:DocStartDate",
+        "csdo:DocValidityDate",
+        "cacdo:DocumentPresentingDetails"
+      ],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDGoodsItemDetails/cacdo:PresentedDocDetails/csdo:DocKindCode": {
+      "name": "csdo:DocKindCode",
+      "children": [],
+      "attributes": {
+        "codeListId": "2009"
+      }
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDGoodsItemDetails/cacdo:PresentedDocDetails/csdo:DocName": {
+      "name": "csdo:DocName",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDGoodsItemDetails/cacdo:PresentedDocDetails/csdo:DocId": {
+      "name": "csdo:DocId",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDGoodsItemDetails/cacdo:PresentedDocDetails/csdo:DocCreationDate": {
+      "name": "csdo:DocCreationDate",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDGoodsItemDetails/cacdo:PresentedDocDetails/cacdo:DocumentPresentingDetails": {
+      "name": "cacdo:DocumentPresentingDetails",
+      "children": [
+        "casdo:DocPresentKindCode"
+      ],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDGoodsItemDetails/cacdo:PresentedDocDetails/cacdo:DocumentPresentingDetails/casdo:DocPresentKindCode": {
+      "name": "casdo:DocPresentKindCode",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDGoodsItemDetails/cacdo:PresentedDocDetails/csdo:DocStartDate": {
+      "name": "csdo:DocStartDate",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDGoodsItemDetails/cacdo:PresentedDocDetails/csdo:DocValidityDate": {
+      "name": "csdo:DocValidityDate",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDGoodsItemDetails/cacdo:CustomsPaymentDetails": {
+      "name": "cacdo:CustomsPaymentDetails",
+      "children": [
+        "casdo:CustomsTaxModeCode",
+        "casdo:TaxBaseMeasure",
+        "csdo:UnifiedCurrencyN3Code",
+        "cacdo:EffectiveCustomsRateDetails",
+        "casdo:DutyTaxFeeRateDate",
+        "casdo:CustomsTaxPaymentFeatureCode",
+        "casdo:CAPaymentNAmount"
+      ],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDGoodsItemDetails/cacdo:CustomsPaymentDetails/casdo:CustomsTaxModeCode": {
+      "name": "casdo:CustomsTaxModeCode",
+      "children": [],
+      "attributes": {
+        "codeListId": "2010"
+      }
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDGoodsItemDetails/cacdo:CustomsPaymentDetails/cacdo:EffectiveCustomsRateDetails": {
+      "name": "cacdo:EffectiveCustomsRateDetails",
+      "children": [
+        "casdo:DutyTaxFeeRateKindCode",
+        "casdo:DutyTaxFeeRateValue"
+      ],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDGoodsItemDetails/cacdo:CustomsPaymentDetails/cacdo:EffectiveCustomsRateDetails/casdo:DutyTaxFeeRateKindCode": {
+      "name": "casdo:DutyTaxFeeRateKindCode",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDGoodsItemDetails/cacdo:CustomsPaymentDetails/cacdo:EffectiveCustomsRateDetails/casdo:DutyTaxFeeRateValue": {
+      "name": "casdo:DutyTaxFeeRateValue",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDGoodsItemDetails/cacdo:CustomsPaymentDetails/casdo:DutyTaxFeeRateDate": {
+      "name": "casdo:DutyTaxFeeRateDate",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDGoodsItemDetails/cacdo:CustomsPaymentDetails/casdo:CustomsTaxPaymentFeatureCode": {
+      "name": "casdo:CustomsTaxPaymentFeatureCode",
+      "children": [],
+      "attributes": {
+        "codeListId": "2011"
+      }
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDGoodsItemDetails/cacdo:CustomsPaymentDetails/casdo:CAPaymentNAmount": {
+      "name": "casdo:CAPaymentNAmount",
+      "children": [],
+      "attributes": {
+        "currencyCode": null,
+        "currencyCodeListId": "2022"
+      }
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDGoodsItemDetails/cacdo:CustomsPaymentDetails/casdo:TaxBaseMeasure": {
+      "name": "casdo:TaxBaseMeasure",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDGoodsItemDetails/cacdo:CustomsPaymentDetails/csdo:UnifiedCurrencyN3Code": {
+      "name": "csdo:UnifiedCurrencyN3Code",
+      "children": [],
+      "attributes": {
+        "codeListId": "2022"
+      }
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDFactPaymentDetails": {
+      "name": "cacdo:GDFactPaymentDetails",
+      "children": [
+        "casdo:CustomsTaxModeCode",
+        "casdo:CAPaymentNAmount",
+        "casdo:ExchangeRate",
+        "cacdo:GDPaymentDocDetails"
+      ],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDFactPaymentDetails/casdo:CustomsTaxModeCode": {
+      "name": "casdo:CustomsTaxModeCode",
+      "children": [],
+      "attributes": {
+        "codeListId": "2010"
+      }
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDFactPaymentDetails/casdo:CAPaymentNAmount": {
+      "name": "casdo:CAPaymentNAmount",
+      "children": [],
+      "attributes": {
+        "currencyCodeListId": "2022"
+      }
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDFactPaymentDetails/casdo:ExchangeRate": {
+      "name": "casdo:ExchangeRate",
+      "children": [],
+      "attributes": {
+        "currencyCode": null,
+        "currencyCodeListId": "2022"
+      }
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDFactPaymentDetails/cacdo:GDPaymentDocDetails": {
+      "name": "cacdo:GDPaymentDocDetails",
+      "children": [
+        "csdo:DocCreationDate",
+        "csdo:TaxpayerId",
+        "casdo:PaymentDate",
+        "casdo:CustomsTaxPaymentMethodCode"
+      ],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDFactPaymentDetails/cacdo:GDPaymentDocDetails/csdo:DocCreationDate": {
+      "name": "csdo:DocCreationDate",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDFactPaymentDetails/cacdo:GDPaymentDocDetails/csdo:TaxpayerId": {
+      "name": "csdo:TaxpayerId",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDFactPaymentDetails/cacdo:GDPaymentDocDetails/casdo:PaymentDate": {
+      "name": "casdo:PaymentDate",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:GDGoodsShipmentDetails/cacdo:GDFactPaymentDetails/cacdo:GDPaymentDocDetails/casdo:CustomsTaxPaymentMethodCode": {
+      "name": "casdo:CustomsTaxPaymentMethodCode",
+      "children": [],
+      "attributes": {
+        "codeListId": "2012"
+      }
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:SignatoryRepresentativeDetails": {
+      "name": "cacdo:SignatoryRepresentativeDetails",
+      "children": [
+        "cacdo:RegisterDocumentIdDetails",
+        "cacdo:RepresentativeContractDetails"
+      ],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:SignatoryRepresentativeDetails/cacdo:RegisterDocumentIdDetails": {
+      "name": "cacdo:RegisterDocumentIdDetails",
+      "children": [
+        "casdo:RegistrationNumberId"
+      ],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:SignatoryRepresentativeDetails/cacdo:RegisterDocumentIdDetails/casdo:RegistrationNumberId": {
+      "name": "casdo:RegistrationNumberId",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:SignatoryRepresentativeDetails/cacdo:RepresentativeContractDetails": {
+      "name": "cacdo:RepresentativeContractDetails",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:SignatoryPersonV2Details": {
+      "name": "cacdo:SignatoryPersonV2Details",
+      "children": [
+        "cacdo:SigningDetails",
+        "cacdo:PowerOfAttorneyDetails"
+      ],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:SignatoryPersonV2Details/cacdo:SigningDetails": {
+      "name": "cacdo:SigningDetails",
+      "children": [
+        "ccdo:FullNameDetails",
+        "csdo:PositionName",
+        "ccdo:CommunicationDetails",
+        "casdo:SigningDate"
+      ],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:SignatoryPersonV2Details/cacdo:SigningDetails/ccdo:FullNameDetails": {
+      "name": "ccdo:FullNameDetails",
+      "children": [
+        "csdo:FirstName",
+        "csdo:MiddleName",
+        "csdo:LastName"
+      ],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:SignatoryPersonV2Details/cacdo:SigningDetails/ccdo:FullNameDetails/csdo:FirstName": {
+      "name": "csdo:FirstName",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:SignatoryPersonV2Details/cacdo:SigningDetails/ccdo:FullNameDetails/csdo:MiddleName": {
+      "name": "csdo:MiddleName",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:SignatoryPersonV2Details/cacdo:SigningDetails/ccdo:FullNameDetails/csdo:LastName": {
+      "name": "csdo:LastName",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:SignatoryPersonV2Details/cacdo:SigningDetails/csdo:PositionName": {
+      "name": "csdo:PositionName",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:SignatoryPersonV2Details/cacdo:SigningDetails/ccdo:CommunicationDetails": {
+      "name": "ccdo:CommunicationDetails",
+      "children": [
+        "csdo:CommunicationChannelId"
+      ],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:SignatoryPersonV2Details/cacdo:SigningDetails/ccdo:CommunicationDetails/csdo:CommunicationChannelId": {
+      "name": "csdo:CommunicationChannelId",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:SignatoryPersonV2Details/cacdo:SigningDetails/casdo:SigningDate": {
+      "name": "casdo:SigningDate",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:SignatoryPersonV2Details/cacdo:PowerOfAttorneyDetails": {
+      "name": "cacdo:PowerOfAttorneyDetails",
+      "children": [
+        "csdo:DocId",
+        "csdo:DocCreationDate",
+        "csdo:DocValidityDate"
+      ],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:SignatoryPersonV2Details/cacdo:PowerOfAttorneyDetails/csdo:DocId": {
+      "name": "csdo:DocId",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:SignatoryPersonV2Details/cacdo:PowerOfAttorneyDetails/csdo:DocCreationDate": {
+      "name": "csdo:DocCreationDate",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/gdgdc:GoodsDeclaration/cacdo:SignatoryPersonV2Details/cacdo:PowerOfAttorneyDetails/csdo:DocValidityDate": {
+      "name": "csdo:DocValidityDate",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/ccecd:KedenGoodsItemDetails": {
+      "name": "ccecd:KedenGoodsItemDetails",
+      "children": [
+        "ccecd:GoodsItemOrder",
+        "ccecd:Ntincode"
+      ],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/ccecd:KedenGoodsItemDetails/ccecd:GoodsItemOrder": {
+      "name": "ccecd:GoodsItemOrder",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/ccecd:KedenGoodsItemDetails/ccecd:Ntincode": {
+      "name": "ccecd:Ntincode",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/ccecd:CustomsOfficeCode": {
+      "name": "ccecd:CustomsOfficeCode",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/ccecd:RateType": {
+      "name": "ccecd:RateType",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/ccecd:FillerInformation": {
+      "name": "ccecd:FillerInformation",
+      "children": [
+        "ccecd:FillerType",
+        "ccecd:FilledBy",
+        "ccecd:PersonId"
+      ],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/ccecd:FillerInformation/ccecd:FillerType": {
+      "name": "ccecd:FillerType",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/ccecd:FillerInformation/ccecd:FilledBy": {
+      "name": "ccecd:FilledBy",
+      "children": [],
+      "attributes": {}
+    },
+    "/ccecd:KedenGoodsDeclaration/ccecd:FillerInformation/ccecd:PersonId": {
+      "name": "ccecd:PersonId",
+      "children": [],
+      "attributes": {}
+    }
+  }
+}

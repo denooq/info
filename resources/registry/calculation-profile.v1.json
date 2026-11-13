@@ -1,0 +1,89 @@
+{
+  "id": "im40-method1-advalorem-v1",
+  "version": "0.1.0",
+  "status": "provisional-mvp",
+  "jurisdiction": "KZ",
+  "valuationMethod": "1",
+  "verifiedOn": "2026-11-12",
+  "legalCurrency": "KZT",
+  "parameterPolicy": {
+    "sourceRequired": true,
+    "dateRequired": true,
+    "userConfirmationRequired": true,
+    "carrySampleRatesToNewDraft": false,
+    "defaults": {
+      "dutyRate": null,
+      "vatRate": null,
+      "feeBase": null,
+      "feeAdditional": null,
+      "fxValue": null,
+      "fxNominal": null
+    }
+  },
+  "rounding": {
+    "mode": "HALF_UP",
+    "moneyScale": 2,
+    "statisticalScale": 2,
+    "massScale": 3,
+    "subGramMassScale": 6,
+    "paymentFactScale": 0,
+    "source": "reference/rules/DT_2026.docx:15(11),(33),(36),(40),(43)-(46)"
+  },
+  "formulas": [
+    {
+      "code": "1010",
+      "kind": "fee",
+      "expression": "(feeBase + extraSheets * feeAdditional) / goodsCount",
+      "source": "reference/rules/DT_2026.docx:15(45)",
+      "parameters": [
+        "feeBase",
+        "feeAdditional"
+      ],
+      "allocation": "equal-with-deterministic-rounding-remainder"
+    },
+    {
+      "code": "2010",
+      "kind": "advalorem",
+      "expression": "customsValue * dutyRate / 100",
+      "source": "Подтверждённая пользователем ставка по коду/происхождению/дате",
+      "parameters": [
+        "dutyRate"
+      ]
+    },
+    {
+      "code": "5060",
+      "kind": "vat",
+      "expression": "(customsValue + duty + fee) * vatRate / 100",
+      "source": "design.md:D7; включение сбора — явно предварительный профиль примеров",
+      "parameters": [
+        "vatRate"
+      ],
+      "requiresConfirmedBasis": true
+    }
+  ],
+  "exchangeRatePolicy": {
+    "dateField": "declaration.calculationDate",
+    "quote": "KZT per nominal units",
+    "formula": "amount * value / nominal",
+    "requireFor": [
+      "invoiceCurrency",
+      "USD",
+      "costCurrencies"
+    ],
+    "requireConfirmed": true
+  },
+  "method1Formula": "basisKzt + additionsKzt - deductionsKzt",
+  "statisticalFormula": "(basisOnBorderKzt + statisticalAddition - statisticalDeduction) / usdKztPerUnit",
+  "paymentFacts": {
+    "deriveFromAccrual": false,
+    "sourceRequired": true,
+    "roundingSource": "reference/rules/DT_2026.docx:15(46)"
+  },
+  "unsupported": [
+    "specific-duty",
+    "combined-duty",
+    "excise",
+    "valuation-methods-2-6"
+  ],
+  "unsupportedPolicy": "explicit-validation-error"
+}

@@ -1,0 +1,217 @@
+{
+  "id": "cpt-ethyl-acetate",
+  "purpose": "reference-observations-not-authoritative-output",
+  "inputs": [
+    "reference/source-documents/Акт идентификации.pdf",
+    "reference/source-documents/брокерский договор.pdf",
+    "reference/source-documents/договор+с+УНК.pdf",
+    "reference/source-documents/инвойс.pdf",
+    "reference/source-documents/отказной по СЭС.pdf",
+    "reference/source-documents/платеж+13.10.2026.pdf",
+    "reference/source-documents/Приложение 25.pdf",
+    "reference/source-documents/смр.pdf",
+    "reference/source-documents/тд.pdf",
+    "reference/source-documents/экспортная.pdf"
+  ],
+  "comparisonOnly": [
+    "reference/expected-output/ДТ 55411_281026_0028206.pdf",
+    "reference/expected-output/S116510021328.xml",
+    "reference/expected-output/DTS_20261105121051096.xml"
+  ],
+  "facts": [
+    {
+      "fieldId": "document.number",
+      "value": "AHRBXS2026103311",
+      "evidence": {
+        "file": "reference/source-documents/инвойс.pdf",
+        "page": 1,
+        "quote": "AHRBXS2026103311"
+      }
+    },
+    {
+      "fieldId": "document.date",
+      "value": "2026-10-09",
+      "evidence": {
+        "file": "reference/source-documents/Приложение 25.pdf",
+        "page": 1,
+        "quote": "09.10.2026"
+      }
+    },
+    {
+      "fieldId": "goods.invoiceValue",
+      "value": "37454.40",
+      "evidence": {
+        "file": "reference/source-documents/инвойс.pdf",
+        "page": 1,
+        "quote": "37454.40"
+      },
+      "currency": "USD"
+    },
+    {
+      "fieldId": "goods.netMass",
+      "value": "24480",
+      "evidence": {
+        "file": "reference/source-documents/смр.pdf",
+        "page": 1,
+        "quote": "24480"
+      },
+      "unit": "kg"
+    },
+    {
+      "fieldId": "goods.grossMass",
+      "value": "26792",
+      "evidence": {
+        "file": "reference/source-documents/экспортная.pdf",
+        "page": 1,
+        "quote": "26792"
+      },
+      "unit": "kg",
+      "conflictGroup": "gross"
+    },
+    {
+      "fieldId": "goods.grossMass",
+      "value": "27860",
+      "evidence": {
+        "file": "reference/source-documents/смр.pdf",
+        "page": 1,
+        "quote": "27860"
+      },
+      "unit": "kg",
+      "conflictGroup": "gross"
+    },
+    {
+      "fieldId": "declaration.deliveryCode",
+      "value": "CPT",
+      "evidence": {
+        "file": "reference/source-documents/инвойс.pdf",
+        "page": 1,
+        "quote": "CPT"
+      }
+    },
+    {
+      "fieldId": "declaration.deliveryPlace",
+      "value": "ALMATY",
+      "evidence": {
+        "file": "reference/source-documents/инвойс.pdf",
+        "page": 1,
+        "quote": "ALMATY"
+      }
+    },
+    {
+      "fieldId": "document.number",
+      "value": "777-ЕА",
+      "evidence": {
+        "file": "reference/source-documents/договор+с+УНК.pdf",
+        "page": 1,
+        "quote": "777-ЕА"
+      }
+    },
+    {
+      "fieldId": "document.number",
+      "value": "25",
+      "evidence": {
+        "file": "reference/source-documents/Приложение 25.pdf",
+        "page": 1,
+        "quote": "25"
+      }
+    },
+    {
+      "fieldId": "document.number",
+      "value": "393",
+      "evidence": {
+        "file": "reference/source-documents/платеж+13.10.2026.pdf",
+        "page": 1,
+        "quote": "393"
+      }
+    },
+    {
+      "fieldId": "document.number",
+      "value": "10-18/332",
+      "evidence": {
+        "file": "reference/source-documents/отказной по СЭС.pdf",
+        "page": 1,
+        "quote": "10-18/332"
+      }
+    }
+  ],
+  "requiredManual": [
+    "declaration.relatedParties",
+    "declaration.methodOneConfirmed",
+    "goods.dutyRate",
+    "goods.vatRate",
+    "declaration.calculationDate",
+    "rate.value",
+    "rate.nominal",
+    "document.presentationCode"
+  ],
+  "prohibitedInferences": [
+    "Реквизиты отсутствующей доверенности из готового XML",
+    "Регистрационный номер и выпуск новой ДТ",
+    "Неизвестная рукописная часть номера транзита",
+    "Автоматическое отсутствие всех расходов CPT"
+  ],
+  "discrepancies": [
+    {
+      "id": "gross",
+      "kind": "source-conflict",
+      "values": [
+        "26792",
+        "27860"
+      ],
+      "resolution": "explicit-choice"
+    },
+    {
+      "id": "letter-presentation",
+      "kind": "output-conflict",
+      "document": "10-18/332",
+      "pdf": "1",
+      "xml": "0",
+      "resolution": "manual-one-value-in-both-outputs"
+    },
+    {
+      "id": "transit-inventory",
+      "kind": "incomplete-source",
+      "file": "reference/source-documents/тд.pdf",
+      "resolution": "do-not-fabricate-full-transit"
+    },
+    {
+      "id": "broker-ocr",
+      "kind": "poor-text",
+      "file": "reference/source-documents/брокерский договор.pdf",
+      "resolution": "visual-or-manual-verification"
+    },
+    {
+      "id": "paid-rounding",
+      "kind": "output-conflict",
+      "resolution": "use-local-rule-not-output-ceiling"
+    },
+    {
+      "id": "authority",
+      "kind": "output-conflict",
+      "presented": "4 от 2026-01-01",
+      "signatory": "10 от 2026-01-03",
+      "resolution": "manual-with-evidence"
+    }
+  ],
+  "calculationScenario": {
+    "testOnly": true,
+    "date": "2026-10-28",
+    "invoice": "37454.40",
+    "currency": "USD",
+    "rate": "455.63",
+    "nominal": "1",
+    "additionsConfirmedZero": true,
+    "deductionsConfirmedZero": true,
+    "dutyRate": "5",
+    "vatRate": "16",
+    "feeBase": "25950",
+    "feeAdditional": "0",
+    "expected": {
+      "customsValue": "17065348.27",
+      "duty": "853267.41",
+      "vat": "2871130.51",
+      "accruedTotal": "3750347.92"
+    },
+    "note": "Ставки/курс относятся только к этой проверочной дате; не значения нового черновика."
+  }
+}

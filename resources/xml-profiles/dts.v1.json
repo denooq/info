@@ -1,0 +1,480 @@
+{
+  "id": "sample-dts-v1",
+  "source": "reference/expected-output/DTS_20261105121051096.xml",
+  "sha256": "cef90a7e91d677a953112119ad80bff880fd58b015c86a33986a4373dd050d42",
+  "validation": "local-sample-profile-no-official-xsd",
+  "namespaces": {
+    "xs": "http://www.w3.org/2001/XMLSchema",
+    "bdt": "urn:EEC:M:BaseDataTypes:v0.4.14",
+    "cacdo": "urn:EEC:M:CA:ComplexDataObjects:v1.8.1",
+    "casdo": "urn:EEC:M:CA:SimpleDataObjects:v1.8.1",
+    "ccdo": "urn:EEC:M:ComplexDataObjects:v0.4.14",
+    "csdo": "urn:EEC:M:SimpleDataObjects:v0.4.14",
+    "cvd": "urn:EEC:R:038:CustomsValueDeclaration:v1.5.0"
+  },
+  "root": "cvd:CustomsValueDeclaration",
+  "nodes": {
+    "/cvd:CustomsValueDeclaration": {
+      "name": "cvd:CustomsValueDeclaration",
+      "children": [
+        "csdo:EDocCode",
+        "csdo:EDocId",
+        "csdo:EDocDateTime",
+        "casdo:EDocIndicatorCode",
+        "casdo:ReferenceDocumentId",
+        "casdo:CVDFormCode",
+        "casdo:ValuationMethodCode",
+        "cacdo:SellerDetails",
+        "cacdo:BuyerDetails",
+        "cacdo:DeclarantDetails",
+        "cacdo:DeliveryTermsDetails",
+        "cacdo:CVDMethod1Details",
+        "cacdo:CVDGoodsItemDetails",
+        "cacdo:SignatoryPersonV2Details"
+      ],
+      "attributes": {}
+    },
+    "/cvd:CustomsValueDeclaration/csdo:EDocCode": {
+      "name": "csdo:EDocCode",
+      "children": [],
+      "attributes": {}
+    },
+    "/cvd:CustomsValueDeclaration/csdo:EDocId": {
+      "name": "csdo:EDocId",
+      "children": [],
+      "attributes": {}
+    },
+    "/cvd:CustomsValueDeclaration/csdo:EDocDateTime": {
+      "name": "csdo:EDocDateTime",
+      "children": [],
+      "attributes": {}
+    },
+    "/cvd:CustomsValueDeclaration/casdo:EDocIndicatorCode": {
+      "name": "casdo:EDocIndicatorCode",
+      "children": [],
+      "attributes": {}
+    },
+    "/cvd:CustomsValueDeclaration/casdo:ReferenceDocumentId": {
+      "name": "casdo:ReferenceDocumentId",
+      "children": [],
+      "attributes": {}
+    },
+    "/cvd:CustomsValueDeclaration/casdo:CVDFormCode": {
+      "name": "casdo:CVDFormCode",
+      "children": [],
+      "attributes": {}
+    },
+    "/cvd:CustomsValueDeclaration/casdo:ValuationMethodCode": {
+      "name": "casdo:ValuationMethodCode",
+      "children": [],
+      "attributes": {
+        "codeListId": "2005"
+      }
+    },
+    "/cvd:CustomsValueDeclaration/cacdo:SellerDetails": {
+      "name": "cacdo:SellerDetails",
+      "children": [
+        "csdo:SubjectBriefName",
+        "ccdo:SubjectAddressDetails"
+      ],
+      "attributes": {}
+    },
+    "/cvd:CustomsValueDeclaration/cacdo:SellerDetails/csdo:SubjectBriefName": {
+      "name": "csdo:SubjectBriefName",
+      "children": [],
+      "attributes": {}
+    },
+    "/cvd:CustomsValueDeclaration/cacdo:SellerDetails/ccdo:SubjectAddressDetails": {
+      "name": "ccdo:SubjectAddressDetails",
+      "children": [
+        "csdo:CityName",
+        "csdo:StreetName"
+      ],
+      "attributes": {}
+    },
+    "/cvd:CustomsValueDeclaration/cacdo:SellerDetails/ccdo:SubjectAddressDetails/csdo:CityName": {
+      "name": "csdo:CityName",
+      "children": [],
+      "attributes": {}
+    },
+    "/cvd:CustomsValueDeclaration/cacdo:SellerDetails/ccdo:SubjectAddressDetails/csdo:StreetName": {
+      "name": "csdo:StreetName",
+      "children": [],
+      "attributes": {}
+    },
+    "/cvd:CustomsValueDeclaration/cacdo:BuyerDetails": {
+      "name": "cacdo:BuyerDetails",
+      "children": [
+        "csdo:SubjectName",
+        "csdo:TaxpayerId",
+        "ccdo:SubjectAddressDetails"
+      ],
+      "attributes": {}
+    },
+    "/cvd:CustomsValueDeclaration/cacdo:BuyerDetails/csdo:SubjectName": {
+      "name": "csdo:SubjectName",
+      "children": [],
+      "attributes": {}
+    },
+    "/cvd:CustomsValueDeclaration/cacdo:BuyerDetails/csdo:TaxpayerId": {
+      "name": "csdo:TaxpayerId",
+      "children": [],
+      "attributes": {}
+    },
+    "/cvd:CustomsValueDeclaration/cacdo:BuyerDetails/ccdo:SubjectAddressDetails": {
+      "name": "ccdo:SubjectAddressDetails",
+      "children": [
+        "csdo:AddressKindCode",
+        "csdo:RegionName",
+        "csdo:CityName",
+        "csdo:StreetName"
+      ],
+      "attributes": {}
+    },
+    "/cvd:CustomsValueDeclaration/cacdo:BuyerDetails/ccdo:SubjectAddressDetails/csdo:AddressKindCode": {
+      "name": "csdo:AddressKindCode",
+      "children": [],
+      "attributes": {}
+    },
+    "/cvd:CustomsValueDeclaration/cacdo:BuyerDetails/ccdo:SubjectAddressDetails/csdo:RegionName": {
+      "name": "csdo:RegionName",
+      "children": [],
+      "attributes": {}
+    },
+    "/cvd:CustomsValueDeclaration/cacdo:BuyerDetails/ccdo:SubjectAddressDetails/csdo:CityName": {
+      "name": "csdo:CityName",
+      "children": [],
+      "attributes": {}
+    },
+    "/cvd:CustomsValueDeclaration/cacdo:BuyerDetails/ccdo:SubjectAddressDetails/csdo:StreetName": {
+      "name": "csdo:StreetName",
+      "children": [],
+      "attributes": {}
+    },
+    "/cvd:CustomsValueDeclaration/cacdo:DeclarantDetails": {
+      "name": "cacdo:DeclarantDetails",
+      "children": [
+        "csdo:SubjectName",
+        "csdo:TaxpayerId",
+        "ccdo:SubjectAddressDetails"
+      ],
+      "attributes": {}
+    },
+    "/cvd:CustomsValueDeclaration/cacdo:DeclarantDetails/csdo:SubjectName": {
+      "name": "csdo:SubjectName",
+      "children": [],
+      "attributes": {}
+    },
+    "/cvd:CustomsValueDeclaration/cacdo:DeclarantDetails/csdo:TaxpayerId": {
+      "name": "csdo:TaxpayerId",
+      "children": [],
+      "attributes": {}
+    },
+    "/cvd:CustomsValueDeclaration/cacdo:DeclarantDetails/ccdo:SubjectAddressDetails": {
+      "name": "ccdo:SubjectAddressDetails",
+      "children": [
+        "csdo:AddressKindCode",
+        "csdo:RegionName",
+        "csdo:CityName",
+        "csdo:StreetName"
+      ],
+      "attributes": {}
+    },
+    "/cvd:CustomsValueDeclaration/cacdo:DeclarantDetails/ccdo:SubjectAddressDetails/csdo:AddressKindCode": {
+      "name": "csdo:AddressKindCode",
+      "children": [],
+      "attributes": {}
+    },
+    "/cvd:CustomsValueDeclaration/cacdo:DeclarantDetails/ccdo:SubjectAddressDetails/csdo:RegionName": {
+      "name": "csdo:RegionName",
+      "children": [],
+      "attributes": {}
+    },
+    "/cvd:CustomsValueDeclaration/cacdo:DeclarantDetails/ccdo:SubjectAddressDetails/csdo:CityName": {
+      "name": "csdo:CityName",
+      "children": [],
+      "attributes": {}
+    },
+    "/cvd:CustomsValueDeclaration/cacdo:DeclarantDetails/ccdo:SubjectAddressDetails/csdo:StreetName": {
+      "name": "csdo:StreetName",
+      "children": [],
+      "attributes": {}
+    },
+    "/cvd:CustomsValueDeclaration/cacdo:DeliveryTermsDetails": {
+      "name": "cacdo:DeliveryTermsDetails",
+      "children": [
+        "casdo:DeliveryTermsCode",
+        "casdo:PlaceName"
+      ],
+      "attributes": {}
+    },
+    "/cvd:CustomsValueDeclaration/cacdo:DeliveryTermsDetails/casdo:DeliveryTermsCode": {
+      "name": "casdo:DeliveryTermsCode",
+      "children": [],
+      "attributes": {
+        "codeListId": "2014"
+      }
+    },
+    "/cvd:CustomsValueDeclaration/cacdo:DeliveryTermsDetails/casdo:PlaceName": {
+      "name": "casdo:PlaceName",
+      "children": [],
+      "attributes": {}
+    },
+    "/cvd:CustomsValueDeclaration/cacdo:CVDMethod1Details": {
+      "name": "cacdo:CVDMethod1Details",
+      "children": [
+        "cacdo:PaymentInvoiceDetails",
+        "cacdo:ContractDetails",
+        "cacdo:BuyerSellerRelationDetails",
+        "cacdo:GoodsUseRestrictionDetails",
+        "cacdo:BuyerSellerRoyaltyFeeDetails"
+      ],
+      "attributes": {}
+    },
+    "/cvd:CustomsValueDeclaration/cacdo:CVDMethod1Details/cacdo:PaymentInvoiceDetails": {
+      "name": "cacdo:PaymentInvoiceDetails",
+      "children": [
+        "csdo:DocKindCode",
+        "csdo:DocName",
+        "csdo:DocId",
+        "csdo:DocCreationDate"
+      ],
+      "attributes": {}
+    },
+    "/cvd:CustomsValueDeclaration/cacdo:CVDMethod1Details/cacdo:PaymentInvoiceDetails/csdo:DocKindCode": {
+      "name": "csdo:DocKindCode",
+      "children": [],
+      "attributes": {
+        "codeListId": "2009"
+      }
+    },
+    "/cvd:CustomsValueDeclaration/cacdo:CVDMethod1Details/cacdo:PaymentInvoiceDetails/csdo:DocName": {
+      "name": "csdo:DocName",
+      "children": [],
+      "attributes": {}
+    },
+    "/cvd:CustomsValueDeclaration/cacdo:CVDMethod1Details/cacdo:PaymentInvoiceDetails/csdo:DocId": {
+      "name": "csdo:DocId",
+      "children": [],
+      "attributes": {}
+    },
+    "/cvd:CustomsValueDeclaration/cacdo:CVDMethod1Details/cacdo:PaymentInvoiceDetails/csdo:DocCreationDate": {
+      "name": "csdo:DocCreationDate",
+      "children": [],
+      "attributes": {}
+    },
+    "/cvd:CustomsValueDeclaration/cacdo:CVDMethod1Details/cacdo:ContractDetails": {
+      "name": "cacdo:ContractDetails",
+      "children": [
+        "csdo:DocKindCode",
+        "csdo:DocName",
+        "csdo:DocId",
+        "csdo:DocCreationDate"
+      ],
+      "attributes": {}
+    },
+    "/cvd:CustomsValueDeclaration/cacdo:CVDMethod1Details/cacdo:ContractDetails/csdo:DocKindCode": {
+      "name": "csdo:DocKindCode",
+      "children": [],
+      "attributes": {
+        "codeListId": "2009"
+      }
+    },
+    "/cvd:CustomsValueDeclaration/cacdo:CVDMethod1Details/cacdo:ContractDetails/csdo:DocName": {
+      "name": "csdo:DocName",
+      "children": [],
+      "attributes": {}
+    },
+    "/cvd:CustomsValueDeclaration/cacdo:CVDMethod1Details/cacdo:ContractDetails/csdo:DocId": {
+      "name": "csdo:DocId",
+      "children": [],
+      "attributes": {}
+    },
+    "/cvd:CustomsValueDeclaration/cacdo:CVDMethod1Details/cacdo:ContractDetails/csdo:DocCreationDate": {
+      "name": "csdo:DocCreationDate",
+      "children": [],
+      "attributes": {}
+    },
+    "/cvd:CustomsValueDeclaration/cacdo:CVDMethod1Details/cacdo:BuyerSellerRelationDetails": {
+      "name": "cacdo:BuyerSellerRelationDetails",
+      "children": [
+        "casdo:RelationIndicator"
+      ],
+      "attributes": {}
+    },
+    "/cvd:CustomsValueDeclaration/cacdo:CVDMethod1Details/cacdo:BuyerSellerRelationDetails/casdo:RelationIndicator": {
+      "name": "casdo:RelationIndicator",
+      "children": [],
+      "attributes": {}
+    },
+    "/cvd:CustomsValueDeclaration/cacdo:CVDMethod1Details/cacdo:GoodsUseRestrictionDetails": {
+      "name": "cacdo:GoodsUseRestrictionDetails",
+      "children": [
+        "casdo:RestrictionIndicator",
+        "casdo:ValueConditionIndicator"
+      ],
+      "attributes": {}
+    },
+    "/cvd:CustomsValueDeclaration/cacdo:CVDMethod1Details/cacdo:GoodsUseRestrictionDetails/casdo:RestrictionIndicator": {
+      "name": "casdo:RestrictionIndicator",
+      "children": [],
+      "attributes": {}
+    },
+    "/cvd:CustomsValueDeclaration/cacdo:CVDMethod1Details/cacdo:GoodsUseRestrictionDetails/casdo:ValueConditionIndicator": {
+      "name": "casdo:ValueConditionIndicator",
+      "children": [],
+      "attributes": {}
+    },
+    "/cvd:CustomsValueDeclaration/cacdo:CVDMethod1Details/cacdo:BuyerSellerRoyaltyFeeDetails": {
+      "name": "cacdo:BuyerSellerRoyaltyFeeDetails",
+      "children": [
+        "casdo:RoyaltyContractIndicator",
+        "casdo:RoyaltyFeeIndicator",
+        "casdo:SubsequentResaleIndicator"
+      ],
+      "attributes": {}
+    },
+    "/cvd:CustomsValueDeclaration/cacdo:CVDMethod1Details/cacdo:BuyerSellerRoyaltyFeeDetails/casdo:RoyaltyContractIndicator": {
+      "name": "casdo:RoyaltyContractIndicator",
+      "children": [],
+      "attributes": {}
+    },
+    "/cvd:CustomsValueDeclaration/cacdo:CVDMethod1Details/cacdo:BuyerSellerRoyaltyFeeDetails/casdo:RoyaltyFeeIndicator": {
+      "name": "casdo:RoyaltyFeeIndicator",
+      "children": [],
+      "attributes": {}
+    },
+    "/cvd:CustomsValueDeclaration/cacdo:CVDMethod1Details/cacdo:BuyerSellerRoyaltyFeeDetails/casdo:SubsequentResaleIndicator": {
+      "name": "casdo:SubsequentResaleIndicator",
+      "children": [],
+      "attributes": {}
+    },
+    "/cvd:CustomsValueDeclaration/cacdo:CVDGoodsItemDetails": {
+      "name": "cacdo:CVDGoodsItemDetails",
+      "children": [
+        "casdo:ConsignmentItemOrdinal",
+        "casdo:PageOrdinal",
+        "csdo:CommodityCode",
+        "casdo:ValuationMethodCode",
+        "casdo:CustomsValueAmount",
+        "casdo:ExchangeRate",
+        "cacdo:CVDMethod1CalculationDetails"
+      ],
+      "attributes": {}
+    },
+    "/cvd:CustomsValueDeclaration/cacdo:CVDGoodsItemDetails/casdo:ConsignmentItemOrdinal": {
+      "name": "casdo:ConsignmentItemOrdinal",
+      "children": [],
+      "attributes": {}
+    },
+    "/cvd:CustomsValueDeclaration/cacdo:CVDGoodsItemDetails/casdo:PageOrdinal": {
+      "name": "casdo:PageOrdinal",
+      "children": [],
+      "attributes": {}
+    },
+    "/cvd:CustomsValueDeclaration/cacdo:CVDGoodsItemDetails/csdo:CommodityCode": {
+      "name": "csdo:CommodityCode",
+      "children": [],
+      "attributes": {}
+    },
+    "/cvd:CustomsValueDeclaration/cacdo:CVDGoodsItemDetails/casdo:ValuationMethodCode": {
+      "name": "casdo:ValuationMethodCode",
+      "children": [],
+      "attributes": {
+        "codeListId": "2005"
+      }
+    },
+    "/cvd:CustomsValueDeclaration/cacdo:CVDGoodsItemDetails/casdo:CustomsValueAmount": {
+      "name": "casdo:CustomsValueAmount",
+      "children": [],
+      "attributes": {
+        "currencyCode": null,
+        "currencyCodeListId": "2022"
+      }
+    },
+    "/cvd:CustomsValueDeclaration/cacdo:CVDGoodsItemDetails/casdo:ExchangeRate": {
+      "name": "casdo:ExchangeRate",
+      "children": [],
+      "attributes": {
+        "currencyCode": null,
+        "currencyCodeListId": "2022"
+      }
+    },
+    "/cvd:CustomsValueDeclaration/cacdo:CVDGoodsItemDetails/cacdo:CVDMethod1CalculationDetails": {
+      "name": "cacdo:CVDMethod1CalculationDetails",
+      "children": [
+        "cacdo:Method1BasisCalculationDetails",
+        "cacdo:Method1AddCostsDetails"
+      ],
+      "attributes": {}
+    },
+    "/cvd:CustomsValueDeclaration/cacdo:CVDGoodsItemDetails/cacdo:CVDMethod1CalculationDetails/cacdo:Method1BasisCalculationDetails": {
+      "name": "cacdo:Method1BasisCalculationDetails",
+      "children": [
+        "casdo:InvoicePriceAmount",
+        "casdo:NationalInvoicePriceAmount",
+        "casdo:PriceCurrencyRate",
+        "casdo:TotalAmount"
+      ],
+      "attributes": {}
+    },
+    "/cvd:CustomsValueDeclaration/cacdo:CVDGoodsItemDetails/cacdo:CVDMethod1CalculationDetails/cacdo:Method1BasisCalculationDetails/casdo:InvoicePriceAmount": {
+      "name": "casdo:InvoicePriceAmount",
+      "children": [],
+      "attributes": {
+        "currencyCode": null,
+        "currencyCodeListId": "2022"
+      }
+    },
+    "/cvd:CustomsValueDeclaration/cacdo:CVDGoodsItemDetails/cacdo:CVDMethod1CalculationDetails/cacdo:Method1BasisCalculationDetails/casdo:NationalInvoicePriceAmount": {
+      "name": "casdo:NationalInvoicePriceAmount",
+      "children": [],
+      "attributes": {
+        "currencyCode": null,
+        "currencyCodeListId": "2022"
+      }
+    },
+    "/cvd:CustomsValueDeclaration/cacdo:CVDGoodsItemDetails/cacdo:CVDMethod1CalculationDetails/cacdo:Method1BasisCalculationDetails/casdo:PriceCurrencyRate": {
+      "name": "casdo:PriceCurrencyRate",
+      "children": [],
+      "attributes": {
+        "currencyCode": null,
+        "currencyCodeListId": "2022"
+      }
+    },
+    "/cvd:CustomsValueDeclaration/cacdo:CVDGoodsItemDetails/cacdo:CVDMethod1CalculationDetails/cacdo:Method1BasisCalculationDetails/casdo:TotalAmount": {
+      "name": "casdo:TotalAmount",
+      "children": [],
+      "attributes": {
+        "currencyCode": null,
+        "currencyCodeListId": "2022"
+      }
+    },
+    "/cvd:CustomsValueDeclaration/cacdo:CVDGoodsItemDetails/cacdo:CVDMethod1CalculationDetails/cacdo:Method1AddCostsDetails": {
+      "name": "cacdo:Method1AddCostsDetails",
+      "children": [
+        "casdo:PlaceName",
+        "casdo:TotalAmount"
+      ],
+      "attributes": {}
+    },
+    "/cvd:CustomsValueDeclaration/cacdo:CVDGoodsItemDetails/cacdo:CVDMethod1CalculationDetails/cacdo:Method1AddCostsDetails/casdo:PlaceName": {
+      "name": "casdo:PlaceName",
+      "children": [],
+      "attributes": {}
+    },
+    "/cvd:CustomsValueDeclaration/cacdo:CVDGoodsItemDetails/cacdo:CVDMethod1CalculationDetails/cacdo:Method1AddCostsDetails/casdo:TotalAmount": {
+      "name": "casdo:TotalAmount",
+      "children": [],
+      "attributes": {
+        "currencyCode": null,
+        "currencyCodeListId": "2022"
+      }
+    },
+    "/cvd:CustomsValueDeclaration/cacdo:SignatoryPersonV2Details": {
+      "name": "cacdo:SignatoryPersonV2Details",
+      "children": [],
+      "attributes": {}
+    }
+  }
+}
