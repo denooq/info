@@ -1,6 +1,5 @@
 /.local-tools/
 /node_modules/
-/vendor/
 /runtime/
 /dist/
 /release/
