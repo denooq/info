@@ -12,14 +12,18 @@ final class Validator
 
     public function validate(array $state): array
     {
+        $state=(new StatutoryRules())->apply($state);
         $this->errors = []; $d = $state['draft']; $normalizer = new Normalizer();
+        $reviewFields=(new GraphRegistry())->reviewFields();
         foreach ($this->registry->fields() as $f) {
             if (in_array('calculated', $f['acquisition'], true)) continue;
             if($f['scope']==='keden'||$f['id']==='goods.sourceLineIds')continue;
+            if(in_array($f['id'],$reviewFields,true)&&!in_array($f['scope'],['party','rate'],true))continue;
             $notFilled=['3','4','7','10','13','27','28','40','48','49','50','51','52','53'];
             if($f['dtGraphs']!==[]&&array_diff($f['dtGraphs'],$notFilled)===[])continue;
             $collection = $this->registry->data()['scopes'][$f['scope']]['collection'];
             $rows = $collection === null ? [$d[$f['scope']]] : $d[$collection];
+            if($f['scope']==='party')$rows=array_values(array_filter($rows,fn($row)=>in_array($row['role'],['seller','buyer'],true)));
             if ($f['scope'] === 'payment' && ($d['declaration']['paymentFactsAvailable'] ?? null) !== true) continue;
             foreach ($rows as $row) {
                 $id = $collection === null ? null : $row['id'];
@@ -48,7 +52,7 @@ final class Validator
         }
         if ($d['goods'] === []) $this->error('goods', 'GOODS_REQUIRED', 'Добавьте хотя бы один товар.');
         $roles = array_column($d['parties'], null, 'role');
-        foreach (['seller','buyer','consignor','consignee','declarant','financial'] as $role) {
+        foreach (['seller','buyer'] as $role) {
             if (!isset($roles[$role])) { $this->error('parties', 'PARTY_REQUIRED', 'Не указан участник: '.$role); continue; }
             $seen = []; $current = $role;
             while (($next = $roles[$current]['sameAsRole'] ?? null) !== null) {
@@ -56,12 +60,10 @@ final class Validator
                 $seen[$current] = true; $current = $next;
             }
         }
-        foreach (['arrival','border'] as $stage) if (!in_array($stage, array_column($d['transports'], 'stage'), true)) $this->error('transports', 'TRANSPORT_REQUIRED', 'Не указан этап транспорта: '.$stage);
         $goodsIds = array_column($d['goods'], 'id'); $packageIds = array_column($d['packages'], 'id'); $docIds = array_column($d['documents'], 'id');
         $usedLines = [];
         foreach ($d['goods'] as $g) {
             $prefix = 'goods/'.$g['id'].'/';
-            if (($g['groupConfirmed'] ?? null) !== true) $this->error($prefix.'groupConfirmed', 'GROUP_CONFIRM', 'Подтвердите состав товара.');
             if (!in_array($g['dutyFormula']??null, TariffEngine::FORMULAS, true) || ($g['exciseApplicable']??null)!==false) $this->error($prefix.'dutyFormula','PAYMENT_FORMULA_UNSUPPORTED','Выберите поддерживаемую формулу; расчёт акциза пока не поддерживается.');
             $this->tariff($d, $g, $prefix);
             if ($g['netMass'] !== null && $g['grossMass'] !== null && BigDecimal::of($g['netMass'])->isGreaterThan($g['grossMass'])) $this->error($prefix.'netMass', 'MASS_ORDER', 'Нетто превышает брутто.');
@@ -80,7 +82,6 @@ final class Validator
             $this->links('document/'.$doc['id'].'/goodsIds', $doc['goodsIds'], $goodsIds);
             $this->links('document/'.$doc['id'].'/documentIds', $doc['documentIds'], array_keys($state['documents']));
         }
-        foreach ($this->registry->data()['requiredDocuments'] as $required) if (!in_array($required['kind'], array_column($d['documents'], 'kind'), true)) $this->error('documents', 'DOCUMENT_REQUIRED', 'В разделе «Документы» укажите реквизиты '.$required['name'].' (код '.$required['kind'].'). Повторная загрузка файла не требуется.');
         $this->links('declaration/_/valuationDocumentIds', $d['declaration']['valuationDocumentIds'], $docIds);
         $requiredCurrencies = \Customs\Rates\ExchangeRates::required($d);
         $currencies = [];
@@ -126,7 +127,9 @@ final class Validator
             if (!in_array($kind, $costKinds, true)) $this->error('declaration/_/'.$key, 'COST_REQUIRED', 'Добавьте строку соответствующего компонента ДТС.');
         }
         if ($d['declaration']['paymentFactsAvailable'] === true && $d['payments'] === []) $this->error('payments','PAYMENT_REQUIRED','Укажите фактическую уплату с основанием.');
-        foreach((new ReviewValidator())->validate($state)['errors'] as $error)if(!array_filter($this->errors,fn($e)=>$e['address']===$error['address']&&$e['code']===$error['code']))$this->errors[]=$error;
+        foreach($d['invalidInputs']??[] as $address=>$invalid)$this->error($address,'VALUE',$invalid['message']);
+        foreach($d['statutoryRules']['errors'] as $error)$this->errors[]=$error;
+        foreach((new ReviewValidator())->validate($state)['errors'] as $error)if(!array_filter($this->errors,fn($e)=>$e['address']===$error['address']&&$e['code']===$error['code']&&$e['message']===$error['message']))$this->errors[]=$error;
         return ['valid' => $this->errors === [], 'errors' => $this->errors, 'count' => count($this->errors), 'registryVersion' => $this->registry->data()['version'],'stage'=>'calculation'];
     }
 
@@ -164,5 +167,9 @@ final class Validator
         }
     }
     private function links(string $address, array $values, array $allowed): void { if (array_diff($values,$allowed)) $this->error($address,'LINK_INVALID','Выбрана ссылка на отсутствующую строку.'); }
-    private function error(string $address, string $code, string $message): void { $this->errors[] = compact('address','code','message'); }
+    private function error(string $address, string $code, string $message): void {
+        $parts=explode('/',$address,3);$key=$parts[2]??'';
+        if(($parts[0]??'')==='goods'&&(StatutoryRules::owns('goods.'.$key)||$key==='groupConfirmed'))$address='goods/'.$parts[1].'/tariffConfirmed';
+        $entry=compact('address','code','message');if(!in_array($entry,$this->errors,true))$this->errors[]=$entry;
+    }
 }

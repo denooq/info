@@ -10,14 +10,14 @@ test('all required initial data is checked; zero, false and inapplicability are 
     $s['draft']['declaration']['container']=false;same(true,$v->validate($s)['valid']);
     $s['draft']['parties'][0]['name']=null;errorCode('DECLARATION_INVALID',fn()=>$v->requireValid($s));
 });
-test('conflicts, party cycles, missing rates and unconfirmed grouping block the server',function():void{
+test('conflicts, party cycles, missing rates and unknown source lines block the server',function():void{
     $v=new Customs\Domain\Validator(new Customs\Domain\Registry());
     foreach(['conflict','cycle','rate','group','method'] as $case){
         $s=completeDraftState();
         if($case==='conflict')$s['draft']['fieldStates']['goods/goods-1/grossMass']['conflict']=true;
         if($case==='cycle')$s['draft']['parties'][0]['sameAsRole']='seller';
         if($case==='rate')$s['draft']['rates']=[];
-        if($case==='group')$s['draft']['goods'][0]['groupConfirmed']=false;
+        if($case==='group')$s['draft']['goods'][0]['sourceLineIds']=['unknown-source-line'];
         if($case==='method'){$s['draft']['declaration']['relatedParties']=true;$s['draft']['declaration']['relationshipAffectedPrice']=true;}
         truth(!$v->validate($s)['valid'],$case);
     }

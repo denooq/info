@@ -43,12 +43,17 @@ final class Calculator
 
     public function calculate(array $state, bool $validate = true): array
     {
+        if (($state['draft']['invalidInputs'] ?? []) !== []) throw new ApiError('DECLARATION_INVALID','Исправьте текущий неверный числовой ввод перед расчётом.',422);
+        foreach($state['draft']['graphTexts']??[] as $saved)if(($saved['error']??null)!==null)throw new ApiError('DECLARATION_INVALID','Исправьте формат текущей графы перед расчётом.',422);
         $state['draft']=GraphDefaults::apply($state['draft']);
+        $state = (new StatutoryRules())->apply($state);
+        $rules = $state['draft']['statutoryRules'];
+        if ($rules['status'] !== 'resolved') throw new ApiError('DECLARATION_INVALID','Нормативный профиль не готов к расчёту.',422,['valid'=>false,'errors'=>$rules['errors'],'count'=>count($rules['errors'])]);
         if($validate)(new Validator(new Registry()))->requireValid($state);
         $d=$state['draft']; $goods=$d['goods']; $count=count($goods);
         if($count<1)throw new ApiError('GOODS_REQUIRED','Добавьте товары.',422);
         $extra=intdiv(max(0,$count-1)+2,3);
-        $feeTotal=self::money(D::of($d['declaration']['feeBase'])->plus(D::of($d['declaration']['feeAdditional'])->multipliedBy($extra)));
+        $feeTotal=$rules['fee'];
         $fees=$this->allocate($feeTotal,array_fill_keys(array_column($goods,'id'),'1'));
         $costs=[]; $parts=[];
         foreach ($goods as $g) $parts[$g['id']]=['indirect'=>D::zero(),'addition'=>D::zero(),'deduction'=>D::zero()];
@@ -102,13 +107,13 @@ final class Calculator
             $paid[$p['code']]=self::money(D::of($paid[$p['code']]??'0')->plus($p['amount']));
         }
         $wholePaid=[];foreach($paid as $code=>$amount)$wholePaid[$code]=(string)D::of($amount)->toScale(0,R::HalfUp);
-        $nodes=[];
+        $nodes=['declaration/fee'=>['formula'=>'mrp * feeMultiplier','operands'=>['mrp'=>$rules['mrp'],'feeMultiplier'=>$rules['feeMultiplier']],'result'=>$feeTotal,'sourceUrl'=>$rules['sources']['fee'],'ruleVersion'=>$rules['version']]];
         foreach($items as $item){$g=$goods[$item['ordinal']-1];$prefix=$item['id'].'/';
             $nodes[$prefix.'customsValue']=['formula'=>'basisValue + additionValue - deductionValue','operands'=>array_intersect_key($item,array_flip(['basisValue','additionValue','deductionValue'])),'result'=>$item['customsValue'],'scale'=>2];
             $nodes[$prefix.'duty']=['formula'=>$item['dutyFormulaText'],'operands'=>['customsValue'=>$item['customsValue'],'rule'=>$item['dutyRule'],'trace'=>$item['dutyTrace']],'result'=>$item['duty'],'scale'=>2];
-            $nodes[$prefix.'vat']=['formula'=>'(customsValue + duty + fee) * vatRate / 100','operands'=>['customsValue'=>$item['customsValue'],'duty'=>$item['duty'],'fee'=>$item['fee'],'vatRate'=>$g['vatRate']],'result'=>$item['vat'],'scale'=>2];
+            $nodes[$prefix.'vat']=['formula'=>'(customsValue + duty + fee) * vatRate / 100','operands'=>['customsValue'=>$item['customsValue'],'duty'=>$item['duty'],'fee'=>$item['fee'],'vatRate'=>$g['vatRate']],'result'=>$item['vat'],'scale'=>2,'sourceUrl'=>$rules['sources']['vatBasis'],'ruleId'=>$rules['goods'][$g['id']]['ruleId']];
         }
-        $result=['dataRevision'=>$state['dataRevision'],'registryVersion'=>$state['registryVersion'],'profile'=>Registry::resource('calculation-profile'),'nodes'=>$nodes,'goodsCount'=>$count,'sheetCount'=>1+$extra,'packageCount'=>$packageCount,'items'=>$items,'costs'=>$costs,'totals'=>array_map(self::money(...),$totals),'actualPaid'=>$paid,'graphB'=>$wholePaid,'proposals'=>[],'consistent'=>true];
+        $result=['dataRevision'=>$state['dataRevision'],'registryVersion'=>$state['registryVersion'],'profile'=>Registry::resource('calculation-profile'),'statutoryRules'=>$rules,'ruleHash'=>$rules['hash'],'nodes'=>$nodes,'goodsCount'=>$count,'sheetCount'=>1+$extra,'packageCount'=>$packageCount,'items'=>$items,'costs'=>$costs,'totals'=>array_map(self::money(...),$totals),'actualPaid'=>$paid,'graphB'=>$wholePaid,'proposals'=>[],'consistent'=>true];
         $result['hash']=hash('sha256',json_encode($result,JSON_UNESCAPED_UNICODE|JSON_THROW_ON_ERROR));
         return $result;
     }

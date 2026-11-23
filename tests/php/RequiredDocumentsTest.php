@@ -2,36 +2,40 @@
 declare(strict_types=1);
 require_once dirname(__DIR__).'/support/fixtures.php';
 
-use Customs\Domain\{Draft,Entities,Registry,Validator};
+use Customs\Domain\{Draft,Entities,GraphCodecs,GraphEdits,Registry,ReviewValidator};
 
-test('required document edits create one record and successive edits reuse it without inventing facts',function():void {
+test('graph 44 creates required records without uploaded files and preserves identities on successive edits',function():void {
     $s=completeDraftState();$s['draft']['documents']=[];$s['draft']['declaration']['valuationDocumentIds']=[];
-    $entities=new Entities(new Registry());
-    $edit=['scope'=>'document','action'=>'required','kind'=>'04021','fieldId'=>'document.number','value'=>'INV-42'];
-    $s=$entities->change($s,$edit);same(1,count($s['draft']['documents']));$document=$s['draft']['documents'][0];
+    $edit=new GraphEdits();$text='04021 | INV-42 | 2026-10-28 | 0';
+    $s=$edit->edit($s,'44','goods-1',$text);same(null,$s['draft']['graphTexts']['graph/44/goods-1']['error']);
+    same(1,count($s['draft']['documents']));$document=$s['draft']['documents'][0];
     same('04021',$document['kind']);same('INV-42',$document['number']);same(true,$document['dateRequired']);
-    same('Счет-фактура (инвойс) к договору',$document['name']);same(null,$document['date']);same(null,$document['presentationCode']);same(['goods-1'],$document['goodsIds']);same([],$document['documentIds']);
-    $s=$entities->change($s,array_replace($edit,['fieldId'=>'document.date','value'=>'2026-10-28']));
-    same(1,count($s['draft']['documents']));same($document['id'],$s['draft']['documents'][0]['id']);same('2026-10-28',$s['draft']['documents'][0]['date']);
+    same('Счет-фактура (инвойс) к договору',$document['name']);same(['goods-1'],$document['goodsIds']);same([],$document['documentIds']);
+    $s=$edit->edit($s,'44','goods-1',$text."\n03011 | CON-1 | 2026-10-01 | 0");
+    same(2,count($s['draft']['documents']));same($document['id'],$s['draft']['documents'][0]['id']);
     same('manual',$s['draft']['fieldStates'][Draft::address('document',$document['id'],'number')]['status']);
-    $errors=(new Validator(new Registry()))->validate($s)['errors'];truth((bool)array_filter($errors,fn($e)=>$e['code']==='REQUIRED'&&$e['address']==='document/'.$document['id'].'/presentationCode'));
-    truth(count(array_filter($errors,fn($e)=>$e['code']==='DOCUMENT_REQUIRED' && str_contains($e['message'],'03011')))===1);
+    same([],array_values(array_filter((new ReviewValidator())->validate($s)['errors'],fn($e)=>$e['code']==='DOCUMENT_REQUIRED')));
 });
 
-test('late required-document edits reuse an existing recognized record and retain its sources and links',function():void {
+test('editing graph 44 retains unchanged sources links and other legal records of the same kind',function():void {
     $s=completeDraftState(2);$invoice=$s['draft']['documents'][0];$address=Draft::address('document',$invoice['id'],'date');
     $s['draft']['fieldStates'][$address]=['status'=>'auto','candidateId'=>'candidate-date','evidenceIds'=>['source-date']];
     $s['draft']['documents'][]=array_replace($invoice,['id'=>'second-invoice','number'=>'INV-SECOND']);
-    $s=(new Entities(new Registry()))->change($s,['scope'=>'document','action'=>'required','kind'=>'04021','fieldId'=>'document.number','value'=>'INV-EDITED']);
-    same(3,count($s['draft']['documents']));same($invoice['id'],$s['draft']['documents'][0]['id']);same('INV-EDITED',$s['draft']['documents'][0]['number']);
-    same($invoice['goodsIds'],$s['draft']['documents'][0]['goodsIds']);same('INV-SECOND',$s['draft']['documents'][2]['number']);same(['source-date'],$s['draft']['fieldStates'][$address]['evidenceIds']);
+    $text=GraphCodecs::documentText($s['draft']['documents'],'goods-1');
+    $s=(new GraphEdits())->edit($s,'44','goods-1',str_replace($invoice['number'],'INV-EDITED',$text));
+    same(null,$s['draft']['graphTexts']['graph/44/goods-1']['error']);same(3,count($s['draft']['documents']));
+    $records=array_column($s['draft']['documents'],null,'id');same('INV-EDITED',$records[$invoice['id']]['number']);
+    same($invoice['goodsIds'],$records[$invoice['id']]['goodsIds']);same('INV-SECOND',$records['second-invoice']['number']);same(['source-date'],$s['draft']['fieldStates'][$address]['evidenceIds']);
 });
 
-test('required-document endpoint restricts kinds and fields and failed input does not persist a blank record',function():void {
-    $store=sessionFixture();$s=$store->create()['state'];$entities=new Entities(new Registry());
-    $request=['scope'=>'document','action'=>'required','kind'=>'04021','fieldId'=>'document.number','value'=>'INV'];
-    errorCode('DOCUMENT_KIND_UNKNOWN',fn()=>$entities->change($s,array_replace($request,['kind'=>'99999'])));
-    foreach(['party.name','document.kind','document.dateRequired'] as $field)errorCode('REQUIRED_DOCUMENT_FIELD',fn()=>$entities->change($s,array_replace($request,['fieldId'=>$field])));
-    errorCode('FIELD_VALUE',fn()=>$store->mutate($s['id'],$s['dataRevision'],fn($state)=>$entities->change($state,array_replace($request,['value'=>42]))));
-    same([],$store->read($s['id'])['draft']['documents']);same($s['dataRevision'],$store->read($s['id'])['dataRevision']);
+test('invalid graph 44 input remains visible without persisting partial records and legacy hidden patches are rejected',function():void {
+    $store=sessionFixture();$s=$store->create()['state'];$before=$s['draft']['documents'];$edit=new GraphEdits();
+    foreach(['99999 | INV | 2026-10-28 | 0','04021 | INV | 2026-02-30 | 0','04021 | INV | 2026-10-28 | 9'] as $text){
+        $changed=$store->mutate($s['id'],$s['dataRevision'],fn($state)=>$edit->edit($state,'44','goods-1',$text));
+        same($before,$changed['draft']['documents']);same($text,$changed['draft']['graphTexts']['graph/44/goods-1']['value']);
+        truth($changed['draft']['graphTexts']['graph/44/goods-1']['error']!==null);$s=$changed;
+    }
+    $complete=completeDraftState();errorCode('GRAPH_EDIT_REQUIRED',fn()=>(new Draft(new Registry()))->edit($complete,'document.number',$complete['draft']['documents'][0]['id'],'INV'));
+    errorCode('GRAPH_EDIT_REQUIRED',fn()=>$store->mutate($s['id'],$s['dataRevision'],fn($state)=>(new Entities(new Registry()))->change($state,['scope'=>'document','action'=>'required','kind'=>'04021','fieldId'=>'document.number','value'=>'INV'])));
+    same($before,$store->read($s['id'])['draft']['documents']);same($s['dataRevision'],$store->read($s['id'])['dataRevision']);
 });

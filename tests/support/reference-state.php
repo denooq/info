@@ -24,5 +24,8 @@ function referenceState(string $case):array
         $d['rates'][]=['id'=>'rate-eur','currency'=>'EUR','value'=>'508.33','nominal'=>'1','date'=>'2026-10-28','source'=>'Проверочный курс из сценария; не для новой декларации','confirmed'=>true];
         foreach(['freight'=>'2058736.50','insurance'=>'5222'] as $kind=>$amount){$d['declaration'][$kind.'Applicable']=true;$d['costs'][]=['id'=>'cost-'.$kind,'kind'=>$kind,'direction'=>'addition','amount'=>$amount,'currency'=>'KZT','includedInPrice'=>false,'basis'=>'Участок до места ввоза подтверждён только для теста','evidenceIds'=>[],'allocationBasis'=>'value','allocationConfirmed'=>true,'goodsIds'=>['goods-1']];}
     }else throw new InvalidArgumentException('Unknown reference case');
-    return $s;
+    unset($d);
+    $rules=new Customs\Domain\StatutoryRules();$s=$rules->apply($s);
+    foreach($s['draft']['goods'] as &$goods)$goods['tariffConfirmed']=true;unset($goods);
+    return $rules->apply($s);
 }

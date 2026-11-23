@@ -5,12 +5,12 @@ test('review gate requires all applicable input graphs while allowing manual rec
     $s=completeDraftState();$review=new Customs\Domain\ReviewValidator();$s['draft']['declaration']['methodOneConfirmed']=null;$s['draft']['declaration']['feeBase']=null;$s['draft']['goods'][0]['dutyRate']=null;
     $r=$review->validate($s);truth($r['valid'],json_encode($r['errors'],JSON_UNESCAPED_UNICODE));
     truth(!(new Customs\Domain\Validator(new Customs\Domain\Registry()))->validate($s)['valid']);
-    same([], $s['documents']);$s['draft']['parties'][3]['name']=null;
-    $r=$review->validate($s);truth(!$r['valid']);truth((bool)array_filter($r['errors'],fn($e)=>$e['graphId']==='8'&&str_ends_with($e['address'],'/name')));
+    same([], $s['documents']);$s=(new Customs\Domain\GraphEdits())->edit($s,'8',null,'');
+    $r=$review->validate($s);truth(!$r['valid']);truth((bool)array_filter($r['errors'],fn($e)=>$e['graphId']==='8'&&$e['address']==='graph/8/_'));
     errorCode('DECLARATION_INVALID',fn()=>$review->requireValid($s));
 });
 test('two and five goods preserve exact fee allocation, shared places and independent payment facts',function():void {
-    foreach([2=>'25960.00',5=>'25970.00'] as $count=>$fee) {
+    foreach([2=>'25950.00',5=>'25950.00'] as $count=>$fee) {
         $s=completeDraftState($count);$s['draft']['declaration']['feeAdditional']='10';$s['draft']['keden']=[];
         $calc=(new Customs\Domain\Calculator())->calculate($s);same($count,$calc['goodsCount']);same(34,$calc['packageCount']);same($fee,$calc['totals']['fee']);same([],$calc['graphB']);
         $sum=Brick\Math\BigDecimal::zero();foreach($calc['items'] as $item)$sum=$sum->plus($item['fee']);truth($sum->isEqualTo($fee));
@@ -19,8 +19,8 @@ test('two and five goods preserve exact fee allocation, shared places and indepe
     }
 });
 test('unknown automatic text is not a value and alpha country model rejects numeric KZ',function():void {
-    $s=completeDraftState();$review=new Customs\Domain\ReviewValidator();$s['draft']['declaration']['signatoryPlace']=Customs\Domain\GraphProjection::UNAVAILABLE;
-    truth((bool)array_filter($review->validate($s)['errors'],fn($e)=>$e['address']==='declaration/_/signatoryPlace'));
+    $s=completeDraftState();$review=new Customs\Domain\ReviewValidator();$s=(new Customs\Domain\GraphEdits())->edit($s,'54',null,Customs\Domain\GraphProjection::UNAVAILABLE);
+    truth((bool)array_filter($review->validate($s)['errors'],fn($e)=>$e['address']==='graph/54/_'));
     $s=completeDraftState();$s['draft']['goods'][0]['originCountry']='398';truth(!$review->validate($s)['valid']);
     $s=completeDraftState();$s['draft']['declaration']['container']=false;$s['draft']['goods'][0]['statisticalAddition']='0';truth($review->validate($s)['valid']);
 });

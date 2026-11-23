@@ -12,7 +12,7 @@
   },
   "autoload": { "psr-4": { "Customs\\": "src/" } },
   "scripts": {
-    "test": "@php tests/php/run.php",
+    "test": "@php tests/php/run.php --isolated",
     "check-platform": "@php bin/check-platform.php"
   },
   "config": {

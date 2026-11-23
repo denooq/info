@@ -41,6 +41,7 @@ final class SessionStore
             'calculation' => null, 'confirmed' => null, 'artifactSet' => null, 'error' => null,
             'registryVersion' => '2.0.0','schemaVersion'=>2,'profile'=>'im40-kz-graphs','uploadGroups'=>[],
         ];
+        $state = SessionMigration::upgrade($state, true);
         $this->writeState($directory, $state);
         return ['token' => $token, 'state' => $state];
     }
@@ -81,6 +82,8 @@ final class SessionStore
                 if (!in_array($changed['phase'], ['uploading','recognizing'], true)) $changed['phase'] = 'reviewing';
             } else $changed['dataRevision'] = $state['dataRevision'];
             $changed['draft']=\Customs\Domain\GraphDefaults::apply(\Customs\Domain\DeclarationDate::defaults($changed['draft'],$this->now()));
+            $changed = SessionMigration::upgrade($changed, true);
+            unset($changed['_migrationPending']);
             $this->writeState($this->directory($id), $changed);
             return $changed;
         } finally { flock($handle, LOCK_UN); fclose($handle); }
@@ -105,7 +108,8 @@ final class SessionStore
 
     public function publicView(array $state): array
     {
-        $copy = array_intersect_key($state, array_flip(['createdAt','expiresAt','dataRevision','phase','csrfToken','draft','candidates','evidence','calculation','error','registryVersion','mappingIssues','exchangeRates']));
+        $state = (new \Customs\Domain\StatutoryRules())->apply($state);
+        $copy = array_intersect_key($state, array_flip(['createdAt','expiresAt','dataRevision','phase','csrfToken','draft','candidates','evidence','calculation','error','registryVersion','mappingIssues','exchangeRates','migrationNotices']));
         $copy['capabilities']=['nbkRates'=>true,'graphs'=>true,'export'=>false];
         $copy['profile']='im40-kz-graphs';$copy['uploadGroups']=array_values($state['uploadGroups']??[]);
         $copy['graphProjection']=(new \Customs\Domain\GraphProjection())->project($state);

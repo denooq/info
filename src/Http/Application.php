@@ -17,7 +17,7 @@ final class Application
     public function handle(string $method, string $path): array|Download
     {
         if ($method === 'GET' && $path === '/api/registry') {
-            return ['fields' => (new \Customs\Domain\Registry())->data(), 'catalogs' => \Customs\Domain\Registry::resource('catalogs'), 'rules' => $this->resource('rules'), 'graphs'=>(new \Customs\Domain\GraphRegistry())->data()];
+            return ['fields' => (new \Customs\Domain\Registry())->data(), 'catalogs' => \Customs\Domain\Registry::resource('catalogs'), 'rules' => $this->resource('rules'), 'graphs'=>(new \Customs\Domain\GraphRegistry())->data(), 'editors'=>(new \Customs\Domain\GraphEditors())->data()];
         }
         if($method==='GET' && $path==='/api/classifiers/documents') {
             $query=$_GET['q']??'';$offset=filter_var($_GET['offset']??0,FILTER_VALIDATE_INT);$limit=filter_var($_GET['limit']??40,FILTER_VALIDATE_INT);
@@ -41,6 +41,7 @@ final class Application
             return $this->view($this->store->mutate($state['id'],$body['revision'],fn($s)=>(new \Customs\Documents\UploadGroups())->assign($s,$match[1],$body['groupId']),true,true));
         }
         if ($method === 'GET' && $path === '/api/session') {
+            if ($state['_migrationPending'] ?? false) $state = $this->store->mutate($state['id'],$state['dataRevision'],fn($s)=>$s,false);
             $defaults=\Customs\Domain\DeclarationDate::defaults($state['draft'],$this->store->now());
             if($defaults!==$state['draft'])$state=$this->store->mutate($state['id'],$state['dataRevision'],function($s)use($defaults){$s['draft']=$defaults;return $s;});
             return $this->view($state);
@@ -69,11 +70,16 @@ final class Application
             $updated = $this->store->mutate($state['id'], $body['revision'], function (array $current) use ($body): array {
                 $draft = new \Customs\Domain\Draft(new \Customs\Domain\Registry());
                 foreach ($body['changes'] as $change) {
+                    if (isset($change['graphId'])) {
+                        if (!is_string($change['graphId']) || (isset($change['entityId']) && !is_string($change['entityId']))) throw new ApiError('GRAPH_REQUEST','Укажите графу и текущий товар.',422);
+                        $current = (new \Customs\Domain\GraphEdits())->edit($current,$change['graphId'],$change['entityId'] ?? null,$change['value'] ?? '',$change['candidateId'] ?? null);
+                        continue;
+                    }
                     if (!is_string($change['fieldId'] ?? null)) throw new ApiError('FIELD_UNKNOWN', 'Не указано поле изменения.');
                     $current = $draft->edit($current, $change['fieldId'], $change['entityId'] ?? null, $change['value'] ?? null, $change['candidateId'] ?? null);
                 }
                 $goodsIds = [];
-                foreach ($body['changes'] as $change) if (in_array($change['fieldId'], ['goods.description', 'goods.commodityCode'], true) && isset($change['entityId'])) $goodsIds[] = $change['entityId'];
+                foreach ($body['changes'] as $change) if ((in_array($change['fieldId'] ?? null, ['goods.description', 'goods.commodityCode'], true) || ($change['graphId'] ?? null) === '31') && isset($change['entityId'])) $goodsIds[] = $change['entityId'];
                 if ($goodsIds !== []) $current = (new \Customs\Domain\TnvedSuggestions())->apply($current, array_values(array_unique($goodsIds)));
                 return (new \Customs\Domain\TariffDefaults())->apply($current);
             },true,true);
@@ -91,10 +97,11 @@ final class Application
         if ($method === 'POST' && $path === '/api/validate') return (new \Customs\Domain\ReviewValidator())->validate($state);
         if($method==='POST'&&$path==='/api/review/complete') {
             $body=$this->body();if(!is_int($body['revision']??null))throw new ApiError('REVISION_REQUIRED','Нужна текущая версия данных.');
-            return $this->view($this->store->mutate($state['id'],$body['revision'],function($s){if(in_array($s['phase'],['uploading','recognizing'],true))throw new ApiError('EXTRACTION_PENDING','Завершите обработку документов.',409);(new \Customs\Domain\ReviewValidator())->requireValid($s);$s['phase']='calculation';return $s;},false,true));
+            return $this->view($this->store->mutate($state['id'],$body['revision'],function($s){if(in_array($s['phase'],['uploading','recognizing'],true))throw new ApiError('EXTRACTION_PENDING','Завершите обработку документов.',409);(new \Customs\Domain\ReviewValidator())->requireValid($s);foreach($s['draft']['goods'] as &$goods)$goods['groupConfirmed']=true;unset($goods);$s['phase']='calculation';return $s;},false,true));
         }
         if ($method === 'POST' && $path === '/api/calculate') {
             $body=$this->body();
+            if (array_intersect(['rules','statutoryRules','calculationRules'], array_keys($body)) !== []) throw new ApiError('FIELD_READ_ONLY','Нормативные правила определяются сервером.',422);
             if(!is_int($body['revision']??null))throw new ApiError('REVISION_REQUIRED','Нужна версия данных.');
             $updated=$this->store->mutate($state['id'],$body['revision'],function(array $s):array {
                 if(in_array($s['phase'],['uploading','recognizing'],true))throw new ApiError('EXTRACTION_PENDING','Сначала завершите распознавание и проверку.',409);

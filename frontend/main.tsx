@@ -49,6 +49,7 @@ function App() {
     }
   },[update]);
   useEffect(()=>{void initialize();},[initialize]);
+  useEffect(()=>{const open=()=>setPage('review');window.addEventListener('customs-open-review',open);return()=>window.removeEventListener('customs-open-review',open);},[]);
   useEffect(()=>{void request<Registry>('/api/registry').then(setRegistry).catch(e=>setFatal(e.message));},[]);
   useEffect(()=>{
     if(!session)return;

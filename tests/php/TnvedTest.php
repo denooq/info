@@ -42,10 +42,10 @@ test('reference matching is per item, idempotent, updates after edits and preser
     same(null, $state['draft']['goods'][1]['commodityCode']);
     same(true, $state['draft']['fieldStates']['goods/goods-2/commodityCode']['conflict']);
     $count = count($state['candidates']); $state = $service->apply($state); same($count, count($state['candidates']));
-    $state = $model->edit($state, 'goods.description', 'goods-1', 'Клей'); $state = $service->apply($state, ['goods-1']);
+    $state = (new Customs\Domain\GraphEdits())->edit($state, '31', 'goods-1', 'Клей'); $state = $service->apply($state, ['goods-1']);
     same(null, $state['draft']['goods'][0]['commodityCode']);
     $state = $model->edit($state, 'goods.commodityCode', 'goods-1', '3506910000');
-    $state = $model->edit($state, 'goods.description', 'goods-1', 'Этилацетат'); $state = $service->apply($state, ['goods-1']);
+    $state = (new Customs\Domain\GraphEdits())->edit($state, '31', 'goods-1', 'Этилацетат'); $state = $service->apply($state, ['goods-1']);
     same('3506910000', $state['draft']['goods'][0]['commodityCode']);
     same('manual', $state['draft']['fieldStates']['goods/goods-1/commodityCode']['status']);
     same(null, $state['draft']['goods'][1]['commodityCode']);

@@ -21,7 +21,11 @@ test('contract and amendment in one PDF retain separate record numbers and a man
     $registry=new Customs\Domain\Registry();$merge=new Customs\AI\CandidateMerger($registry);$s=['draft'=>(new Customs\Domain\Draft($registry))->empty(),'candidates'=>[],'evidence'=>[]];$id=str_repeat('a',32);$source=typedWeightSource($id,'03011','Contract CON-1; Appendix ADD-25');
     $response=['entities'=>[],'candidates'=>[],'warnings'=>[]];foreach(['contract'=>'CON-1','appendix'=>'ADD-25'] as $key=>$number){$citation=['documentId'=>$id,'page'=>1,'blockId'=>'p1-b0','sheet'=>null,'cell'=>null,'quote'=>$number];$response['entities'][]=['scope'=>'document','key'=>$key,'role'=>null,'source'=>$citation];$response['candidates'][]=['fieldId'=>'document.number','entityKey'=>$key,'rawValue'=>$number,'unit'=>null,'source'=>$citation];}
     $s=$merge->merge($s,$response,[$source]);same(2,count($s['draft']['documents']));same(['CON-1','ADD-25'],array_column($s['draft']['documents'],'number'));
-    $appendix=$s['draft']['documents'][1]['id'];$s=(new Customs\Domain\Draft($registry))->edit($s,'document.kind',$appendix,'03012');$s=$merge->merge($s,$response,[$source]);same('03012',$s['draft']['documents'][1]['kind']);same([$id],$s['draft']['documents'][1]['documentIds']);
+    foreach($s['draft']['documents'] as &$document){$document['date']='2026-10-28';$document['presentationCode']='0';}unset($document);
+    $appendix=$s['draft']['documents'][1]['id'];
+    $s=(new Customs\Domain\GraphEdits())->edit($s,'44','goods-1',"03011 | CON-1 | 2026-10-28 | 0\n03012 | ADD-25 | 2026-10-28 | 0");
+    same(null,$s['draft']['graphTexts']['graph/44/goods-1']['error']);
+    $s=$merge->merge($s,$response,[$source]);$corrected=array_column($s['draft']['documents'],null,'id')[$appendix];same('03012',$corrected['kind']);same([$id],$corrected['documentIds']);
 });
 test('document entity keys are local to a file and transport roles select the correct existing stage',function():void {
     $registry=new Customs\Domain\Registry();$merge=new Customs\AI\CandidateMerger($registry);$s=['draft'=>(new Customs\Domain\Draft($registry))->empty(),'candidates'=>[],'evidence'=>[]];

@@ -1,0 +1,1033 @@
+{
+  "version": "3.0.0",
+  "profile": "im40-kz-compact",
+  "sourceGraphVersion": "2.0.0",
+  "graphs": [
+    {
+      "graphId": "1",
+      "scope": "declaration",
+      "entityRole": null,
+      "editorKind": "readonly",
+      "visibleInputs": [],
+      "typedBindings": [],
+      "textBinding": null,
+      "requiredWhen": true,
+      "readOnlyWhen": true,
+      "childPositions": [],
+      "presentation": {
+        "layout": "framed",
+        "heightToken": "graph-card-height"
+      },
+      "ruleSource": "DT:15(1)"
+    },
+    {
+      "graphId": "2",
+      "scope": "declaration",
+      "entityRole": "consignor",
+      "editorKind": "text",
+      "visibleInputs": [],
+      "typedBindings": [],
+      "textBinding": "graphTexts/2",
+      "requiredWhen": true,
+      "readOnlyWhen": false,
+      "childPositions": [],
+      "presentation": {
+        "layout": "framed",
+        "heightToken": "graph-card-height"
+      },
+      "ruleSource": "DT:15(2)"
+    },
+    {
+      "graphId": "3",
+      "scope": "declaration",
+      "entityRole": null,
+      "editorKind": "inactive",
+      "visibleInputs": [],
+      "typedBindings": [],
+      "textBinding": null,
+      "requiredWhen": false,
+      "readOnlyWhen": true,
+      "childPositions": [],
+      "presentation": {
+        "layout": "framed",
+        "heightToken": "graph-card-height"
+      },
+      "ruleSource": "DT:15(3)"
+    },
+    {
+      "graphId": "4",
+      "scope": "declaration",
+      "entityRole": null,
+      "editorKind": "inactive",
+      "visibleInputs": [],
+      "typedBindings": [],
+      "textBinding": null,
+      "requiredWhen": false,
+      "readOnlyWhen": true,
+      "childPositions": [],
+      "presentation": {
+        "layout": "framed",
+        "heightToken": "graph-card-height"
+      },
+      "ruleSource": "DT:15(4)"
+    },
+    {
+      "graphId": "5",
+      "scope": "declaration",
+      "entityRole": null,
+      "editorKind": "readonly",
+      "visibleInputs": [],
+      "typedBindings": [],
+      "textBinding": null,
+      "requiredWhen": true,
+      "readOnlyWhen": true,
+      "childPositions": [],
+      "presentation": {
+        "layout": "framed",
+        "heightToken": "graph-card-height"
+      },
+      "ruleSource": "DT:15(5)"
+    },
+    {
+      "graphId": "6",
+      "scope": "declaration",
+      "entityRole": null,
+      "editorKind": "packages",
+      "visibleInputs": [
+        "declaration.sourcePackageCount",
+        "declaration.shipmentPackageIds",
+        "goods.packageIds"
+      ],
+      "typedBindings": [
+        "declaration.sourcePackageCount"
+      ],
+      "textBinding": null,
+      "requiredWhen": true,
+      "readOnlyWhen": false,
+      "childPositions": [],
+      "presentation": {
+        "layout": "framed",
+        "heightToken": "graph-card-height"
+      },
+      "ruleSource": "DT:15(6)"
+    },
+    {
+      "graphId": "7",
+      "scope": "declaration",
+      "entityRole": null,
+      "editorKind": "inactive",
+      "visibleInputs": [],
+      "typedBindings": [],
+      "textBinding": null,
+      "requiredWhen": false,
+      "readOnlyWhen": true,
+      "childPositions": [],
+      "presentation": {
+        "layout": "framed",
+        "heightToken": "graph-card-height"
+      },
+      "ruleSource": "DT:15(7)"
+    },
+    {
+      "graphId": "8",
+      "scope": "declaration",
+      "entityRole": "consignee",
+      "editorKind": "text",
+      "visibleInputs": [],
+      "typedBindings": [],
+      "textBinding": "graphTexts/8",
+      "requiredWhen": true,
+      "readOnlyWhen": false,
+      "childPositions": [],
+      "presentation": {
+        "layout": "framed",
+        "heightToken": "graph-card-height"
+      },
+      "ruleSource": "DT:15(8)"
+    },
+    {
+      "graphId": "9",
+      "scope": "declaration",
+      "entityRole": "financial",
+      "editorKind": "text",
+      "visibleInputs": [],
+      "typedBindings": [],
+      "textBinding": "graphTexts/9",
+      "requiredWhen": true,
+      "readOnlyWhen": false,
+      "childPositions": [],
+      "presentation": {
+        "layout": "framed",
+        "heightToken": "graph-card-height"
+      },
+      "ruleSource": "DT:15(9)"
+    },
+    {
+      "graphId": "10",
+      "scope": "declaration",
+      "entityRole": null,
+      "editorKind": "inactive",
+      "visibleInputs": [],
+      "typedBindings": [],
+      "textBinding": null,
+      "requiredWhen": false,
+      "readOnlyWhen": true,
+      "childPositions": [],
+      "presentation": {
+        "layout": "framed",
+        "heightToken": "graph-card-height"
+      },
+      "ruleSource": "DT:15(10)"
+    },
+    {
+      "graphId": "11",
+      "scope": "declaration",
+      "entityRole": null,
+      "editorKind": "fields",
+      "visibleInputs": [
+        "declaration.tradeCountry"
+      ],
+      "typedBindings": [
+        "declaration.tradeCountry"
+      ],
+      "textBinding": null,
+      "requiredWhen": true,
+      "readOnlyWhen": false,
+      "childPositions": [],
+      "presentation": {
+        "layout": "framed",
+        "heightToken": "graph-card-height"
+      },
+      "ruleSource": "DT:15(11)"
+    },
+    {
+      "graphId": "12",
+      "scope": "declaration",
+      "entityRole": null,
+      "editorKind": "readonly",
+      "visibleInputs": [],
+      "typedBindings": [],
+      "textBinding": null,
+      "requiredWhen": false,
+      "readOnlyWhen": true,
+      "childPositions": [],
+      "presentation": {
+        "layout": "framed",
+        "heightToken": "graph-card-height"
+      },
+      "ruleSource": "DT:15(12)"
+    },
+    {
+      "graphId": "13",
+      "scope": "declaration",
+      "entityRole": null,
+      "editorKind": "inactive",
+      "visibleInputs": [],
+      "typedBindings": [],
+      "textBinding": null,
+      "requiredWhen": false,
+      "readOnlyWhen": true,
+      "childPositions": [],
+      "presentation": {
+        "layout": "framed",
+        "heightToken": "graph-card-height"
+      },
+      "ruleSource": "DT:15(13)"
+    },
+    {
+      "graphId": "14",
+      "scope": "declaration",
+      "entityRole": "declarant",
+      "editorKind": "text",
+      "visibleInputs": [],
+      "typedBindings": [],
+      "textBinding": "graphTexts/14",
+      "requiredWhen": true,
+      "readOnlyWhen": false,
+      "childPositions": [],
+      "presentation": {
+        "layout": "framed",
+        "heightToken": "graph-card-height"
+      },
+      "ruleSource": "DT:15(14)"
+    },
+    {
+      "graphId": "15",
+      "scope": "declaration",
+      "entityRole": null,
+      "editorKind": "fields",
+      "visibleInputs": [
+        "declaration.dispatchCountry"
+      ],
+      "typedBindings": [
+        "declaration.dispatchCountry"
+      ],
+      "textBinding": null,
+      "requiredWhen": true,
+      "readOnlyWhen": false,
+      "childPositions": [
+        "15a"
+      ],
+      "presentation": {
+        "layout": "framed",
+        "heightToken": "graph-card-height"
+      },
+      "ruleSource": "DT:15(15)"
+    },
+    {
+      "graphId": "16",
+      "scope": "declaration",
+      "entityRole": null,
+      "editorKind": "fields",
+      "visibleInputs": [
+        "declaration.originCountry"
+      ],
+      "typedBindings": [
+        "declaration.originCountry"
+      ],
+      "textBinding": null,
+      "requiredWhen": true,
+      "readOnlyWhen": false,
+      "childPositions": [],
+      "presentation": {
+        "layout": "framed",
+        "heightToken": "graph-card-height"
+      },
+      "ruleSource": "DT:15(16)"
+    },
+    {
+      "graphId": "17",
+      "scope": "declaration",
+      "entityRole": null,
+      "editorKind": "readonly",
+      "visibleInputs": [],
+      "typedBindings": [],
+      "textBinding": null,
+      "requiredWhen": true,
+      "readOnlyWhen": true,
+      "childPositions": [
+        "17a"
+      ],
+      "presentation": {
+        "layout": "framed",
+        "heightToken": "graph-card-height"
+      },
+      "ruleSource": "DT:15(17)"
+    },
+    {
+      "graphId": "18",
+      "scope": "declaration",
+      "entityRole": "arrival",
+      "editorKind": "text",
+      "visibleInputs": [],
+      "typedBindings": [],
+      "textBinding": "graphTexts/18",
+      "requiredWhen": true,
+      "readOnlyWhen": false,
+      "childPositions": [],
+      "presentation": {
+        "layout": "framed",
+        "heightToken": "graph-card-height"
+      },
+      "ruleSource": "DT:15(18)"
+    },
+    {
+      "graphId": "19",
+      "scope": "declaration",
+      "entityRole": null,
+      "editorKind": "code-text",
+      "visibleInputs": [],
+      "typedBindings": [
+        "declaration.container",
+        "declaration.containerNumbers"
+      ],
+      "textBinding": "graphTexts/19",
+      "requiredWhen": true,
+      "readOnlyWhen": false,
+      "childPositions": [],
+      "presentation": {
+        "layout": "framed",
+        "heightToken": "graph-card-height"
+      },
+      "ruleSource": "DT:15(19)"
+    },
+    {
+      "graphId": "20",
+      "scope": "declaration",
+      "entityRole": null,
+      "editorKind": "code-text",
+      "visibleInputs": [],
+      "typedBindings": [
+        "declaration.deliveryCode",
+        "declaration.deliveryPlace"
+      ],
+      "textBinding": "graphTexts/20",
+      "requiredWhen": true,
+      "readOnlyWhen": false,
+      "childPositions": [],
+      "presentation": {
+        "layout": "framed",
+        "heightToken": "graph-card-height"
+      },
+      "ruleSource": "DT:15(20)"
+    },
+    {
+      "graphId": "21",
+      "scope": "declaration",
+      "entityRole": "border",
+      "editorKind": "text",
+      "visibleInputs": [],
+      "typedBindings": [],
+      "textBinding": "graphTexts/21",
+      "requiredWhen": true,
+      "readOnlyWhen": false,
+      "childPositions": [],
+      "presentation": {
+        "layout": "framed",
+        "heightToken": "graph-card-height"
+      },
+      "ruleSource": "DT:15(21)"
+    },
+    {
+      "graphId": "22",
+      "scope": "declaration",
+      "entityRole": null,
+      "editorKind": "currency",
+      "visibleInputs": [
+        "declaration.invoiceCurrency"
+      ],
+      "typedBindings": [
+        "declaration.invoiceCurrency"
+      ],
+      "textBinding": null,
+      "requiredWhen": true,
+      "readOnlyWhen": false,
+      "childPositions": [],
+      "presentation": {
+        "layout": "framed",
+        "heightToken": "graph-card-height"
+      },
+      "ruleSource": "DT:15(22)"
+    },
+    {
+      "graphId": "23",
+      "scope": "declaration",
+      "entityRole": null,
+      "editorKind": "rate",
+      "visibleInputs": [
+        "rate.value",
+        "rate.nominal",
+        "rate.source",
+        "rate.confirmed"
+      ],
+      "typedBindings": [
+        "rate.value",
+        "rate.nominal",
+        "rate.source",
+        "rate.confirmed"
+      ],
+      "textBinding": null,
+      "requiredWhen": true,
+      "readOnlyWhen": false,
+      "childPositions": [],
+      "presentation": {
+        "layout": "framed",
+        "heightToken": "graph-card-height"
+      },
+      "ruleSource": "DT:15(23)"
+    },
+    {
+      "graphId": "24",
+      "scope": "declaration",
+      "entityRole": null,
+      "editorKind": "code-text",
+      "visibleInputs": [],
+      "typedBindings": [
+        "declaration.transactionCode",
+        "declaration.transactionFeature"
+      ],
+      "textBinding": "graphTexts/24",
+      "requiredWhen": true,
+      "readOnlyWhen": false,
+      "childPositions": [],
+      "presentation": {
+        "layout": "framed",
+        "heightToken": "graph-card-height"
+      },
+      "ruleSource": "DT:15(24)"
+    },
+    {
+      "graphId": "25",
+      "scope": "declaration",
+      "entityRole": "border",
+      "editorKind": "fields",
+      "visibleInputs": [
+        "transport.mode"
+      ],
+      "typedBindings": [
+        "transport.mode"
+      ],
+      "textBinding": null,
+      "requiredWhen": true,
+      "readOnlyWhen": false,
+      "childPositions": [],
+      "presentation": {
+        "layout": "framed",
+        "heightToken": "graph-card-height"
+      },
+      "ruleSource": "DT:15(25)"
+    },
+    {
+      "graphId": "26",
+      "scope": "declaration",
+      "entityRole": "arrival",
+      "editorKind": "fields",
+      "visibleInputs": [
+        "transport.mode"
+      ],
+      "typedBindings": [
+        "transport.mode"
+      ],
+      "textBinding": null,
+      "requiredWhen": true,
+      "readOnlyWhen": false,
+      "childPositions": [],
+      "presentation": {
+        "layout": "framed",
+        "heightToken": "graph-card-height"
+      },
+      "ruleSource": "DT:15(26)"
+    },
+    {
+      "graphId": "27",
+      "scope": "declaration",
+      "entityRole": null,
+      "editorKind": "inactive",
+      "visibleInputs": [],
+      "typedBindings": [],
+      "textBinding": null,
+      "requiredWhen": false,
+      "readOnlyWhen": true,
+      "childPositions": [],
+      "presentation": {
+        "layout": "framed",
+        "heightToken": "graph-card-height"
+      },
+      "ruleSource": "DT:15(27)"
+    },
+    {
+      "graphId": "28",
+      "scope": "declaration",
+      "entityRole": null,
+      "editorKind": "inactive",
+      "visibleInputs": [],
+      "typedBindings": [],
+      "textBinding": null,
+      "requiredWhen": false,
+      "readOnlyWhen": true,
+      "childPositions": [],
+      "presentation": {
+        "layout": "framed",
+        "heightToken": "graph-card-height"
+      },
+      "ruleSource": "DT:15(28)"
+    },
+    {
+      "graphId": "29",
+      "scope": "declaration",
+      "entityRole": null,
+      "editorKind": "text",
+      "visibleInputs": [],
+      "typedBindings": [],
+      "textBinding": "graphTexts/29",
+      "requiredWhen": true,
+      "readOnlyWhen": false,
+      "childPositions": [],
+      "presentation": {
+        "layout": "framed",
+        "heightToken": "graph-card-height"
+      },
+      "ruleSource": "DT:15(29)"
+    },
+    {
+      "graphId": "30",
+      "scope": "declaration",
+      "entityRole": null,
+      "editorKind": "text",
+      "visibleInputs": [],
+      "typedBindings": [],
+      "textBinding": "graphTexts/30",
+      "requiredWhen": true,
+      "readOnlyWhen": false,
+      "childPositions": [],
+      "presentation": {
+        "layout": "framed",
+        "heightToken": "graph-card-height"
+      },
+      "ruleSource": "DT:15(30)"
+    },
+    {
+      "graphId": "31",
+      "scope": "goods",
+      "entityRole": null,
+      "editorKind": "text",
+      "visibleInputs": [],
+      "typedBindings": [],
+      "textBinding": "graphTexts/31",
+      "requiredWhen": true,
+      "readOnlyWhen": false,
+      "childPositions": [],
+      "presentation": {
+        "layout": "framed",
+        "heightToken": "graph-card-height"
+      },
+      "ruleSource": "DT:15(31)"
+    },
+    {
+      "graphId": "32",
+      "scope": "goods",
+      "entityRole": null,
+      "editorKind": "readonly",
+      "visibleInputs": [],
+      "typedBindings": [],
+      "textBinding": null,
+      "requiredWhen": true,
+      "readOnlyWhen": true,
+      "childPositions": [],
+      "presentation": {
+        "layout": "framed",
+        "heightToken": "graph-card-height"
+      },
+      "ruleSource": "DT:15(32)"
+    },
+    {
+      "graphId": "33",
+      "scope": "goods",
+      "entityRole": null,
+      "editorKind": "fields",
+      "visibleInputs": [
+        "goods.commodityCode"
+      ],
+      "typedBindings": [
+        "goods.commodityCode"
+      ],
+      "textBinding": null,
+      "requiredWhen": true,
+      "readOnlyWhen": false,
+      "childPositions": [],
+      "presentation": {
+        "layout": "framed",
+        "heightToken": "graph-card-height"
+      },
+      "ruleSource": "DT:15(33)"
+    },
+    {
+      "graphId": "34",
+      "scope": "goods",
+      "entityRole": null,
+      "editorKind": "fields",
+      "visibleInputs": [
+        "goods.originCountry"
+      ],
+      "typedBindings": [
+        "goods.originCountry"
+      ],
+      "textBinding": null,
+      "requiredWhen": true,
+      "readOnlyWhen": false,
+      "childPositions": [],
+      "presentation": {
+        "layout": "framed",
+        "heightToken": "graph-card-height"
+      },
+      "ruleSource": "DT:15(34)"
+    },
+    {
+      "graphId": "35",
+      "scope": "goods",
+      "entityRole": null,
+      "editorKind": "fields",
+      "visibleInputs": [
+        "goods.grossMass"
+      ],
+      "typedBindings": [
+        "goods.grossMass"
+      ],
+      "textBinding": null,
+      "requiredWhen": true,
+      "readOnlyWhen": false,
+      "childPositions": [],
+      "presentation": {
+        "layout": "framed",
+        "heightToken": "graph-card-height"
+      },
+      "ruleSource": "DT:15(35)"
+    },
+    {
+      "graphId": "36",
+      "scope": "goods",
+      "entityRole": null,
+      "editorKind": "code-text",
+      "visibleInputs": [],
+      "typedBindings": [
+        "goods.hasPreference",
+        "goods.preferenceFee",
+        "goods.preferenceDuty",
+        "goods.preferenceExcise",
+        "goods.preferenceVat",
+        "goods.preferenceBasis"
+      ],
+      "textBinding": "graphTexts/36",
+      "requiredWhen": true,
+      "readOnlyWhen": false,
+      "childPositions": [],
+      "presentation": {
+        "layout": "framed",
+        "heightToken": "graph-card-height"
+      },
+      "ruleSource": "DT:15(36)"
+    },
+    {
+      "graphId": "37",
+      "scope": "goods",
+      "entityRole": null,
+      "editorKind": "code-text",
+      "visibleInputs": [],
+      "typedBindings": [
+        "declaration.procedure",
+        "goods.previousProcedure",
+        "goods.movementFeature"
+      ],
+      "textBinding": "graphTexts/37",
+      "requiredWhen": true,
+      "readOnlyWhen": false,
+      "childPositions": [],
+      "presentation": {
+        "layout": "framed",
+        "heightToken": "graph-card-height"
+      },
+      "ruleSource": "DT:15(37)"
+    },
+    {
+      "graphId": "38",
+      "scope": "goods",
+      "entityRole": null,
+      "editorKind": "fields",
+      "visibleInputs": [
+        "goods.netMass"
+      ],
+      "typedBindings": [
+        "goods.netMass"
+      ],
+      "textBinding": null,
+      "requiredWhen": true,
+      "readOnlyWhen": false,
+      "childPositions": [],
+      "presentation": {
+        "layout": "framed",
+        "heightToken": "graph-card-height"
+      },
+      "ruleSource": "DT:15(38)"
+    },
+    {
+      "graphId": "39",
+      "scope": "goods",
+      "entityRole": null,
+      "editorKind": "quota",
+      "visibleInputs": [
+        "goods.hasQuota",
+        "goods.quotaQuantity",
+        "goods.quotaUnit"
+      ],
+      "typedBindings": [
+        "goods.hasQuota",
+        "goods.quotaQuantity",
+        "goods.quotaUnit"
+      ],
+      "textBinding": null,
+      "requiredWhen": true,
+      "readOnlyWhen": false,
+      "childPositions": [],
+      "presentation": {
+        "layout": "framed",
+        "heightToken": "graph-card-height"
+      },
+      "ruleSource": "DT:15(39)"
+    },
+    {
+      "graphId": "40",
+      "scope": "goods",
+      "entityRole": null,
+      "editorKind": "inactive",
+      "visibleInputs": [],
+      "typedBindings": [],
+      "textBinding": null,
+      "requiredWhen": false,
+      "readOnlyWhen": true,
+      "childPositions": [],
+      "presentation": {
+        "layout": "framed",
+        "heightToken": "graph-card-height"
+      },
+      "ruleSource": "DT:15(40)"
+    },
+    {
+      "graphId": "41",
+      "scope": "goods",
+      "entityRole": null,
+      "editorKind": "quantities",
+      "visibleInputs": [
+        "goods.additionalQuantity",
+        "goods.additionalUnit",
+        "goods.secondaryAdditionalQuantity",
+        "goods.secondaryAdditionalUnit"
+      ],
+      "typedBindings": [
+        "goods.additionalQuantity",
+        "goods.additionalUnit",
+        "goods.secondaryAdditionalQuantity",
+        "goods.secondaryAdditionalUnit"
+      ],
+      "textBinding": null,
+      "requiredWhen": true,
+      "readOnlyWhen": false,
+      "childPositions": [],
+      "presentation": {
+        "layout": "framed",
+        "heightToken": "graph-card-height"
+      },
+      "ruleSource": "DT:15(41)"
+    },
+    {
+      "graphId": "42",
+      "scope": "goods",
+      "entityRole": null,
+      "editorKind": "fields",
+      "visibleInputs": [
+        "goods.invoiceValue"
+      ],
+      "typedBindings": [
+        "goods.invoiceValue"
+      ],
+      "textBinding": null,
+      "requiredWhen": true,
+      "readOnlyWhen": false,
+      "childPositions": [],
+      "presentation": {
+        "layout": "framed",
+        "heightToken": "graph-card-height"
+      },
+      "ruleSource": "DT:15(42)"
+    },
+    {
+      "graphId": "43",
+      "scope": "goods",
+      "entityRole": null,
+      "editorKind": "readonly",
+      "visibleInputs": [],
+      "typedBindings": [],
+      "textBinding": null,
+      "requiredWhen": true,
+      "readOnlyWhen": true,
+      "childPositions": [],
+      "presentation": {
+        "layout": "framed",
+        "heightToken": "graph-card-height"
+      },
+      "ruleSource": "DT:15(43)"
+    },
+    {
+      "graphId": "44",
+      "scope": "goods",
+      "entityRole": null,
+      "editorKind": "documents",
+      "visibleInputs": [],
+      "typedBindings": [],
+      "textBinding": "graphTexts/44",
+      "requiredWhen": true,
+      "readOnlyWhen": false,
+      "childPositions": [],
+      "presentation": {
+        "layout": "framed",
+        "heightToken": "graph-card-height"
+      },
+      "ruleSource": "DT:15(44)"
+    },
+    {
+      "graphId": "45",
+      "scope": "goods",
+      "entityRole": null,
+      "editorKind": "readonly",
+      "visibleInputs": [],
+      "typedBindings": [],
+      "textBinding": null,
+      "requiredWhen": false,
+      "readOnlyWhen": true,
+      "childPositions": [],
+      "presentation": {
+        "layout": "framed",
+        "heightToken": "graph-card-height"
+      },
+      "ruleSource": "DT:15(45)"
+    },
+    {
+      "graphId": "46",
+      "scope": "goods",
+      "entityRole": null,
+      "editorKind": "readonly",
+      "visibleInputs": [],
+      "typedBindings": [],
+      "textBinding": null,
+      "requiredWhen": false,
+      "readOnlyWhen": true,
+      "childPositions": [],
+      "presentation": {
+        "layout": "framed",
+        "heightToken": "graph-card-height"
+      },
+      "ruleSource": "DT:15(46)"
+    },
+    {
+      "graphId": "47",
+      "scope": "goods",
+      "entityRole": null,
+      "editorKind": "readonly",
+      "visibleInputs": [],
+      "typedBindings": [],
+      "textBinding": null,
+      "requiredWhen": false,
+      "readOnlyWhen": true,
+      "childPositions": [
+        "B"
+      ],
+      "presentation": {
+        "layout": "framed",
+        "heightToken": "graph-card-height"
+      },
+      "ruleSource": "DT:15(47)"
+    },
+    {
+      "graphId": "48",
+      "scope": "declaration",
+      "entityRole": null,
+      "editorKind": "inactive",
+      "visibleInputs": [],
+      "typedBindings": [],
+      "textBinding": null,
+      "requiredWhen": false,
+      "readOnlyWhen": true,
+      "childPositions": [],
+      "presentation": {
+        "layout": "framed",
+        "heightToken": "graph-card-height"
+      },
+      "ruleSource": "DT:15(48)"
+    },
+    {
+      "graphId": "49",
+      "scope": "declaration",
+      "entityRole": null,
+      "editorKind": "inactive",
+      "visibleInputs": [],
+      "typedBindings": [],
+      "textBinding": null,
+      "requiredWhen": false,
+      "readOnlyWhen": true,
+      "childPositions": [],
+      "presentation": {
+        "layout": "framed",
+        "heightToken": "graph-card-height"
+      },
+      "ruleSource": "DT:15(49)"
+    },
+    {
+      "graphId": "50",
+      "scope": "declaration",
+      "entityRole": null,
+      "editorKind": "inactive",
+      "visibleInputs": [],
+      "typedBindings": [],
+      "textBinding": null,
+      "requiredWhen": false,
+      "readOnlyWhen": true,
+      "childPositions": [],
+      "presentation": {
+        "layout": "framed",
+        "heightToken": "graph-card-height"
+      },
+      "ruleSource": "DT:15(50)"
+    },
+    {
+      "graphId": "51",
+      "scope": "declaration",
+      "entityRole": null,
+      "editorKind": "inactive",
+      "visibleInputs": [],
+      "typedBindings": [],
+      "textBinding": null,
+      "requiredWhen": false,
+      "readOnlyWhen": true,
+      "childPositions": [],
+      "presentation": {
+        "layout": "framed",
+        "heightToken": "graph-card-height"
+      },
+      "ruleSource": "DT:15(51)"
+    },
+    {
+      "graphId": "52",
+      "scope": "declaration",
+      "entityRole": null,
+      "editorKind": "inactive",
+      "visibleInputs": [],
+      "typedBindings": [],
+      "textBinding": null,
+      "requiredWhen": false,
+      "readOnlyWhen": true,
+      "childPositions": [],
+      "presentation": {
+        "layout": "framed",
+        "heightToken": "graph-card-height"
+      },
+      "ruleSource": "DT:15(52)"
+    },
+    {
+      "graphId": "53",
+      "scope": "declaration",
+      "entityRole": null,
+      "editorKind": "inactive",
+      "visibleInputs": [],
+      "typedBindings": [],
+      "textBinding": null,
+      "requiredWhen": false,
+      "readOnlyWhen": true,
+      "childPositions": [],
+      "presentation": {
+        "layout": "framed",
+        "heightToken": "graph-card-height"
+      },
+      "ruleSource": "DT:15(53)"
+    },
+    {
+      "graphId": "54",
+      "scope": "declaration",
+      "entityRole": null,
+      "editorKind": "signature",
+      "visibleInputs": [
+        "declaration.signatureDate"
+      ],
+      "typedBindings": [
+        "declaration.signatureDate"
+      ],
+      "textBinding": "graphTexts/54",
+      "requiredWhen": true,
+      "readOnlyWhen": false,
+      "childPositions": [],
+      "presentation": {
+        "layout": "framed",
+        "heightToken": "graph-card-height"
+      },
+      "ruleSource": "DT:15(54)"
+    }
+  ]
+}

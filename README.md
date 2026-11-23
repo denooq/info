@@ -1,6 +1,6 @@
 # Подготовка декларации ИМ 40
 
-Текущий профиль `im40-kz-graphs` ведётся по `openspec/changes/customs-declaration-mvp`: три страницы — выбор официальных видов/вложения, 54 графы ДТ, расчёт. Mistral выполняет OCR и сопоставление, backend проверяет источники и считает суммы. PDF/XML и четвёртая страница отключены. Границы: ДТС-1 метода 1, без БД, регистрации, истории, отправки в Keden и электронной подписи. [Сценарий и допущения](docs/graphs-mvp.md), [полные справочники](docs/classifiers.md), [матрица книги](docs/graph-matrix.md). Фактическая приёмка этой версии на PS.kz XS ещё не выполнена.
+Текущий профиль `im40-kz-graphs` обновлён изменением `compact-declaration-graphs`: три страницы — выбор официальных видов/вложения, 54 компактные графы ДТ, расчёт. Редакторы версии 3.0.0 имеют одинаковые размеры: две колонки на широком экране, одна на узком. Mistral выполняет OCR и сопоставление, backend проверяет источники и считает суммы. PDF/XML и четвёртая страница отключены. Границы: ДТС-1 метода 1, без БД, регистрации, истории, отправки в Keden и электронной подписи. [Компактная форма](docs/compact-graphs.md), [правила расчёта](docs/catalogs-and-calculations.md), [локальная приёмка](docs/acceptance-compact.md), [классификаторы](docs/classifiers.md).
 
 ## Локальный запуск
 
@@ -27,14 +27,14 @@ php -S 127.0.0.1:8080 -t public public/router.php
 
 ```powershell
 node --test tests/*.test.mjs
-php tests/php/run.php
-node --test --test-concurrency=1 tests/graphs.browser.mjs
+php tests/php/run.php --isolated
+node --test tests/compact-graphs.browser.mjs tests/graphs.browser.mjs tests/upload-recognition.browser.mjs
 composer validate --no-check-publish
 npm run build
 php -d memory_limit=192M bin/resource-probe.php
 ```
 
-На Windows с ограничением дочерних процессов тестам Node может потребоваться разрешение среды выполнения. Браузерный прогон использует установленный Edge и временный локальный PHP-сервер. Тесты не обращаются к Mistral и не требуют API-ключа. Реальные документы используются для проверки чтения/ячеек и описаний источников; зарегистрированные ДТ не входят в AI-входы. Прежние browser-файлы четырёхстраничного профиля — исторические сценарии; активная приёмка текущего UI находится в `graphs.browser.mjs`.
+На Windows с ограничением дочерних процессов тестам Node может потребоваться разрешение среды выполнения; `--test-isolation=none` отключает отдельные процессы файлов Node-тестов. PHP `--isolated` запускает каждый файл отдельно, чтобы декодирование сканов не делило лимит памяти с каталогами предыдущих тестов. Браузерный прогон использует установленный Edge и временный локальный PHP-сервер. Тесты не обращаются к Mistral и не требуют API-ключа. Реальные документы используются для проверки чтения/ячеек и описаний источников; зарегистрированные ДТ не входят в AI-входы. Прежние browser-файлы четырёхстраничного профиля — исторические сценарии.
 
 ## Размещение файлов
 
@@ -45,4 +45,4 @@ php -d memory_limit=192M bin/resource-probe.php
 - `bin/` — служебные PHP-команды для проверки среды и будущих заданий Plesk; они не публикуются как открытые HTTP-операции.
 - `reference/`, `tests/`, `openspec/`, `.local-tools/` — исследовательские материалы и разработка, не публичная часть релиза.
 
-Детали: [реестр полей](docs/field-registry.md), [проверка и расчёт](docs/review-and-calculation.md), [дата составления и курсы НБК](docs/exchange-rates.md), [профили XML и ограничения](docs/xml-profiles.md), [ресурсный прототип](docs/resource-probe.md), [инструкция PS.kz](docs/ps-kz-xs.md). Готовый комплект Git/Plesk создаётся командой `php bin/build-release.php`; в архив входят frontend/vendor, но не ключи и reference. Обычный исходный checkout целиком не публиковать.
+Детали: [проверка и расчёт](docs/review-and-calculation.md), [дата и курсы НБК](docs/exchange-rates.md), [сборка, миграция и откат](docs/compact-release.md). Комплект создаётся командой `php bin/build-release.php`; в архив входят frontend/backend/resources/vendor и manifest с SHA-256, но не ключи, runtime и reference. Проверка распакованного комплекта: `php tests/release-smoke.php`. Изменение не требует действий на PS.kz.

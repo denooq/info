@@ -57,7 +57,7 @@ test('equivalent country names coalesce and a rejected delivery proposal does no
     same(1, count($country)); same(2, count($country[0]['evidenceIds']));
     same(false, $state['draft']['fieldStates']['declaration/_/deliveryCode']['conflict']);
     same(false, $state['draft']['fieldStates']['declaration/_/deliveryCode']['needsReview']);
-    $state = (new Draft(new Registry()))->edit($state, 'declaration.deliveryCode', null, 'FCA');
+    $state = (new Customs\Domain\GraphEdits())->edit($state, '20', null, 'FCA; ALMATY');
     $state = (new CandidateMerger(new Registry()))->merge($state, ['entities' => [], 'candidates' => [$candidates[3]], 'warnings' => []], $sources);
     same('FCA', $state['draft']['declaration']['deliveryCode']);
     same(false, $state['draft']['fieldStates']['declaration/_/deliveryCode']['needsReview']);

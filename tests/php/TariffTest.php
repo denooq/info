@@ -32,7 +32,7 @@ test('all terminal tariff expressions round trip with exact rate and unit metada
     truth(memory_get_peak_usage(true)<192*1024*1024,'Runtime exceeds 192M');
 });
 
-test('tariff autofill requires context confirmation, preserves manual rates and resets confirmation after changes',function():void {
+test('tariff autofill requires context confirmation, owns rates and resets confirmation after changes',function():void {
     $service=new TariffDefaults(); $model=new Draft(new Registry()); $validator=new Validator(new Registry());
     $s=tariffState('2915310000'); $g=$s['draft']['goods'][0];
     same('5',$g['dutyRate']); same('advalorem',$g['dutyFormula']); same(false,$g['additionalUnitRequired']); same(false,$g['tariffConfirmed']); same('16',$g['vatRate']);
@@ -42,13 +42,10 @@ test('tariff autofill requires context confirmation, preserves manual rates and 
     same($s,$service->apply($s));
     $changed=$service->apply($model->edit($s,'goods.originCountry','goods-1','DE')); same(false,$changed['draft']['goods'][0]['tariffConfirmed']);
     $changed=$service->apply($model->edit($s,'declaration.calculationDate',null,'2026-11-13')); same(false,$changed['draft']['goods'][0]['tariffConfirmed']); same('2026-11-13',$changed['draft']['goods'][0]['ratesDate']);
-    $changed=$service->apply($model->edit($s,'goods.dutyRate','goods-1','7')); same(false,$changed['draft']['goods'][0]['tariffConfirmed']);
-    truth(in_array('TARIFF_BASIS',array_column($validator->validate($changed)['errors'],'code'),true));
-    $changed=$service->apply($model->edit($changed,'goods.rateBasis','goods-1','Проверенное основание отклонения'));
-    $changed=$service->apply($model->edit($changed,'goods.tariffConfirmed','goods-1',true));
-    truth($validator->validate($changed)['valid']);
+    errorCode('FIELD_READ_ONLY',fn()=>$model->edit($s,'goods.dutyRate','goods-1','7'));
+    errorCode('FIELD_READ_ONLY',fn()=>$model->edit($s,'goods.rateBasis','goods-1','Произвольное основание'));
     $manual=completeDraftState(); $manual['draft']['goods'][0]['dutyRate']='7'; $manual=$service->apply($manual);
-    same('7',$manual['draft']['goods'][0]['dutyRate']); same(false,$manual['draft']['goods'][0]['tariffFromCatalogue']);
+    same('5',$manual['draft']['goods'][0]['dutyRate']); same(true,$manual['draft']['goods'][0]['tariffFromCatalogue']);
     truth($validator->validate($manual)['valid'],json_encode($validator->validate($manual)['errors'],JSON_UNESCAPED_UNICODE));
     $zero=tariffState('0101210000'); same('0',$zero['draft']['goods'][0]['dutyRate']); same('796',$zero['draft']['goods'][0]['additionalUnit']); same(null,$zero['draft']['goods'][0]['additionalQuantity']);
     $none=$service->apply($model->edit($s,'goods.commodityCode','goods-1','9999999999')); same(null,$none['draft']['goods'][0]['dutyRate']); truth(!isset($none['draft']['goods'][0]['_tariff']));

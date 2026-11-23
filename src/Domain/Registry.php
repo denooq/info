@@ -15,6 +15,10 @@ final class Registry
         $this->data['version']='2.0.0';
         foreach($this->data['fields'] as &$field) if($field['id']==='declaration.destinationCountry')$field['fixedValue']='KZ';
         unset($field);
+        foreach ($this->data['fields'] as &$field) if (StatutoryRules::owns($field['id'])) $field['acquisition'] = ['reference','calculated'];
+        unset($field);
+        foreach ($this->data['fields'] as &$field) if ($field['id']==='goods.tariffConfirmed') $field['label']='Подтверждаю стандартный импорт без льгот, акциза, исключений ВТО и защитных пошлин; базовая ставка и сноски проверены';
+        unset($field);
         $this->data['fields'][]=['id'=>'declaration.sourcePackageCount','key'=>'sourcePackageCount','scope'=>'declaration','label'=>'Количество мест по документам','type'=>'integer','acquisition'=>['extract','manual'],'dtGraphs'=>['6'],'rule'=>'DT:15(6)','requiredWhen'=>false,'validWhen'=>[['op'=>'decimal','min'=>'1']],'sourceHints'=>['number of packages','pallets','количество мест']];
         $this->fields = array_column($this->data['fields'], null, 'id');
     }

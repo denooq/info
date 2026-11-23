@@ -1,10 +1,10 @@
 {
-  "id": "im40-method1-tariff-v2",
-  "version": "0.2.0",
+  "id": "im40-method1-statutory-v3",
+  "version": "3.0.0",
   "status": "provisional-mvp",
   "jurisdiction": "KZ",
   "valuationMethod": "1",
-  "verifiedOn": "2026-11-12",
+  "verifiedOn": "2026-11-23",
   "legalCurrency": "KZT",
   "parameterPolicy": {
     "sourceRequired": true,
@@ -18,7 +18,9 @@
       "feeAdditional": null,
       "fxValue": null,
       "fxNominal": null
-    }
+    },
+    "statutoryOwner": "backend",
+    "statutoryRules": "statutory-rules.kz.v1.json"
   },
   "rounding": {
     "mode": "HALF_UP",
@@ -33,11 +35,11 @@
     {
       "code": "1010",
       "kind": "fee",
-      "expression": "(feeBase + extraSheets * feeAdditional) / goodsCount",
-      "source": "reference/rules/DT_2026.docx:15(45)",
+      "expression": "mrp * feeMultiplier / goodsCount",
+      "source": "statutory-rules.kz.v1.json:sources.fee",
       "parameters": [
-        "feeBase",
-        "feeAdditional"
+        "mrp",
+        "feeMultiplier"
       ],
       "allocation": "equal-with-deterministic-rounding-remainder"
     },
@@ -59,11 +61,11 @@
       "code": "5060",
       "kind": "vat",
       "expression": "(customsValue + duty + fee) * vatRate / 100",
-      "source": "design.md:D7; включение сбора — явно предварительный профиль примеров",
+      "source": "НК РК 2026, статья 466; statutory-rules.kz.v1.json:sources.vatBasis",
       "parameters": [
         "vatRate"
       ],
-      "requiresConfirmedBasis": true
+      "requiresConfirmedBasis": false
     }
   ],
   "exchangeRatePolicy": {

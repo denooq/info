@@ -38,6 +38,6 @@ final class GraphProjection
             if($graph['id']==='B'){$status=($draft['declaration']['paymentFactsAvailable']??null)===false?'not_applicable':($calculation!==null?'calculated':'pending_calculation');$displayValue=$calculation['graphB']??null;}
             $result[]=['id'=>$graph['id'],'parentGraph'=>$graph['parentGraph'],'status'=>$status,'entries'=>$entries,'displayValue'=>$displayValue];
         }
-        return ['version'=>$graphs->data()['version'],'profile'=>'im40-kz-graphs','dataRevision'=>$state['dataRevision']??0,'graphs'=>$result];
+        return ['version'=>GraphEditors::VERSION,'profile'=>'im40-kz-compact','dataRevision'=>$state['dataRevision']??0,'graphs'=>$result,'editors'=>(new CompactGraphs())->project($state)];
     }
 }

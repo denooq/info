@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+require_once dirname(__DIR__).'/support/attachments.php';
 test('terminal OCR failures finish in manual review while successful sources alone enter mapping',function():void {
     foreach([false,true] as $allFailed) {
         $config=new Customs\Config(['runtime_dir'=>sys_get_temp_dir().'/customs-partial-'.bin2hex(random_bytes(6)),'mistral_api_key'=>'test-placeholder']);$store=new Customs\Storage\SessionStore($config);$s=$store->create()['state'];$dir=$store->directory($s['id']);

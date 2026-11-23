@@ -1,0 +1,20 @@
+{
+  "version": "kz-im40-2026.1",
+  "verifiedOn": "2026-11-23",
+  "jurisdiction": "KZ",
+  "procedure": "40",
+  "effectiveFrom": "2026-01-01",
+  "effectiveTo": "2026-12-31",
+  "mrp": "4325",
+  "feeMultiplier": "6",
+  "vatRate": "16",
+  "vatBasis": "customsValue + duty + allocatedFee",
+  "sources": {
+    "mrp": "https://www.gov.kz/org/enbek-sko/press/news/details/1130809?lang=ru",
+    "fee": "https://www.gov.kz/org/kgd-sko/press/news/details/1327077?lang=ru",
+    "vat": "https://www.gov.kz/org/kgd-astana/press/news/details/1175082?lang=ru",
+    "vatBasis": "https://www.gov.kz/org/kgd-akmola/documents/details/1084149?lang=ru"
+  },
+  "coverage": "Стандартный облагаемый импорт ИМ 40, метод 1, без льгот, акциза и специальных защитных платежей. Применимость подтверждается отдельно.",
+  "unsupported": ["medical-preferential-vat", "exemptions", "preferential-duty", "wto-national-exceptions", "excise", "protective-duties", "valuation-methods-2-6"]
+}

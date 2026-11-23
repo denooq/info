@@ -48,6 +48,9 @@ final class Draft
     {
         $field = $this->registry->field($fieldId);
         if (in_array('calculated', $field['acquisition'], true) || isset($field['fixedValue'])) throw new ApiError('FIELD_READ_ONLY', 'Измените исходные параметры этого поля.');
+        $target =& $this->entity($state['draft'],$field['scope'],$entityId);
+        $role = $target['role'] ?? $target['stage'] ?? null; unset($target);
+        if ((new GraphEditors())->hidden($fieldId,$role)) throw new ApiError('GRAPH_EDIT_REQUIRED','Измените полный текст соответствующей графы в компактной форме.',422);
         $address = self::address($field['scope'], $entityId, $field['key']);
         $evidenceIds = [];
         $status = 'manual';
@@ -55,7 +58,15 @@ final class Draft
             $candidate = $state['candidates'][$candidateId] ?? throw new ApiError('CANDIDATE_UNKNOWN', 'Предложение больше недоступно.');
             if ($candidate['address'] !== $address) throw new ApiError('CANDIDATE_FIELD', 'Предложение относится к другому полю.');
             $value = $candidate['value']; $evidenceIds = $candidate['evidenceIds']; $status = 'selected';
-        } else $value = $this->manualValue($field, $value);
+        } else {
+            try { $value = $this->manualValue($field, $value); }
+            catch (ApiError $error) {
+                if (!in_array($field['type'], ['decimal','integer','date'], true) || !is_string($value)) throw $error;
+                $state['draft']['invalidInputs'][$address] = ['raw'=>$value,'message'=>$error->getMessage()];
+                return $state;
+            }
+        }
+        unset($state['draft']['invalidInputs'][$address]);
         $row =& $this->entity($state['draft'], $field['scope'], $entityId);
         $oldValue=$row[$field['key']]??null;
         if ($field['scope'] === 'goods' && isset($row['_tariff']) && (in_array($field['key'], TariffDefaults::UNIT_FIELDS, true) || ($field['key'] === 'dutyQuantity' && (TariffDefaults::linkedQuantity($row) !== null || ($row['dutyQuantityBasis'] ?? '') === 'net_mass')))) throw new ApiError('FIELD_READ_ONLY', 'Единица задана кодом ТН ВЭД; связанное количество меняется через исходную массу или количество товара.', 422);
@@ -98,6 +109,7 @@ final class Draft
             return array_values(array_unique($value));
         }
         if ($type === 'integer') {
+            if (is_string($value)) return (new Normalizer())->value($field,$value,null,'');
             if (!is_int($value) || $value < 0) throw new ApiError('FIELD_VALUE', 'Ожидается неотрицательное целое число.');
             return $value;
         }

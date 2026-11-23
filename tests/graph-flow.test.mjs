@@ -11,9 +11,9 @@ test('HTTP gates all input graphs, opens calculation parameters separately and n
     await patch([{fieldId:'declaration.methodOneConfirmed',value:null}]);assert.equal(state.reviewValidation.valid,true);assert.equal(state.calculationValidation.valid,false);
     let r=await call('/api/review/complete','POST',{revision:state.dataRevision});assert.equal(r.response.status,200);assert.equal(state.phase,'calculation');assert.equal(state.calculation,null);
     r=await call('/api/calculate','POST',{revision:state.dataRevision});assert.equal(r.response.status,422);assert.equal(r.payload.error.code,'DECLARATION_INVALID');
-    await patch([{fieldId:'declaration.methodOneConfirmed',value:true},{fieldId:'party.name',entityId:'party-consignee',value:null}]);
+    await patch([{fieldId:'declaration.methodOneConfirmed',value:true},{graphId:'8',value:''}]);
     for(const path of ['/api/review/complete','/api/calculate']){r=await call(path,'POST',{revision:state.dataRevision});assert.equal(r.response.status,422);assert.ok(r.payload.error.details.errors.some(e=>e.graphId==='8'));}
-    await patch([{fieldId:'party.name',entityId:'party-consignee',value:'Получатель'}]);r=await call('/api/calculate','POST',{revision:state.dataRevision});assert.equal(r.response.status,200,JSON.stringify(r.payload));
+    await patch([{graphId:'8',value:'Получатель'}]);r=await call('/api/calculate','POST',{revision:state.dataRevision});assert.equal(r.response.status,200,JSON.stringify(r.payload));
     const oldRevision=state.dataRevision;assert.equal(state.calculation.dataRevision,oldRevision);const graph12=state.graphProjection.graphs.find(g=>g.id==='12');assert.equal(graph12.entries[0].status,'calculated');assert.equal(graph12.entries[0].value,state.calculation.totals.customsValue);
     r=await call('/api/calculation','PATCH',{revision:state.dataRevision,entityId:'goods-1',key:'customsValue',value:'1'});assert.equal(r.response.status,200);assert.equal(state.calculation.consistent,false);
     await patch([{fieldId:'goods.invoiceValue',entityId:'goods-1',value:'40000'}]);assert.equal(state.calculation,null);assert.equal(state.graphProjection.graphs.find(g=>g.id==='45').entries[0].status,'pending_calculation');

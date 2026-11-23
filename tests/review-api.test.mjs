@@ -36,16 +36,15 @@ test('real HTTP adds review rows, renews activity cookies and retains documents 
     const originalDocument=await readFile(document);const originalOcr=await readFile(ocr);
     assert.equal(state.expiresAt,initial+120);
     const invoiceId=state.draft.documents.find(doc=>doc.kind==='04021').id;
-    result=await call('/api/entities','POST',{revision:state.dataRevision,scope:'document',action:'required',kind:'04021',fieldId:'document.number',value:'HTTP-INVOICE'});
+    const documentText=state.graphProjection.editors.find(g=>g.graphId==='44'&&g.entityId==='goods-1').value;
+    const invoiceText=documentText.split('\n').find(line=>line.startsWith('04021')).replace(state.draft.documents.find(doc=>doc.id===invoiceId).number,'HTTP-INVOICE');
+    result=await call('/api/draft','PATCH',{revision:state.dataRevision,changes:[{graphId:'44',entityId:'goods-1',value:documentText.replace(documentText.split('\n').find(line=>line.startsWith('04021')),invoiceText)}]});
     assert.equal(result.response.status,200,JSON.stringify(result.payload));state=result.payload;
     assert.equal(state.draft.documents.length,2);assert.equal(state.draft.documents.find(doc=>doc.id===invoiceId).number,'HTTP-INVOICE');
-    const contractId=state.draft.documents.find(doc=>doc.kind==='03011').id;
-    result=await call('/api/entities','POST',{revision:state.dataRevision,scope:'document',action:'remove',id:contractId});assert.equal(result.response.status,200);state=result.payload;
+    result=await call('/api/draft','PATCH',{revision:state.dataRevision,changes:[{graphId:'44',entityId:'goods-1',value:invoiceText}]});assert.equal(result.response.status,200);state=result.payload;
     result=await call('/api/session');state=result.payload;assert.equal(state.draft.documents.length,1,'Opening the form must not persist fake documentary records');
-    for(const [fieldId,value] of [['document.number','HTTP-CONTRACT'],['document.date','2026-10-28']]) {
-      result=await call('/api/entities','POST',{revision:state.dataRevision,scope:'document',action:'required',kind:'03011',fieldId,value});
-      assert.equal(result.response.status,200,JSON.stringify(result.payload));state=result.payload;assert.equal(state.draft.documents.length,2);
-    }
+    result=await call('/api/draft','PATCH',{revision:state.dataRevision,changes:[{graphId:'44',entityId:'goods-1',value:invoiceText+'\n03011 | HTTP-CONTRACT | 2026-10-28 | 0'}]});
+    assert.equal(result.response.status,200,JSON.stringify(result.payload));state=result.payload;assert.equal(state.draft.documents.length,2);
     assert.equal(state.draft.documents.find(doc=>doc.kind==='03011').number,'HTTP-CONTRACT');
     await writeFile(join(root,'clock'),String(initial+110));
     result=await call('/api/session');assert.equal(result.payload.expiresAt,initial+120,'Polling must not renew server TTL');

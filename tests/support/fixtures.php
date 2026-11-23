@@ -40,5 +40,9 @@ function completeDraftState(int $goodsCount=1): array
     $draft['rates'][0]=array_replace($draft['rates'][0],['currency'=>'USD','value'=>'455.63','nominal'=>'1','date'=>'2026-10-28','source'=>'Проверочный курс, только для теста','confirmed'=>true]);
     $draft['keden']=array_replace($draft['keden'],['officeCode'=>'55411','rateType'=>'1','fillerType'=>'0','filledBy'=>'1','personId'=>'test-person']);
     foreach($draft['goods'] as &$g)$g['paymentFeature']='ИУ';unset($g);
-    return ['draft'=>$draft,'candidates'=>[],'evidence'=>[],'documents'=>[],'dataRevision'=>1,'registryVersion'=>'0.1.0','phase'=>'reviewing'];
+    $state=['draft'=>$draft,'candidates'=>[],'evidence'=>[],'documents'=>[],'dataRevision'=>1,'registryVersion'=>'0.1.0','phase'=>'reviewing'];
+    $state=(new Customs\Domain\StatutoryRules())->apply($state);
+    foreach($state['draft']['goods'] as &$goods)$goods['tariffConfirmed']=true;
+    unset($goods);
+    return (new Customs\Domain\StatutoryRules())->apply($state);
 }

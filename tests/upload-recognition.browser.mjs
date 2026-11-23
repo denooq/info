@@ -46,7 +46,7 @@ for(const outcome of ['partial-error','all-error','mapping-error'])test(`termina
     }
     await stage(page,outcome);await poll(page);await page.getByRole('heading',{name:'Проверьте данные декларации',exact:true}).waitFor();
     await expect(page.getByText('Проверочная конечная ошибка обработки.',{exact:true})).toBeVisible();await expect(page.getByRole('button',{name:'К расчёту',exact:true})).toBeDisabled();
-    const field=page.locator('[data-address="party/party-consignee/name"] input');await field.fill('Ручной получатель после ошибки');await field.blur();await expect(field).toHaveValue('Ручной получатель после ошибки');
+    const field=page.locator('[data-address="graph/8/_"] textarea');await field.fill('Ручной получатель после ошибки');await field.blur();await expect(field).toHaveValue('Ручной получатель после ошибки');
     await expect(page.locator('.notice.progress')).toHaveCount(0);
   } finally {await browser.close();await server.stop();}
 });

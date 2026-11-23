@@ -18,6 +18,7 @@ function issueAddress(issue:Issue,session:Session,registry:Registry):string {
 }
 function issueLabel(address:string,session:Session,registry:Registry):string {
   const [scope,id,key]=address.split('/');const field=registry.fields.fields.find(f=>f.id===`${scope}.${key}`);
+  if(scope==='graph'){const g=registry.graphs?.graphs.find(g=>g.id===id);const index=session.draft.goods.findIndex(g=>g.id===key);return `Графа ${id} · ${g?.title??'Проверка данных'}${index>=0?` · товар ${index+1}`:''}`;}
   let context=sections[scope]?.label || 'Проверка данных';
   const collection=registry.fields.scopes[scope]?.collection;
   if(collection && id) {
@@ -32,14 +33,17 @@ function issueLabel(address:string,session:Session,registry:Registry):string {
 export function focusReviewIssue(issue:Issue,session:Session,registry:Registry):void {
   const address=issueAddress(issue,session,registry);
   const [scope,entityId]=address.split('/');
-  if(scope==='goods')window.dispatchEvent(new CustomEvent('customs-focus-good',{detail:entityId}));
+  const goodsId=scope==='goods'?entityId:scope==='graph'&&address.split('/')[2]!=='_'?address.split('/')[2]:null;
+  if(!document.getElementById(domId(address))&&issue.graphId&&!document.getElementById(`graph-${issue.graphId}`))window.dispatchEvent(new CustomEvent('customs-open-review'));
+  if(goodsId)window.dispatchEvent(new CustomEvent('customs-focus-good',{detail:goodsId}));
   window.setTimeout(()=>{
+  if(goodsId)window.dispatchEvent(new CustomEvent('customs-focus-good',{detail:goodsId}));
   const target=document.getElementById(domId(address)) || document.getElementById(`graph-${issue.graphId??''}`) || document.getElementById(`calculation-goods-${entityId}`) || document.getElementById(sections[scope]?.id || 'section-declaration');
   if(!target)return;
   for(let node:HTMLElement|null=target;node;node=node.parentElement)if(node instanceof HTMLDetailsElement)node.open=true;
   if(!target.hasAttribute('tabindex') && !/^(INPUT|SELECT|TEXTAREA|BUTTON|A)$/.test(target.tagName))target.tabIndex=-1;
   target.scrollIntoView({behavior:'smooth',block:'center'});target.focus({preventScroll:true});
-  },30);
+  },60);
 }
 export function ReviewValidation({session,registry}:{session:Session;registry:Registry}) {
   if(session.validation.valid)return null;
