@@ -8,6 +8,10 @@
     "1"
   ],
   "ruleSource": "reference/rules/DT_2026.docx",
+  "requiredDocuments": [
+    { "kind": "04021", "label": "Инвойс", "name": "инвойса" },
+    { "kind": "03011", "label": "Контракт", "name": "контракта" }
+  ],
   "xmlAliases": {
     "D": "gdgdc:GoodsDeclaration",
     "S": "D/cacdo:GDGoodsShipmentDetails",
@@ -654,7 +658,8 @@
       "label": "Дата для расчёта",
       "type": "date",
       "acquisition": [
-        "manual"
+        "manual",
+        "reference"
       ],
       "dtGraphs": [
         "23",
@@ -689,7 +694,8 @@
       "label": "Дата составления",
       "type": "date",
       "acquisition": [
-        "manual"
+        "manual",
+        "reference"
       ],
       "dtGraphs": [
         "54"
@@ -959,7 +965,12 @@
       ],
       "rule": "DT:15(22)",
       "requiredWhen": true,
-      "validWhen": [],
+      "validWhen": [
+        {
+          "op": "pattern",
+          "value": "[A-Z]{3}"
+        }
+      ],
       "sourceHints": [
         {
           "documentKinds": [
@@ -6590,7 +6601,12 @@
       ],
       "rule": "DTS-1:11б,13-24",
       "requiredWhen": true,
-      "validWhen": [],
+      "validWhen": [
+        {
+          "op": "pattern",
+          "value": "[A-Z]{3}"
+        }
+      ],
       "sourceHints": [
         {
           "documentKinds": [
@@ -6826,14 +6842,20 @@
       "label": "Валюта курса",
       "type": "code",
       "acquisition": [
-        "manual"
+        "manual",
+        "reference"
       ],
       "dtGraphs": [
         "23"
       ],
       "rule": "DT:15(23);DTS-1:11",
       "requiredWhen": true,
-      "validWhen": [],
+      "validWhen": [
+        {
+          "op": "pattern",
+          "value": "[A-Z]{3}"
+        }
+      ],
       "sourceHints": [],
       "pdf": {
         "document": "dt",
@@ -6857,14 +6879,21 @@
       "label": "Курс к KZT",
       "type": "decimal",
       "acquisition": [
-        "manual"
+        "manual",
+        "reference"
       ],
       "dtGraphs": [
         "23"
       ],
       "rule": "DT:15(23);DTS-1:11",
       "requiredWhen": true,
-      "validWhen": [],
+      "validWhen": [
+        {
+          "op": "decimal",
+          "min": "0",
+          "exclusiveMin": true
+        }
+      ],
       "sourceHints": [],
       "pdf": {
         "document": "dt",
@@ -6888,14 +6917,21 @@
       "label": "Кратность курса",
       "type": "decimal",
       "acquisition": [
-        "manual"
+        "manual",
+        "reference"
       ],
       "dtGraphs": [
         "23"
       ],
       "rule": "DT:15(23);DTS-1:11",
       "requiredWhen": true,
-      "validWhen": [],
+      "validWhen": [
+        {
+          "op": "decimal",
+          "min": "0",
+          "exclusiveMin": true
+        }
+      ],
       "sourceHints": [],
       "pdf": {
         "document": "dt",
@@ -6919,7 +6955,8 @@
       "label": "Дата курса",
       "type": "date",
       "acquisition": [
-        "manual"
+        "manual",
+        "reference"
       ],
       "dtGraphs": [
         "23"
@@ -6950,7 +6987,8 @@
       "label": "Источник курса",
       "type": "string",
       "acquisition": [
-        "manual"
+        "manual",
+        "reference"
       ],
       "dtGraphs": [
         "23"
@@ -6981,7 +7019,8 @@
       "label": "Курс подтверждён",
       "type": "boolean",
       "acquisition": [
-        "manual"
+        "manual",
+        "reference"
       ],
       "dtGraphs": [
         "23"
@@ -8230,7 +8269,12 @@
           }
         ]
       },
-      "validWhen": [],
+      "validWhen": [
+        {
+          "op": "pattern",
+          "value": "[A-Z]{3}"
+        }
+      ],
       "sourceHints": [],
       "pdf": {
         "document": null,

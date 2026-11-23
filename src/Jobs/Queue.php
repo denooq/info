@@ -14,6 +14,7 @@ final class Queue
     public function enqueue(string $sessionId, string $kind, ?string $documentId = null, bool $retry = false, int $chunkStart = 0): array
     {
         if (!in_array($kind, ['ocr','mapping','generate'], true)) throw new ApiError('JOB_KIND', 'Неизвестный этап обработки.');
+        if($kind==='generate')throw new ApiError('EXPORT_DISABLED','Формирование PDF и XML отключено в профиле подготовки 54 граф.',409);
         return $this->store->mutate($sessionId, null, function (array $state) use ($kind, $documentId, $retry, $chunkStart): array {
             $fingerprint = $this->fingerprint($state, $kind, $documentId, $chunkStart);
             foreach ($state['jobs'] as $job) {
@@ -44,6 +45,9 @@ final class Queue
             $parts[] = \Customs\AI\Mapper::PROMPT_VERSION;
             $parts[] = (new \Customs\Domain\TnvedCatalogue())->version();
             $parts[] = \Customs\Domain\TariffDefaults::VERSION;
+            $parts[] = hash_file('sha256',dirname(__DIR__,2).'/resources/registry/graphs.im40.v2.json');
+            $parts[] = hash_file('sha256',dirname(__DIR__,2).'/resources/registry/source-roles.v2.json');
+            $parts[] = (new \Customs\Domain\Classifiers())->version();
         }
         if ($kind === 'ocr') {
             $document = $state['documents'][$documentId] ?? null;
@@ -51,7 +55,7 @@ final class Queue
             $parts[] = $documentId; $parts[] = $document['hash']; $parts[] = $chunkStart;
         } else {
             $documents = $state['documents']; ksort($documents);
-            foreach ($documents as $document) { $parts[] = $document['id']; $parts[] = $document['hash']; }
+            foreach ($documents as $document) { $parts[] = [$document['id'],$document['hash'],$document['documentKind']??null,$document['classifierVersion']??null,$document['status']]; }
         }
         if ($kind === 'generate') { $parts[] = $state['dataRevision']; $parts[] = $state['confirmed']['hash'] ?? null; }
         return hash('sha256', json_encode($parts, JSON_THROW_ON_ERROR));
@@ -171,6 +175,7 @@ final class Queue
                         $current['documents'][$job['documentId']]['error'] = $safe;
                     }
                     if (!$retry) $current['error'] = $safe;
+                    if(!$retry&&$job['kind']==='mapping')$current['phase']='reviewing';
                     return $current;
                 }, false);
             } catch (ApiError $storageError) {

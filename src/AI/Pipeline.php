@@ -11,7 +11,7 @@ use Customs\Storage\SessionStore;
 
 final class Pipeline
 {
-    public const MAPPING_PLAN_VERSION='per-document-scopes-v4-shipment-context';
+    public const MAPPING_PLAN_VERSION='typed-graphs-v2-terminal-ocr';
     private Queue $queue;
     private Ocr $ocr;
     private Registry $registry;
@@ -44,8 +44,6 @@ final class Pipeline
                 'continue' => fn(array $payload): bool => $payload['more'], 'changesData' => true,
             ],
         ];
-        $bundle=new \Customs\Export\Bundle((new \Customs\Export\XmlProfiles())->serialize(...),$this->config);
-        $handlers['generate']=['run'=>$bundle->run(...),'apply'=>$bundle->apply(...)];
         $result = $this->queue->tick($handlers, $maxJobs, 150, $onlySessionId, fn(string $id) => $this->scheduleMapping($id, false));
         foreach (glob($this->config->get('runtime_dir') . '/sessions/*', GLOB_ONLYDIR) as $directory) {
             $id = basename($directory);
@@ -61,15 +59,24 @@ final class Pipeline
     {
         $state = $this->store->read($sessionId);
         if ($state['documents'] === []) return;
-        foreach ($state['documents'] as $document) if ($document['status'] !== 'recognized') return;
+        foreach($state['jobs'] as $job)if($job['kind']==='ocr'&&in_array($job['status'],['queued','running'],true))return;
+        foreach ($state['documents'] as $document) if (!in_array($document['status'],['recognized','error'],true)) return;
+        if(!array_filter($state['documents'],fn($d)=>$d['status']==='recognized')) {
+            if($state['phase']==='recognizing')$this->store->mutate($sessionId,null,function($s){$s['phase']='reviewing';$s['error']??=['code'=>'OCR_ALL_FAILED','message'=>'Документы не распознаны. Заполните графы вручную или повторите неуспешные файлы.'];return $s;},false);
+            return;
+        }
         $this->queue->enqueue($sessionId, 'mapping', null, $retry);
     }
 
     private function sources(array $state, string $directory): array
     {
-        $sources = [];
+        $sources = []; $seen=[];
         foreach ($state['documents'] as $document) {
-            $source = ['documentId' => $document['id'],'name' => $document['name'],'pages' => [],'sheets' => []];
+            if($document['status']!=='recognized')continue;
+            $identity=$document['hash'].'|'.($document['documentKind']??'');
+            if(isset($seen[$identity]))continue;
+            $seen[$identity]=true;
+            $source = ['documentId' => $document['id'],'name' => $document['name'],'documentKind'=>$document['documentKind']??null,'classifierVersion'=>$document['classifierVersion']??null,'sourceRole'=>\Customs\Domain\SourceRoles::forCode($document['documentKind']??null),'pages' => [],'sheets' => []];
             foreach (glob($directory . '/ocr/' . $document['id'] . '-*.json') as $path) {
                 $raw = @file_get_contents($path);
                 if ($raw === false) throw new ApiError('SESSION_EXPIRED', 'Данные сессии недоступны.', 410);
@@ -93,11 +100,11 @@ final class Pipeline
         $chunks = []; $current = []; $bytes = 0;
         foreach ($sources as $source) {
             $parts = [];
-            foreach ($source['pages'] as $page) foreach ($page['blocks'] as $block) $parts[] = ['documentId' => $source['documentId'],'name' => $source['name'], 'allowsNewGoods' => $source['allowsNewGoods'], 'pages' => [['page' => $page['page'],'blocks' => [$block]]], 'sheets' => []];
+            foreach ($source['pages'] as $page) foreach ($page['blocks'] as $block) $parts[] = [...array_intersect_key($source,array_flip(['documentId','name','documentKind','classifierVersion','sourceRole','allowsNewGoods'])), 'pages' => [['page' => $page['page'],'blocks' => [$block]]], 'sheets' => []];
             foreach ($source['sheets'] as $sheet) {
                 $cells = [];
                 foreach ($sheet['cells'] as $address => $cell) if ($cell['value'] !== null && $cell['value'] !== '') $cells[$address] = $cell;
-                foreach (array_chunk($cells, 600, true) as $cellChunk) $parts[] = ['documentId' => $source['documentId'],'name' => $source['name'], 'allowsNewGoods' => $source['allowsNewGoods'], 'pages' => [],'sheets' => [['name' => $sheet['name'],'cells' => $cellChunk]]];
+                foreach (array_chunk($cells, 600, true) as $cellChunk) $parts[] = [...array_intersect_key($source,array_flip(['documentId','name','documentKind','classifierVersion','sourceRole','allowsNewGoods'])), 'pages' => [],'sheets' => [['name' => $sheet['name'],'cells' => $cellChunk]]];
             }
             foreach ($parts as $part) {
                 $length = strlen(json_encode($part, JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR));
@@ -112,7 +119,8 @@ final class Pipeline
         if ($current !== []) $chunks[] = $this->combineSources($current);
         if ($chunks === []) return [];
         // Establish shipment items before asking supporting permits about those items.
-        usort($chunks, static fn(array $a, array $b): int => (int) $b[0]['allowsNewGoods'] <=> (int) $a[0]['allowsNewGoods']);
+        $order=static fn(array $source):int=>match($source['sourceRole']??null){'invoice'=>0,'packing'=>1,default=>$source['allowsNewGoods']?1:2};
+        usort($chunks,static fn(array $a,array $b):int=>$order($a[0])<=>$order($b[0]));
         $plan = [];
         foreach ($chunks as $chunk) foreach ([['declaration','party','transport'],['goods','cost'],['document']] as $scopes) {
             $fields=array_filter($this->registry->extractable(),fn(array $f):bool=>in_array($f['scope'],$scopes,true));
@@ -125,7 +133,7 @@ final class Pipeline
     {
         $result = [];
         foreach ($parts as $part) {
-            $id = $part['documentId']; $result[$id] ??= ['documentId' => $id,'name' => $part['name'], 'allowsNewGoods' => $part['allowsNewGoods'], 'pages' => [],'sheets' => []];
+            $id = $part['documentId']; $result[$id] ??= [...array_intersect_key($part,array_flip(['documentId','name','documentKind','classifierVersion','sourceRole','allowsNewGoods'])), 'pages' => [],'sheets' => []];
             foreach ($part['pages'] as $page) {
                 $number = $page['page'];
                 $result[$id]['pages'][$number] ??= ['page' => $number,'blocks' => []];
@@ -168,6 +176,7 @@ final class Pipeline
     {
         $state = (new CandidateMerger($this->registry))->merge($state, $payload['response'], $payload['sources']);
         $state = (new \Customs\Domain\TnvedSuggestions())->apply($state);
+        $state['draft'] = \Customs\Domain\DeclarationDate::defaults($state['draft'], $this->store->now());
         $state = (new \Customs\Domain\TariffDefaults())->apply($state);
         $state['mappingProgress'][$job['fingerprint']] = $payload['cursor'];
         $state['phase'] = $payload['more'] ? 'recognizing' : 'reviewing';

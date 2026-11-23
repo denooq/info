@@ -1,0 +1,2 @@
+# Preserve downloaded official source bytes used by SHA-256 provenance checks.
+reference/classifiers/*.html -text -diff

@@ -9,7 +9,7 @@ use Customs\Storage\SessionStore;
 final class Application
 {
     private SessionStore $store;
-    public function __construct(private readonly Config $config, ?SessionStore $store = null)
+    public function __construct(private readonly Config $config, ?SessionStore $store = null, private readonly ?\Customs\Rates\NationalBankClient $bank = null)
     {
         $this->store = $store ?? new SessionStore($config);
     }
@@ -17,7 +17,12 @@ final class Application
     public function handle(string $method, string $path): array|Download
     {
         if ($method === 'GET' && $path === '/api/registry') {
-            return ['fields' => $this->resource('fields'), 'catalogs' => $this->resource('catalogs'), 'rules' => $this->resource('rules')];
+            return ['fields' => (new \Customs\Domain\Registry())->data(), 'catalogs' => \Customs\Domain\Registry::resource('catalogs'), 'rules' => $this->resource('rules'), 'graphs'=>(new \Customs\Domain\GraphRegistry())->data()];
+        }
+        if($method==='GET' && $path==='/api/classifiers/documents') {
+            $query=$_GET['q']??'';$offset=filter_var($_GET['offset']??0,FILTER_VALIDATE_INT);$limit=filter_var($_GET['limit']??40,FILTER_VALIDATE_INT);
+            if(!is_string($query)||mb_strlen($query)>500||$offset===false||$limit===false)throw new ApiError('CLASSIFIER_QUERY','Укажите строку поиска, offset и limit.',422);
+            return (new \Customs\Domain\Classifiers())->documents($query,$offset,$limit,\Customs\Domain\DeclarationDate::today($this->store->now()));
         }
         if ($method === 'POST' && $path === '/api/session') {
             $session = $this->store->create();
@@ -26,7 +31,26 @@ final class Application
         }
         $state = $this->store->fromToken($_COOKIE['customs_session'] ?? null);
         if ($method !== 'GET') $this->csrf($state);
-        if ($method === 'GET' && $path === '/api/session') return $this->view($state);
+        if(in_array($path,['/api/confirm','/api/create','/api/generate'],true)||str_starts_with($path,'/api/download/'))throw new ApiError('EXPORT_DISABLED','Формирование PDF и XML отключено в профиле подготовки 54 граф.',409);
+        if($method==='POST' && $path==='/api/upload-groups') {
+            $body=$this->body();if(!is_int($body['revision']??null))throw new ApiError('REVISION_REQUIRED','Нужна текущая версия данных.');
+            return $this->view($this->store->mutate($state['id'],$body['revision'],fn($s)=>(new \Customs\Documents\UploadGroups())->change($s,$body),true,true));
+        }
+        if($method==='PATCH' && preg_match('#^/api/documents/([a-f0-9]{32})/type$#D',$path,$match)) {
+            $body=$this->body();if(!is_int($body['revision']??null)||!is_string($body['groupId']??null))throw new ApiError('UPLOAD_GROUP_REQUEST','Выберите вид и текущую версию данных.',422);
+            return $this->view($this->store->mutate($state['id'],$body['revision'],fn($s)=>(new \Customs\Documents\UploadGroups())->assign($s,$match[1],$body['groupId']),true,true));
+        }
+        if ($method === 'GET' && $path === '/api/session') {
+            $defaults=\Customs\Domain\DeclarationDate::defaults($state['draft'],$this->store->now());
+            if($defaults!==$state['draft'])$state=$this->store->mutate($state['id'],$state['dataRevision'],function($s)use($defaults){$s['draft']=$defaults;return $s;});
+            return $this->view($state);
+        }
+        if ($method === 'POST' && $path === '/api/rates') {
+            $body=$this->body();
+            if(!is_int($body['revision']??null) || (isset($body['force'])&&!is_bool($body['force'])))throw new ApiError('RATES_REQUEST','Нужна текущая версия данных.',422);
+            $service=new \Customs\Rates\ExchangeRates($this->store,$this->bank??new \Customs\Rates\NationalBankClient());
+            return $this->view($service->refresh($state['id'],$body['revision'],$body['force']??false));
+        }
         if($method==='GET' && preg_match('#^/api/download/(pdf|xml)$#D',$path,$match)) {
             $download = Download::fromState($this->store,$state,$match[1]);
             $state = $this->store->mutate($state['id'],null,fn($s)=>$s,false,true);
@@ -64,12 +88,17 @@ final class Application
                 return (new \Customs\Domain\TariffDefaults())->apply($s);
             },true,true));
         }
-        if ($method === 'POST' && $path === '/api/validate') return (new \Customs\Domain\Validator(new \Customs\Domain\Registry()))->validate($state);
+        if ($method === 'POST' && $path === '/api/validate') return (new \Customs\Domain\ReviewValidator())->validate($state);
+        if($method==='POST'&&$path==='/api/review/complete') {
+            $body=$this->body();if(!is_int($body['revision']??null))throw new ApiError('REVISION_REQUIRED','Нужна текущая версия данных.');
+            return $this->view($this->store->mutate($state['id'],$body['revision'],function($s){if(in_array($s['phase'],['uploading','recognizing'],true))throw new ApiError('EXTRACTION_PENDING','Завершите обработку документов.',409);(new \Customs\Domain\ReviewValidator())->requireValid($s);$s['phase']='calculation';return $s;},false,true));
+        }
         if ($method === 'POST' && $path === '/api/calculate') {
             $body=$this->body();
             if(!is_int($body['revision']??null))throw new ApiError('REVISION_REQUIRED','Нужна версия данных.');
             $updated=$this->store->mutate($state['id'],$body['revision'],function(array $s):array {
                 if(in_array($s['phase'],['uploading','recognizing'],true))throw new ApiError('EXTRACTION_PENDING','Сначала завершите распознавание и проверку.',409);
+                (new \Customs\Domain\ReviewValidator())->requireValid($s);
                 $s['calculation']=(new \Customs\Domain\Calculator())->calculate($s);
                 $s['confirmed']=$s['artifactSet']=null; $s['phase']='calculated';return $s;
             },false,true);
@@ -96,8 +125,8 @@ final class Application
         }
         if ($method === 'POST' && $path === '/api/documents') {
             $revision = filter_var($_POST['revision'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 0]]);
-            if ($revision === false || !isset($_FILES['file'])) throw new ApiError('UPLOAD_FAILED', 'Нужны файл и текущая версия данных.');
-            $updated = (new \Customs\Documents\Uploads($this->config, $this->store))->receive($state['id'], $_FILES['file'], $revision, true);
+            if ($revision === false || !isset($_FILES['file']) || !is_string($_POST['groupId']??null)) throw new ApiError('UPLOAD_FAILED', 'Нужны файл, выбранный вид и текущая версия данных.');
+            $updated = (new \Customs\Documents\Uploads($this->config, $this->store))->receive($state['id'], $_FILES['file'], $revision, true, $_POST['groupId']);
             return $this->view($updated);
         }
         if ($method === 'DELETE' && preg_match('#^/api/documents/([a-f0-9]{32})$#D', $path, $matches)) {

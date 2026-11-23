@@ -27,7 +27,7 @@ function completeDraftState(int $goodsCount=1): array
         }
     }
     $draft['declaration']=array_replace($draft['declaration'],[
-        'dispatchCountry'=>'CN','destinationCountry'=>'KZ','tradeCountry'=>'CN','deliveryCode'=>'CPT','deliveryPlace'=>'ALMATY','invoiceCurrency'=>'USD','transactionCode'=>'010','transactionFeature'=>'00','borderOfficeCode'=>'55411','borderOfficeCountry'=>'KZ','locationCode'=>'11','locationRegistration'=>'001','locationCountry'=>'KZ','locationOfficeCode'=>'55411','shipmentPackageIds'=>['package-1'],'valuationDocumentIds'=>['doc-invoice','doc-contract'],'methodOneConfirmed'=>true,'feeBase'=>'25950','feeAdditional'=>'0',
+        'dispatchCountry'=>'CN','destinationCountry'=>'KZ','originCountry'=>'CN','sourcePackageCount'=>null,'tradeCountry'=>'CN','deliveryCode'=>'CPT','deliveryPlace'=>'ALMATY','invoiceCurrency'=>'USD','transactionCode'=>'010','transactionFeature'=>'00','borderOfficeCode'=>'55411','borderOfficeCountry'=>'KZ','locationCode'=>'11','locationRegistration'=>'001','locationCountry'=>'KZ','locationOfficeCode'=>'55411','shipmentPackageIds'=>['package-1'],'valuationDocumentIds'=>['doc-invoice','doc-contract'],'methodOneConfirmed'=>true,'feeBase'=>'25950','feeAdditional'=>'0',
     ]);
     foreach($draft['parties'] as &$p){$p['country']='KZ';$p['identifierKind']='1';}unset($p);
     foreach($draft['transports'] as &$p){$p['mode']='31';$p['country']='KZ';$p['transportType']='31';}unset($p);

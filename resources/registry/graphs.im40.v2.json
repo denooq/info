@@ -1,0 +1,1811 @@
+{
+    "version": "2.0.0",
+    "profile": "im40-kz-graphs",
+    "source": {
+        "file": "Книга1 (2).xlsx",
+        "sheet": "Лист1",
+        "sha256": "a013d4f4f2ad62c5ee29ad23108eb58ef9e5b67b0c1b566698623ab46ef071aa"
+    },
+    "graphs": [
+        {
+            "id": "1",
+            "sourceNumber": "1",
+            "title": "Декларация",
+            "priorities": [
+                "ИМ-40",
+                null,
+                null
+            ],
+            "sourceCells": {
+                "number": "A4",
+                "title": "B4",
+                "priorities": [
+                    "C4",
+                    "D4",
+                    "E4"
+                ]
+            },
+            "parentGraph": null,
+            "scope": "declaration",
+            "fieldBindings": [
+                "declaration.kind",
+                "declaration.procedure",
+                "declaration.format"
+            ],
+            "fillMode": "mixed",
+            "requiredWhen": true,
+            "applicabilityRule": "applicable",
+            "ruleSource": "DT:15(1)",
+            "calculationStage": "review",
+            "emptyState": "auto_unavailable"
+        },
+        {
+            "id": "2",
+            "sourceNumber": "2",
+            "title": "Отправитель/Экспортер",
+            "priorities": [
+                "товаротранспортный документ",
+                "инвойс",
+                "контракт"
+            ],
+            "sourceCells": {
+                "number": "A5",
+                "title": "B5",
+                "priorities": [
+                    "C5",
+                    "D5",
+                    "E5"
+                ]
+            },
+            "parentGraph": null,
+            "scope": "declaration",
+            "fieldBindings": [
+                "party.sameAsRole",
+                "party.name",
+                "party.briefName",
+                "party.country",
+                "party.region",
+                "party.city",
+                "party.street",
+                "party.postalCode",
+                "party.taxId",
+                "party.identifierKind"
+            ],
+            "fillMode": "extract",
+            "requiredWhen": true,
+            "applicabilityRule": "applicable",
+            "ruleSource": "DT:15(2)",
+            "calculationStage": "review",
+            "emptyState": "missing",
+            "entityRole": "consignor"
+        },
+        {
+            "id": "3",
+            "sourceNumber": "3",
+            "title": "Формы",
+            "priorities": [
+                "не заполняется",
+                null,
+                null
+            ],
+            "sourceCells": {
+                "number": "A6",
+                "title": "B6",
+                "priorities": [
+                    "C6",
+                    "D6",
+                    "E6"
+                ]
+            },
+            "parentGraph": null,
+            "scope": "declaration",
+            "fieldBindings": [],
+            "fillMode": "not_applicable",
+            "requiredWhen": false,
+            "applicabilityRule": "profile_not_filled",
+            "ruleSource": "DT:15(3)",
+            "calculationStage": "review",
+            "emptyState": "missing"
+        },
+        {
+            "id": "4",
+            "sourceNumber": "4",
+            "title": "Отгрузочные спецификации",
+            "priorities": [
+                "не заполняется",
+                null,
+                null
+            ],
+            "sourceCells": {
+                "number": "A7",
+                "title": "B7",
+                "priorities": [
+                    "C7",
+                    "D7",
+                    "E7"
+                ]
+            },
+            "parentGraph": null,
+            "scope": "declaration",
+            "fieldBindings": [],
+            "fillMode": "not_applicable",
+            "requiredWhen": false,
+            "applicabilityRule": "profile_not_filled",
+            "ruleSource": "DT:15(4)",
+            "calculationStage": "review",
+            "emptyState": "missing"
+        },
+        {
+            "id": "5",
+            "sourceNumber": "5",
+            "title": "Всего товаров",
+            "priorities": [
+                "инвойс",
+                null,
+                null
+            ],
+            "sourceCells": {
+                "number": "A8",
+                "title": "B8",
+                "priorities": [
+                    "C8",
+                    "D8",
+                    "E8"
+                ]
+            },
+            "parentGraph": null,
+            "scope": "declaration",
+            "fieldBindings": [
+                "declaration.goodsCount"
+            ],
+            "fillMode": "mixed",
+            "requiredWhen": true,
+            "applicabilityRule": "applicable",
+            "ruleSource": "DT:15(5)",
+            "calculationStage": "review",
+            "emptyState": "auto_unavailable"
+        },
+        {
+            "id": "6",
+            "sourceNumber": "6",
+            "title": "Всего мест",
+            "priorities": [
+                "товаротранспортный документ",
+                "упаковочный лист",
+                null
+            ],
+            "sourceCells": {
+                "number": "A9",
+                "title": "B9",
+                "priorities": [
+                    "C9",
+                    "D9",
+                    "E9"
+                ]
+            },
+            "parentGraph": null,
+            "scope": "declaration",
+            "fieldBindings": [
+                "declaration.sourcePackageCount",
+                "declaration.shipmentPackageIds",
+                "declaration.packageCount"
+            ],
+            "fillMode": "extract",
+            "requiredWhen": true,
+            "applicabilityRule": "applicable",
+            "ruleSource": "DT:15(6)",
+            "calculationStage": "review",
+            "emptyState": "missing"
+        },
+        {
+            "id": "7",
+            "sourceNumber": "7",
+            "title": "Справочный номер",
+            "priorities": [
+                "не заполняется",
+                null,
+                null
+            ],
+            "sourceCells": {
+                "number": "A10",
+                "title": "B10",
+                "priorities": [
+                    "C10",
+                    "D10",
+                    "E10"
+                ]
+            },
+            "parentGraph": null,
+            "scope": "declaration",
+            "fieldBindings": [],
+            "fillMode": "not_applicable",
+            "requiredWhen": false,
+            "applicabilityRule": "profile_not_filled",
+            "ruleSource": "DT:15(7)",
+            "calculationStage": "review",
+            "emptyState": "missing"
+        },
+        {
+            "id": "8",
+            "sourceNumber": "8",
+            "title": "Получатель",
+            "priorities": [
+                "инвойс",
+                "товаротранспортный документ",
+                "контракт"
+            ],
+            "sourceCells": {
+                "number": "A11",
+                "title": "B11",
+                "priorities": [
+                    "C11",
+                    "D11",
+                    "E11"
+                ]
+            },
+            "parentGraph": null,
+            "scope": "declaration",
+            "fieldBindings": [
+                "party.sameAsRole",
+                "party.name",
+                "party.briefName",
+                "party.country",
+                "party.region",
+                "party.city",
+                "party.street",
+                "party.postalCode",
+                "party.taxId",
+                "party.identifierKind"
+            ],
+            "fillMode": "extract",
+            "requiredWhen": true,
+            "applicabilityRule": "applicable",
+            "ruleSource": "DT:15(8)",
+            "calculationStage": "review",
+            "emptyState": "missing",
+            "entityRole": "consignee"
+        },
+        {
+            "id": "9",
+            "sourceNumber": "9",
+            "title": "Лицо, ответственное за финансовое урегулирование",
+            "priorities": [
+                "инвойс",
+                "товаротранспортный документ",
+                "контракт"
+            ],
+            "sourceCells": {
+                "number": "A12",
+                "title": "B12",
+                "priorities": [
+                    "C12",
+                    "D12",
+                    "E12"
+                ]
+            },
+            "parentGraph": null,
+            "scope": "declaration",
+            "fieldBindings": [
+                "party.sameAsRole",
+                "party.name",
+                "party.briefName",
+                "party.country",
+                "party.region",
+                "party.city",
+                "party.street",
+                "party.postalCode",
+                "party.taxId",
+                "party.identifierKind"
+            ],
+            "fillMode": "extract",
+            "requiredWhen": true,
+            "applicabilityRule": "applicable",
+            "ruleSource": "DT:15(9)",
+            "calculationStage": "review",
+            "emptyState": "missing",
+            "entityRole": "financial"
+        },
+        {
+            "id": "10",
+            "sourceNumber": "10",
+            "title": "Страна 1-го назначения",
+            "priorities": [
+                "не заполняется",
+                null,
+                null
+            ],
+            "sourceCells": {
+                "number": "A13",
+                "title": "B13",
+                "priorities": [
+                    "C13",
+                    "D13",
+                    "E13"
+                ]
+            },
+            "parentGraph": null,
+            "scope": "declaration",
+            "fieldBindings": [],
+            "fillMode": "not_applicable",
+            "requiredWhen": false,
+            "applicabilityRule": "profile_not_filled",
+            "ruleSource": "DT:15(10)",
+            "calculationStage": "review",
+            "emptyState": "missing"
+        },
+        {
+            "id": "11",
+            "sourceNumber": "11",
+            "title": "Торгующая страна",
+            "priorities": [
+                "контракт",
+                "инвойс",
+                null
+            ],
+            "sourceCells": {
+                "number": "A14",
+                "title": "B14",
+                "priorities": [
+                    "C14",
+                    "D14",
+                    "E14"
+                ]
+            },
+            "parentGraph": null,
+            "scope": "declaration",
+            "fieldBindings": [
+                "declaration.tradeCountry"
+            ],
+            "fillMode": "extract",
+            "requiredWhen": true,
+            "applicabilityRule": "applicable",
+            "ruleSource": "DT:15(11)",
+            "calculationStage": "review",
+            "emptyState": "missing"
+        },
+        {
+            "id": "12",
+            "sourceNumber": "12",
+            "title": "Общая таможенная стоимость",
+            "priorities": [
+                "инвойс",
+                "инвойс + счет за транспорт",
+                null
+            ],
+            "sourceCells": {
+                "number": "A15",
+                "title": "B15",
+                "priorities": [
+                    "C15",
+                    "D15",
+                    "E15"
+                ]
+            },
+            "parentGraph": null,
+            "scope": "declaration",
+            "fieldBindings": [
+                "declaration.customsValue"
+            ],
+            "fillMode": "calculated",
+            "requiredWhen": false,
+            "applicabilityRule": "applicable",
+            "ruleSource": "DT:15(12)",
+            "calculationStage": "result",
+            "emptyState": "missing"
+        },
+        {
+            "id": "13",
+            "sourceNumber": "13",
+            "title": "Без названия",
+            "priorities": [
+                "не заполняется",
+                null,
+                null
+            ],
+            "sourceCells": {
+                "number": "A16",
+                "title": "B16",
+                "priorities": [
+                    "C16",
+                    "D16",
+                    "E16"
+                ]
+            },
+            "parentGraph": null,
+            "scope": "declaration",
+            "fieldBindings": [],
+            "fillMode": "not_applicable",
+            "requiredWhen": false,
+            "applicabilityRule": "profile_not_filled",
+            "ruleSource": "DT:15(13)",
+            "calculationStage": "review",
+            "emptyState": "missing"
+        },
+        {
+            "id": "14",
+            "sourceNumber": "14",
+            "title": "Декларант",
+            "priorities": [
+                "инвойс",
+                "товаротранспортный документ",
+                "контракт"
+            ],
+            "sourceCells": {
+                "number": "A17",
+                "title": "B17",
+                "priorities": [
+                    "C17",
+                    "D17",
+                    "E17"
+                ]
+            },
+            "parentGraph": null,
+            "scope": "declaration",
+            "fieldBindings": [
+                "party.sameAsRole",
+                "party.name",
+                "party.briefName",
+                "party.country",
+                "party.region",
+                "party.city",
+                "party.street",
+                "party.postalCode",
+                "party.taxId",
+                "party.identifierKind"
+            ],
+            "fillMode": "extract",
+            "requiredWhen": true,
+            "applicabilityRule": "applicable",
+            "ruleSource": "DT:15(14)",
+            "calculationStage": "review",
+            "emptyState": "missing",
+            "entityRole": "declarant"
+        },
+        {
+            "id": "15",
+            "sourceNumber": "15",
+            "title": "Страна отправления",
+            "priorities": [
+                "товаротранспортный документ",
+                "инвойс",
+                null
+            ],
+            "sourceCells": {
+                "number": "A18",
+                "title": "B18",
+                "priorities": [
+                    "C18",
+                    "D18",
+                    "E18"
+                ]
+            },
+            "parentGraph": null,
+            "scope": "declaration",
+            "fieldBindings": [],
+            "fillMode": "extract",
+            "requiredWhen": true,
+            "applicabilityRule": "applicable",
+            "ruleSource": "DT:15(15)",
+            "calculationStage": "review",
+            "emptyState": "missing",
+            "countryNameFrom": "dispatchCountry"
+        },
+        {
+            "id": "15a",
+            "sourceNumber": "15a",
+            "title": "Код страны отправления",
+            "priorities": [
+                "товаротранспортный документ",
+                null,
+                null
+            ],
+            "sourceCells": {
+                "number": "A19",
+                "title": "B19",
+                "priorities": [
+                    "C19",
+                    "D19",
+                    "E19"
+                ]
+            },
+            "parentGraph": "15",
+            "scope": "declaration",
+            "fieldBindings": [
+                "declaration.dispatchCountry"
+            ],
+            "fillMode": "extract",
+            "requiredWhen": true,
+            "applicabilityRule": "applicable",
+            "ruleSource": "DT:15(15)",
+            "calculationStage": "review",
+            "emptyState": "missing"
+        },
+        {
+            "id": "16",
+            "sourceNumber": "16",
+            "title": "Страна происхождения",
+            "priorities": [
+                "сертификат происхождения",
+                "инвойс",
+                "сертификат соответствия"
+            ],
+            "sourceCells": {
+                "number": "A20",
+                "title": "B20",
+                "priorities": [
+                    "C20",
+                    "D20",
+                    "E20"
+                ]
+            },
+            "parentGraph": null,
+            "scope": "declaration",
+            "fieldBindings": [
+                "declaration.originCountry"
+            ],
+            "fillMode": "extract",
+            "requiredWhen": true,
+            "applicabilityRule": "applicable",
+            "ruleSource": "DT:15(16)",
+            "calculationStage": "review",
+            "emptyState": "missing"
+        },
+        {
+            "id": "17",
+            "sourceNumber": "17",
+            "title": "Страна назначения",
+            "priorities": [
+                "Казахстан (всегда)",
+                null,
+                null
+            ],
+            "sourceCells": {
+                "number": "A21",
+                "title": "B21",
+                "priorities": [
+                    "C21",
+                    "D21",
+                    "E21"
+                ]
+            },
+            "parentGraph": null,
+            "scope": "declaration",
+            "fieldBindings": [],
+            "fillMode": "mixed",
+            "requiredWhen": true,
+            "applicabilityRule": "applicable",
+            "ruleSource": "DT:15(17)",
+            "calculationStage": "review",
+            "emptyState": "auto_unavailable",
+            "countryNameFrom": "destinationCountry"
+        },
+        {
+            "id": "17a",
+            "sourceNumber": "17a",
+            "title": "Код страны назначения",
+            "priorities": [
+                "398 (всегда)",
+                null,
+                null
+            ],
+            "sourceCells": {
+                "number": "A22",
+                "title": "B22",
+                "priorities": [
+                    "C22",
+                    "D22",
+                    "E22"
+                ]
+            },
+            "parentGraph": "17",
+            "scope": "declaration",
+            "fieldBindings": [
+                "declaration.destinationCountry"
+            ],
+            "fillMode": "mixed",
+            "requiredWhen": true,
+            "applicabilityRule": "applicable",
+            "ruleSource": "DT:15(17)",
+            "calculationStage": "review",
+            "emptyState": "auto_unavailable"
+        },
+        {
+            "id": "18",
+            "sourceNumber": "18",
+            "title": "Идентификация и страна регистрации трансп. средства при отправлении/прибытии",
+            "priorities": [
+                "товаротранспортный документ",
+                "транзитная декларация",
+                null
+            ],
+            "sourceCells": {
+                "number": "A23",
+                "title": "B23",
+                "priorities": [
+                    "C23",
+                    "D23",
+                    "E23"
+                ]
+            },
+            "parentGraph": null,
+            "scope": "declaration",
+            "fieldBindings": [
+                "transport.registration",
+                "transport.country",
+                "transport.transportType"
+            ],
+            "fillMode": "extract",
+            "requiredWhen": true,
+            "applicabilityRule": "applicable",
+            "ruleSource": "DT:15(18)",
+            "calculationStage": "review",
+            "emptyState": "missing",
+            "entityRole": "arrival"
+        },
+        {
+            "id": "19",
+            "sourceNumber": "19",
+            "title": "Контейнер",
+            "priorities": [
+                "товаротранспортный документ",
+                null,
+                null
+            ],
+            "sourceCells": {
+                "number": "A24",
+                "title": "B24",
+                "priorities": [
+                    "C24",
+                    "D24",
+                    "E24"
+                ]
+            },
+            "parentGraph": null,
+            "scope": "declaration",
+            "fieldBindings": [
+                "declaration.container"
+            ],
+            "fillMode": "extract",
+            "requiredWhen": true,
+            "applicabilityRule": "applicable",
+            "ruleSource": "DT:15(19)",
+            "calculationStage": "review",
+            "emptyState": "missing"
+        },
+        {
+            "id": "20",
+            "sourceNumber": "20",
+            "title": "Условия поставки",
+            "priorities": [
+                "инвойс",
+                "контракт",
+                null
+            ],
+            "sourceCells": {
+                "number": "A25",
+                "title": "B25",
+                "priorities": [
+                    "C25",
+                    "D25",
+                    "E25"
+                ]
+            },
+            "parentGraph": null,
+            "scope": "declaration",
+            "fieldBindings": [
+                "declaration.deliveryCode",
+                "declaration.deliveryPlace"
+            ],
+            "fillMode": "extract",
+            "requiredWhen": true,
+            "applicabilityRule": "applicable",
+            "ruleSource": "DT:15(20)",
+            "calculationStage": "review",
+            "emptyState": "missing"
+        },
+        {
+            "id": "21",
+            "sourceNumber": "21",
+            "title": "Идентификация и страна регистрации активного трансп. средства на границе",
+            "priorities": [
+                "товаротранспортный документ",
+                "транзитная декларация",
+                null
+            ],
+            "sourceCells": {
+                "number": "A26",
+                "title": "B26",
+                "priorities": [
+                    "C26",
+                    "D26",
+                    "E26"
+                ]
+            },
+            "parentGraph": null,
+            "scope": "declaration",
+            "fieldBindings": [
+                "transport.registration",
+                "transport.country",
+                "transport.transportType"
+            ],
+            "fillMode": "extract",
+            "requiredWhen": true,
+            "applicabilityRule": "applicable",
+            "ruleSource": "DT:15(21)",
+            "calculationStage": "review",
+            "emptyState": "missing",
+            "entityRole": "border"
+        },
+        {
+            "id": "22",
+            "sourceNumber": "22",
+            "title": "Валюта и общая сумма по счету",
+            "priorities": [
+                "инвойс",
+                "контракт",
+                null
+            ],
+            "sourceCells": {
+                "number": "A27",
+                "title": "B27",
+                "priorities": [
+                    "C27",
+                    "D27",
+                    "E27"
+                ]
+            },
+            "parentGraph": null,
+            "scope": "declaration",
+            "fieldBindings": [
+                "declaration.invoiceCurrency",
+                "declaration.invoiceTotal"
+            ],
+            "fillMode": "extract",
+            "requiredWhen": true,
+            "applicabilityRule": "applicable",
+            "ruleSource": "DT:15(22)",
+            "calculationStage": "review",
+            "emptyState": "missing"
+        },
+        {
+            "id": "23",
+            "sourceNumber": "23",
+            "title": "Курс валюты",
+            "priorities": [
+                "берем валюту из инфойса и тянем с нац банка курс на текущую дату",
+                null,
+                null
+            ],
+            "sourceCells": {
+                "number": "A28",
+                "title": "B28",
+                "priorities": [
+                    "C28",
+                    "D28",
+                    "E28"
+                ]
+            },
+            "parentGraph": null,
+            "scope": "declaration",
+            "fieldBindings": [
+                "rate.currency",
+                "rate.value",
+                "rate.nominal",
+                "rate.date",
+                "rate.source",
+                "rate.confirmed"
+            ],
+            "fillMode": "extract",
+            "requiredWhen": true,
+            "applicabilityRule": "applicable",
+            "ruleSource": "DT:15(23)",
+            "calculationStage": "review",
+            "emptyState": "missing"
+        },
+        {
+            "id": "24",
+            "sourceNumber": "24",
+            "title": "Характер сделки",
+            "priorities": [
+                "инвойс",
+                "контракт",
+                null
+            ],
+            "sourceCells": {
+                "number": "A29",
+                "title": "B29",
+                "priorities": [
+                    "C29",
+                    "D29",
+                    "E29"
+                ]
+            },
+            "parentGraph": null,
+            "scope": "declaration",
+            "fieldBindings": [
+                "declaration.transactionCode",
+                "declaration.transactionFeature"
+            ],
+            "fillMode": "extract",
+            "requiredWhen": true,
+            "applicabilityRule": "applicable",
+            "ruleSource": "DT:15(24)",
+            "calculationStage": "review",
+            "emptyState": "missing"
+        },
+        {
+            "id": "25",
+            "sourceNumber": "25",
+            "title": "Вид транспорта на границе",
+            "priorities": [
+                "товаротранспортный документ",
+                null,
+                null
+            ],
+            "sourceCells": {
+                "number": "A30",
+                "title": "B30",
+                "priorities": [
+                    "C30",
+                    "D30",
+                    "E30"
+                ]
+            },
+            "parentGraph": null,
+            "scope": "declaration",
+            "fieldBindings": [
+                "transport.mode"
+            ],
+            "fillMode": "extract",
+            "requiredWhen": true,
+            "applicabilityRule": "applicable",
+            "ruleSource": "DT:15(25)",
+            "calculationStage": "review",
+            "emptyState": "missing",
+            "entityRole": "border"
+        },
+        {
+            "id": "26",
+            "sourceNumber": "26",
+            "title": "Вид транспорта внутри страны",
+            "priorities": [
+                "товаротранспортный документ",
+                null,
+                null
+            ],
+            "sourceCells": {
+                "number": "A31",
+                "title": "B31",
+                "priorities": [
+                    "C31",
+                    "D31",
+                    "E31"
+                ]
+            },
+            "parentGraph": null,
+            "scope": "declaration",
+            "fieldBindings": [
+                "transport.mode"
+            ],
+            "fillMode": "extract",
+            "requiredWhen": true,
+            "applicabilityRule": "applicable",
+            "ruleSource": "DT:15(26)",
+            "calculationStage": "review",
+            "emptyState": "missing",
+            "entityRole": "arrival"
+        },
+        {
+            "id": "27",
+            "sourceNumber": "27",
+            "title": "Место погрузки/разгрузки",
+            "priorities": [
+                "не заполняется",
+                null,
+                null
+            ],
+            "sourceCells": {
+                "number": "A32",
+                "title": "B32",
+                "priorities": [
+                    "C32",
+                    "D32",
+                    "E32"
+                ]
+            },
+            "parentGraph": null,
+            "scope": "declaration",
+            "fieldBindings": [],
+            "fillMode": "not_applicable",
+            "requiredWhen": false,
+            "applicabilityRule": "profile_not_filled",
+            "ruleSource": "DT:15(27)",
+            "calculationStage": "review",
+            "emptyState": "missing"
+        },
+        {
+            "id": "28",
+            "sourceNumber": "28",
+            "title": "Финансовые и банковские сведения",
+            "priorities": [
+                "не заполняется",
+                null,
+                null
+            ],
+            "sourceCells": {
+                "number": "A33",
+                "title": "B33",
+                "priorities": [
+                    "C33",
+                    "D33",
+                    "E33"
+                ]
+            },
+            "parentGraph": null,
+            "scope": "declaration",
+            "fieldBindings": [],
+            "fillMode": "not_applicable",
+            "requiredWhen": false,
+            "applicabilityRule": "profile_not_filled",
+            "ruleSource": "DT:15(28)",
+            "calculationStage": "review",
+            "emptyState": "missing"
+        },
+        {
+            "id": "29",
+            "sourceNumber": "29",
+            "title": "Орган въезда/ выезда",
+            "priorities": [
+                "транзитная декларация",
+                "товаротранспортный документ",
+                null
+            ],
+            "sourceCells": {
+                "number": "A34",
+                "title": "B34",
+                "priorities": [
+                    "C34",
+                    "D34",
+                    "E34"
+                ]
+            },
+            "parentGraph": null,
+            "scope": "declaration",
+            "fieldBindings": [
+                "declaration.borderOfficeCode",
+                "declaration.borderOfficeCountry",
+                "declaration.borderOfficeName"
+            ],
+            "fillMode": "extract",
+            "requiredWhen": true,
+            "applicabilityRule": "applicable",
+            "ruleSource": "DT:15(29)",
+            "calculationStage": "review",
+            "emptyState": "missing"
+        },
+        {
+            "id": "30",
+            "sourceNumber": "30",
+            "title": "Местонахождение товаров",
+            "priorities": [
+                "товаротранспортный документ",
+                "транзитная декларация",
+                null
+            ],
+            "sourceCells": {
+                "number": "A35",
+                "title": "B35",
+                "priorities": [
+                    "C35",
+                    "D35",
+                    "E35"
+                ]
+            },
+            "parentGraph": null,
+            "scope": "declaration",
+            "fieldBindings": [
+                "declaration.locationCode",
+                "declaration.locationRegistration",
+                "declaration.locationCountry",
+                "declaration.locationOfficeCode",
+                "declaration.locationAddress"
+            ],
+            "fillMode": "extract",
+            "requiredWhen": true,
+            "applicabilityRule": "applicable",
+            "ruleSource": "DT:15(30)",
+            "calculationStage": "review",
+            "emptyState": "missing"
+        },
+        {
+            "id": "31",
+            "sourceNumber": "31",
+            "title": "Грузовые места и описание товаров",
+            "priorities": [
+                "инвойс",
+                "упаковочный лист",
+                null
+            ],
+            "sourceCells": {
+                "number": "A36",
+                "title": "B36",
+                "priorities": [
+                    "C36",
+                    "D36",
+                    "E36"
+                ]
+            },
+            "parentGraph": null,
+            "scope": "goods",
+            "fieldBindings": [
+                "goods.description",
+                "goods.packageIds",
+                "goods.packageKind",
+                "goods.packageQuantity",
+                "goods.manufacturer",
+                "goods.tradeMark",
+                "goods.brand",
+                "goods.model",
+                "goods.article",
+                "goods.groupConfirmed",
+                "declaration.containerNumbers"
+            ],
+            "fillMode": "extract",
+            "requiredWhen": true,
+            "applicabilityRule": "applicable",
+            "ruleSource": "DT:15(31)",
+            "calculationStage": "review",
+            "emptyState": "missing"
+        },
+        {
+            "id": "32",
+            "sourceNumber": "32",
+            "title": "Товар",
+            "priorities": [
+                "автоматическое заполнение",
+                null,
+                null
+            ],
+            "sourceCells": {
+                "number": "A37",
+                "title": "B37",
+                "priorities": [
+                    "C37",
+                    "D37",
+                    "E37"
+                ]
+            },
+            "parentGraph": null,
+            "scope": "goods",
+            "fieldBindings": [
+                "goods.ordinal"
+            ],
+            "fillMode": "mixed",
+            "requiredWhen": true,
+            "applicabilityRule": "applicable",
+            "ruleSource": "DT:15(32)",
+            "calculationStage": "review",
+            "emptyState": "auto_unavailable"
+        },
+        {
+            "id": "33",
+            "sourceNumber": "33",
+            "title": "Код товара",
+            "priorities": [
+                "инвойс",
+                "упаковочный лист",
+                "товаротранспортный документ"
+            ],
+            "sourceCells": {
+                "number": "A38",
+                "title": "B38",
+                "priorities": [
+                    "C38",
+                    "D38",
+                    "E38"
+                ]
+            },
+            "parentGraph": null,
+            "scope": "goods",
+            "fieldBindings": [
+                "goods.commodityCode",
+                "goods.prohibitionCodes",
+                "goods.intellectualPropertyCode"
+            ],
+            "fillMode": "extract",
+            "requiredWhen": true,
+            "applicabilityRule": "applicable",
+            "ruleSource": "DT:15(33)",
+            "calculationStage": "review",
+            "emptyState": "missing"
+        },
+        {
+            "id": "34",
+            "sourceNumber": "34",
+            "title": "Код страны происхождения",
+            "priorities": [
+                "сертификат происхождения",
+                "инвойс",
+                "сертификат соответствия"
+            ],
+            "sourceCells": {
+                "number": "A39",
+                "title": "B39",
+                "priorities": [
+                    "C39",
+                    "D39",
+                    "E39"
+                ]
+            },
+            "parentGraph": null,
+            "scope": "goods",
+            "fieldBindings": [
+                "goods.originCountry"
+            ],
+            "fillMode": "extract",
+            "requiredWhen": true,
+            "applicabilityRule": "applicable",
+            "ruleSource": "DT:15(34)",
+            "calculationStage": "review",
+            "emptyState": "missing"
+        },
+        {
+            "id": "35",
+            "sourceNumber": "35",
+            "title": "Вес брутто (кг)",
+            "priorities": [
+                "товаротранспортный документ",
+                "упаковочный лист",
+                "инвойс"
+            ],
+            "sourceCells": {
+                "number": "A40",
+                "title": "B40",
+                "priorities": [
+                    "C40",
+                    "D40",
+                    "E40"
+                ]
+            },
+            "parentGraph": null,
+            "scope": "goods",
+            "fieldBindings": [
+                "goods.grossMass"
+            ],
+            "fillMode": "extract",
+            "requiredWhen": true,
+            "applicabilityRule": "applicable",
+            "ruleSource": "DT:15(35)",
+            "calculationStage": "review",
+            "emptyState": "missing"
+        },
+        {
+            "id": "36",
+            "sourceNumber": "36",
+            "title": "Преференция",
+            "priorities": [
+                "автоматическое заполнение",
+                null,
+                null
+            ],
+            "sourceCells": {
+                "number": "A41",
+                "title": "B41",
+                "priorities": [
+                    "C41",
+                    "D41",
+                    "E41"
+                ]
+            },
+            "parentGraph": null,
+            "scope": "goods",
+            "fieldBindings": [
+                "goods.hasPreference",
+                "goods.preferenceFee",
+                "goods.preferenceDuty",
+                "goods.preferenceExcise",
+                "goods.preferenceVat",
+                "goods.preferenceBasis"
+            ],
+            "fillMode": "mixed",
+            "requiredWhen": true,
+            "applicabilityRule": "applicable",
+            "ruleSource": "DT:15(36)",
+            "calculationStage": "review",
+            "emptyState": "auto_unavailable"
+        },
+        {
+            "id": "37",
+            "sourceNumber": "37",
+            "title": "ПРОЦЕДУРА",
+            "priorities": [
+                "автоматическое заполнение",
+                null,
+                null
+            ],
+            "sourceCells": {
+                "number": "A42",
+                "title": "B42",
+                "priorities": [
+                    "C42",
+                    "D42",
+                    "E42"
+                ]
+            },
+            "parentGraph": null,
+            "scope": "goods",
+            "fieldBindings": [
+                "declaration.procedure",
+                "goods.previousProcedure",
+                "goods.movementFeature"
+            ],
+            "fillMode": "mixed",
+            "requiredWhen": true,
+            "applicabilityRule": "applicable",
+            "ruleSource": "DT:15(37)",
+            "calculationStage": "review",
+            "emptyState": "auto_unavailable"
+        },
+        {
+            "id": "38",
+            "sourceNumber": "38",
+            "title": "Вес нетто (кг)",
+            "priorities": [
+                "упаковочный лист",
+                "инвойс",
+                null
+            ],
+            "sourceCells": {
+                "number": "A43",
+                "title": "B43",
+                "priorities": [
+                    "C43",
+                    "D43",
+                    "E43"
+                ]
+            },
+            "parentGraph": null,
+            "scope": "goods",
+            "fieldBindings": [
+                "goods.netMass"
+            ],
+            "fillMode": "extract",
+            "requiredWhen": true,
+            "applicabilityRule": "applicable",
+            "ruleSource": "DT:15(38)",
+            "calculationStage": "review",
+            "emptyState": "missing"
+        },
+        {
+            "id": "39",
+            "sourceNumber": "39",
+            "title": "Квота",
+            "priorities": [
+                "лицензия на ввоз",
+                null,
+                null
+            ],
+            "sourceCells": {
+                "number": "A44",
+                "title": "B44",
+                "priorities": [
+                    "C44",
+                    "D44",
+                    "E44"
+                ]
+            },
+            "parentGraph": null,
+            "scope": "goods",
+            "fieldBindings": [
+                "goods.hasQuota",
+                "goods.quotaQuantity",
+                "goods.quotaUnit"
+            ],
+            "fillMode": "extract",
+            "requiredWhen": true,
+            "applicabilityRule": "quota_answer",
+            "ruleSource": "DT:15(39)",
+            "calculationStage": "review",
+            "emptyState": "missing"
+        },
+        {
+            "id": "40",
+            "sourceNumber": "40",
+            "title": "Общая декларация/Предшествующий документ",
+            "priorities": [
+                "не заполняется",
+                null,
+                null
+            ],
+            "sourceCells": {
+                "number": "A45",
+                "title": "B45",
+                "priorities": [
+                    "C45",
+                    "D45",
+                    "E45"
+                ]
+            },
+            "parentGraph": null,
+            "scope": "goods",
+            "fieldBindings": [],
+            "fillMode": "not_applicable",
+            "requiredWhen": false,
+            "applicabilityRule": "profile_not_filled",
+            "ruleSource": "DT:15(40)",
+            "calculationStage": "review",
+            "emptyState": "missing"
+        },
+        {
+            "id": "41",
+            "sourceNumber": "41",
+            "title": "Дополнительные единицы",
+            "priorities": [
+                "автоматическое заполнение",
+                null,
+                null
+            ],
+            "sourceCells": {
+                "number": "A46",
+                "title": "B46",
+                "priorities": [
+                    "C46",
+                    "D46",
+                    "E46"
+                ]
+            },
+            "parentGraph": null,
+            "scope": "goods",
+            "fieldBindings": [
+                "goods.additionalUnitRequired",
+                "goods.additionalUnit",
+                "goods.additionalQuantity",
+                "goods.secondaryAdditionalUnitRequired",
+                "goods.secondaryAdditionalUnit",
+                "goods.secondaryAdditionalQuantity"
+            ],
+            "fillMode": "mixed",
+            "requiredWhen": true,
+            "applicabilityRule": "tnved_units",
+            "ruleSource": "DT:15(41)",
+            "calculationStage": "review",
+            "emptyState": "auto_unavailable"
+        },
+        {
+            "id": "42",
+            "sourceNumber": "42",
+            "title": "Цена товара",
+            "priorities": [
+                "инвойс",
+                null,
+                null
+            ],
+            "sourceCells": {
+                "number": "A47",
+                "title": "B47",
+                "priorities": [
+                    "C47",
+                    "D47",
+                    "E47"
+                ]
+            },
+            "parentGraph": null,
+            "scope": "goods",
+            "fieldBindings": [
+                "goods.invoiceValue"
+            ],
+            "fillMode": "extract",
+            "requiredWhen": true,
+            "applicabilityRule": "applicable",
+            "ruleSource": "DT:15(42)",
+            "calculationStage": "review",
+            "emptyState": "missing"
+        },
+        {
+            "id": "43",
+            "sourceNumber": "43",
+            "title": "Код МОС",
+            "priorities": [
+                "автоматическое заполнение",
+                null,
+                null
+            ],
+            "sourceCells": {
+                "number": "A48",
+                "title": "B48",
+                "priorities": [
+                    "C48",
+                    "D48",
+                    "E48"
+                ]
+            },
+            "parentGraph": null,
+            "scope": "goods",
+            "fieldBindings": [
+                "goods.valuationMethod"
+            ],
+            "fillMode": "mixed",
+            "requiredWhen": true,
+            "applicabilityRule": "applicable",
+            "ruleSource": "DT:15(43)",
+            "calculationStage": "review",
+            "emptyState": "auto_unavailable"
+        },
+        {
+            "id": "44",
+            "sourceNumber": "44",
+            "title": "Дополнит. информация/Представл. Документы",
+            "priorities": [
+                "все документы, каждый под своим кодом согласно класификатора (документы которые вкладываем)",
+                null,
+                null
+            ],
+            "sourceCells": {
+                "number": "A49",
+                "title": "B49",
+                "priorities": [
+                    "C49",
+                    "D49",
+                    "E49"
+                ]
+            },
+            "parentGraph": null,
+            "scope": "goods",
+            "fieldBindings": [
+                "document.kind",
+                "document.name",
+                "document.number",
+                "document.date",
+                "document.dateRequired",
+                "document.validFrom",
+                "document.validUntil",
+                "document.presentationCode",
+                "document.goodsIds",
+                "document.documentIds"
+            ],
+            "fillMode": "extract",
+            "requiredWhen": true,
+            "applicabilityRule": "applicable",
+            "ruleSource": "DT:15(44)",
+            "calculationStage": "review",
+            "emptyState": "missing"
+        },
+        {
+            "id": "45",
+            "sourceNumber": "45",
+            "title": "Таможенная стоимость",
+            "priorities": [
+                "автоматическое заполнение",
+                null,
+                null
+            ],
+            "sourceCells": {
+                "number": "A50",
+                "title": "B50",
+                "priorities": [
+                    "C50",
+                    "D50",
+                    "E50"
+                ]
+            },
+            "parentGraph": null,
+            "scope": "goods",
+            "fieldBindings": [
+                "goods.customsValue"
+            ],
+            "fillMode": "calculated",
+            "requiredWhen": false,
+            "applicabilityRule": "applicable",
+            "ruleSource": "DT:15(45)",
+            "calculationStage": "result",
+            "emptyState": "missing"
+        },
+        {
+            "id": "46",
+            "sourceNumber": "46",
+            "title": "Статистическая стоимость",
+            "priorities": [
+                "автоматическое заполнение",
+                null,
+                null
+            ],
+            "sourceCells": {
+                "number": "A51",
+                "title": "B51",
+                "priorities": [
+                    "C51",
+                    "D51",
+                    "E51"
+                ]
+            },
+            "parentGraph": null,
+            "scope": "goods",
+            "fieldBindings": [
+                "goods.statisticalValue"
+            ],
+            "fillMode": "calculated",
+            "requiredWhen": false,
+            "applicabilityRule": "applicable",
+            "ruleSource": "DT:15(46)",
+            "calculationStage": "result",
+            "emptyState": "missing"
+        },
+        {
+            "id": "47",
+            "sourceNumber": "47",
+            "title": "Исчисление платежей",
+            "priorities": [
+                "автоматическое заполнение",
+                null,
+                null
+            ],
+            "sourceCells": {
+                "number": "A52",
+                "title": "B52",
+                "priorities": [
+                    "C52",
+                    "D52",
+                    "E52"
+                ]
+            },
+            "parentGraph": null,
+            "scope": "goods",
+            "fieldBindings": [],
+            "fillMode": "calculated",
+            "requiredWhen": false,
+            "applicabilityRule": "applicable",
+            "ruleSource": "DT:15(47)",
+            "calculationStage": "result",
+            "emptyState": "missing"
+        },
+        {
+            "id": "B",
+            "sourceNumber": "графа «В»",
+            "title": "Подробности подсчета",
+            "priorities": [
+                "автоматическое заполнение",
+                null,
+                null
+            ],
+            "sourceCells": {
+                "number": "A53",
+                "title": "B53",
+                "priorities": [
+                    "C53",
+                    "D53",
+                    "E53"
+                ]
+            },
+            "parentGraph": "47",
+            "scope": "declaration",
+            "fieldBindings": [
+                "declaration.paymentFactsAvailable",
+                "payment.code",
+                "payment.amount",
+                "payment.source",
+                "payment.documentNumber",
+                "payment.date"
+            ],
+            "fillMode": "extract",
+            "requiredWhen": false,
+            "applicabilityRule": "payment_facts",
+            "ruleSource": "DT:15(B)",
+            "calculationStage": "calculation",
+            "emptyState": "missing"
+        },
+        {
+            "id": "48",
+            "sourceNumber": "48",
+            "title": "Отсрочка платежей",
+            "priorities": [
+                "не заполняется",
+                null,
+                null
+            ],
+            "sourceCells": {
+                "number": "A54",
+                "title": "B54",
+                "priorities": [
+                    "C54",
+                    "D54",
+                    "E54"
+                ]
+            },
+            "parentGraph": null,
+            "scope": "declaration",
+            "fieldBindings": [],
+            "fillMode": "not_applicable",
+            "requiredWhen": false,
+            "applicabilityRule": "profile_not_filled",
+            "ruleSource": "DT:15(48)",
+            "calculationStage": "review",
+            "emptyState": "missing"
+        },
+        {
+            "id": "49",
+            "sourceNumber": "49",
+            "title": "Реквизиты склада",
+            "priorities": [
+                "не заполняется",
+                null,
+                null
+            ],
+            "sourceCells": {
+                "number": "A55",
+                "title": "B55",
+                "priorities": [
+                    "C55",
+                    "D55",
+                    "E55"
+                ]
+            },
+            "parentGraph": null,
+            "scope": "declaration",
+            "fieldBindings": [],
+            "fillMode": "not_applicable",
+            "requiredWhen": false,
+            "applicabilityRule": "profile_not_filled",
+            "ruleSource": "DT:15(49)",
+            "calculationStage": "review",
+            "emptyState": "missing"
+        },
+        {
+            "id": "50",
+            "sourceNumber": "50",
+            "title": "Без названия",
+            "priorities": [
+                "не заполняется",
+                null,
+                null
+            ],
+            "sourceCells": {
+                "number": "A56",
+                "title": "B56",
+                "priorities": [
+                    "C56",
+                    "D56",
+                    "E56"
+                ]
+            },
+            "parentGraph": null,
+            "scope": "declaration",
+            "fieldBindings": [],
+            "fillMode": "not_applicable",
+            "requiredWhen": false,
+            "applicabilityRule": "profile_not_filled",
+            "ruleSource": "DT:15(50)",
+            "calculationStage": "review",
+            "emptyState": "missing"
+        },
+        {
+            "id": "51",
+            "sourceNumber": "51",
+            "title": "Предпологаемые органы (и страна транзита)",
+            "priorities": [
+                "не заполняется",
+                null,
+                null
+            ],
+            "sourceCells": {
+                "number": "A57",
+                "title": "B57",
+                "priorities": [
+                    "C57",
+                    "D57",
+                    "E57"
+                ]
+            },
+            "parentGraph": null,
+            "scope": "declaration",
+            "fieldBindings": [],
+            "fillMode": "not_applicable",
+            "requiredWhen": false,
+            "applicabilityRule": "profile_not_filled",
+            "ruleSource": "DT:15(51)",
+            "calculationStage": "review",
+            "emptyState": "missing"
+        },
+        {
+            "id": "52",
+            "sourceNumber": "52",
+            "title": "ГАРАНТИЯ НЕДЕЙСТВИТЕЛЬНА ДЛЯ",
+            "priorities": [
+                "не заполняется",
+                null,
+                null
+            ],
+            "sourceCells": {
+                "number": "A58",
+                "title": "B58",
+                "priorities": [
+                    "C58",
+                    "D58",
+                    "E58"
+                ]
+            },
+            "parentGraph": null,
+            "scope": "declaration",
+            "fieldBindings": [],
+            "fillMode": "not_applicable",
+            "requiredWhen": false,
+            "applicabilityRule": "profile_not_filled",
+            "ruleSource": "DT:15(52)",
+            "calculationStage": "review",
+            "emptyState": "missing"
+        },
+        {
+            "id": "53",
+            "sourceNumber": "53",
+            "title": "Орган (и страна) назначения",
+            "priorities": [
+                "не заполняется",
+                null,
+                null
+            ],
+            "sourceCells": {
+                "number": "A59",
+                "title": "B59",
+                "priorities": [
+                    "C59",
+                    "D59",
+                    "E59"
+                ]
+            },
+            "parentGraph": null,
+            "scope": "declaration",
+            "fieldBindings": [],
+            "fillMode": "not_applicable",
+            "requiredWhen": false,
+            "applicabilityRule": "profile_not_filled",
+            "ruleSource": "DT:15(53)",
+            "calculationStage": "review",
+            "emptyState": "missing"
+        },
+        {
+            "id": "54",
+            "sourceNumber": "54",
+            "title": "Место и дата",
+            "priorities": [
+                "автоматическое заполнение",
+                null,
+                null
+            ],
+            "sourceCells": {
+                "number": "A60",
+                "title": "B60",
+                "priorities": [
+                    "C60",
+                    "D60",
+                    "E60"
+                ]
+            },
+            "parentGraph": null,
+            "scope": "declaration",
+            "fieldBindings": [
+                "declaration.signatureDate",
+                "declaration.signatoryPlace",
+                "declaration.signatoryFirstName",
+                "declaration.signatoryLastName",
+                "declaration.signatoryMiddleName",
+                "declaration.signatoryPosition",
+                "declaration.signatoryContact",
+                "declaration.representativeUsed",
+                "declaration.representativeRegistry",
+                "declaration.representativeContractNumber",
+                "declaration.representativeContractDate",
+                "declaration.authorityRequired",
+                "declaration.authorityNumber",
+                "declaration.authorityDate",
+                "declaration.authorityValidUntil"
+            ],
+            "fillMode": "mixed",
+            "requiredWhen": true,
+            "applicabilityRule": "applicable",
+            "ruleSource": "DT:15(54)",
+            "calculationStage": "review",
+            "emptyState": "auto_unavailable"
+        }
+    ],
+    "bindingVersion": "2.0.0",
+    "instructionSha256": "2523ec8479160f12f0709e8843fa97272319c64902a0585736a6aabcc021925b"
+}

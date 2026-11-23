@@ -1,0 +1,892 @@
+{
+  "version": "2.0.0",
+  "profile": "im40-kz-graphs",
+  "graphs": [
+    {
+      "id": "1",
+      "parentGraph": null,
+      "scope": "declaration",
+      "fieldBindings": [
+        "declaration.kind",
+        "declaration.procedure",
+        "declaration.format"
+      ],
+      "fillMode": "mixed",
+      "requiredWhen": true,
+      "applicabilityRule": "applicable",
+      "ruleSource": "DT:15(1)",
+      "calculationStage": "review",
+      "emptyState": "auto_unavailable"
+    },
+    {
+      "id": "2",
+      "parentGraph": null,
+      "scope": "declaration",
+      "fieldBindings": [
+        "party.sameAsRole",
+        "party.name",
+        "party.briefName",
+        "party.country",
+        "party.region",
+        "party.city",
+        "party.street",
+        "party.postalCode",
+        "party.taxId",
+        "party.identifierKind"
+      ],
+      "fillMode": "extract",
+      "requiredWhen": true,
+      "applicabilityRule": "applicable",
+      "ruleSource": "DT:15(2)",
+      "calculationStage": "review",
+      "emptyState": "missing",
+      "entityRole": "consignor"
+    },
+    {
+      "id": "3",
+      "parentGraph": null,
+      "scope": "declaration",
+      "fieldBindings": [],
+      "fillMode": "not_applicable",
+      "requiredWhen": false,
+      "applicabilityRule": "profile_not_filled",
+      "ruleSource": "DT:15(3)",
+      "calculationStage": "review",
+      "emptyState": "missing"
+    },
+    {
+      "id": "4",
+      "parentGraph": null,
+      "scope": "declaration",
+      "fieldBindings": [],
+      "fillMode": "not_applicable",
+      "requiredWhen": false,
+      "applicabilityRule": "profile_not_filled",
+      "ruleSource": "DT:15(4)",
+      "calculationStage": "review",
+      "emptyState": "missing"
+    },
+    {
+      "id": "5",
+      "parentGraph": null,
+      "scope": "declaration",
+      "fieldBindings": [
+        "declaration.goodsCount"
+      ],
+      "fillMode": "mixed",
+      "requiredWhen": true,
+      "applicabilityRule": "applicable",
+      "ruleSource": "DT:15(5)",
+      "calculationStage": "review",
+      "emptyState": "auto_unavailable"
+    },
+    {
+      "id": "6",
+      "parentGraph": null,
+      "scope": "declaration",
+      "fieldBindings": [
+        "declaration.sourcePackageCount",
+        "declaration.shipmentPackageIds",
+        "declaration.packageCount"
+      ],
+      "fillMode": "extract",
+      "requiredWhen": true,
+      "applicabilityRule": "applicable",
+      "ruleSource": "DT:15(6)",
+      "calculationStage": "review",
+      "emptyState": "missing"
+    },
+    {
+      "id": "7",
+      "parentGraph": null,
+      "scope": "declaration",
+      "fieldBindings": [],
+      "fillMode": "not_applicable",
+      "requiredWhen": false,
+      "applicabilityRule": "profile_not_filled",
+      "ruleSource": "DT:15(7)",
+      "calculationStage": "review",
+      "emptyState": "missing"
+    },
+    {
+      "id": "8",
+      "parentGraph": null,
+      "scope": "declaration",
+      "fieldBindings": [
+        "party.sameAsRole",
+        "party.name",
+        "party.briefName",
+        "party.country",
+        "party.region",
+        "party.city",
+        "party.street",
+        "party.postalCode",
+        "party.taxId",
+        "party.identifierKind"
+      ],
+      "fillMode": "extract",
+      "requiredWhen": true,
+      "applicabilityRule": "applicable",
+      "ruleSource": "DT:15(8)",
+      "calculationStage": "review",
+      "emptyState": "missing",
+      "entityRole": "consignee"
+    },
+    {
+      "id": "9",
+      "parentGraph": null,
+      "scope": "declaration",
+      "fieldBindings": [
+        "party.sameAsRole",
+        "party.name",
+        "party.briefName",
+        "party.country",
+        "party.region",
+        "party.city",
+        "party.street",
+        "party.postalCode",
+        "party.taxId",
+        "party.identifierKind"
+      ],
+      "fillMode": "extract",
+      "requiredWhen": true,
+      "applicabilityRule": "applicable",
+      "ruleSource": "DT:15(9)",
+      "calculationStage": "review",
+      "emptyState": "missing",
+      "entityRole": "financial"
+    },
+    {
+      "id": "10",
+      "parentGraph": null,
+      "scope": "declaration",
+      "fieldBindings": [],
+      "fillMode": "not_applicable",
+      "requiredWhen": false,
+      "applicabilityRule": "profile_not_filled",
+      "ruleSource": "DT:15(10)",
+      "calculationStage": "review",
+      "emptyState": "missing"
+    },
+    {
+      "id": "11",
+      "parentGraph": null,
+      "scope": "declaration",
+      "fieldBindings": [
+        "declaration.tradeCountry"
+      ],
+      "fillMode": "extract",
+      "requiredWhen": true,
+      "applicabilityRule": "applicable",
+      "ruleSource": "DT:15(11)",
+      "calculationStage": "review",
+      "emptyState": "missing"
+    },
+    {
+      "id": "12",
+      "parentGraph": null,
+      "scope": "declaration",
+      "fieldBindings": [
+        "declaration.customsValue"
+      ],
+      "fillMode": "calculated",
+      "requiredWhen": false,
+      "applicabilityRule": "applicable",
+      "ruleSource": "DT:15(12)",
+      "calculationStage": "result",
+      "emptyState": "missing"
+    },
+    {
+      "id": "13",
+      "parentGraph": null,
+      "scope": "declaration",
+      "fieldBindings": [],
+      "fillMode": "not_applicable",
+      "requiredWhen": false,
+      "applicabilityRule": "profile_not_filled",
+      "ruleSource": "DT:15(13)",
+      "calculationStage": "review",
+      "emptyState": "missing"
+    },
+    {
+      "id": "14",
+      "parentGraph": null,
+      "scope": "declaration",
+      "fieldBindings": [
+        "party.sameAsRole",
+        "party.name",
+        "party.briefName",
+        "party.country",
+        "party.region",
+        "party.city",
+        "party.street",
+        "party.postalCode",
+        "party.taxId",
+        "party.identifierKind"
+      ],
+      "fillMode": "extract",
+      "requiredWhen": true,
+      "applicabilityRule": "applicable",
+      "ruleSource": "DT:15(14)",
+      "calculationStage": "review",
+      "emptyState": "missing",
+      "entityRole": "declarant"
+    },
+    {
+      "id": "15",
+      "parentGraph": null,
+      "scope": "declaration",
+      "fieldBindings": [],
+      "fillMode": "extract",
+      "requiredWhen": true,
+      "applicabilityRule": "applicable",
+      "ruleSource": "DT:15(15)",
+      "calculationStage": "review",
+      "emptyState": "missing",
+      "countryNameFrom": "dispatchCountry"
+    },
+    {
+      "id": "15a",
+      "parentGraph": "15",
+      "scope": "declaration",
+      "fieldBindings": [
+        "declaration.dispatchCountry"
+      ],
+      "fillMode": "extract",
+      "requiredWhen": true,
+      "applicabilityRule": "applicable",
+      "ruleSource": "DT:15(15)",
+      "calculationStage": "review",
+      "emptyState": "missing"
+    },
+    {
+      "id": "16",
+      "parentGraph": null,
+      "scope": "declaration",
+      "fieldBindings": [
+        "declaration.originCountry"
+      ],
+      "fillMode": "extract",
+      "requiredWhen": true,
+      "applicabilityRule": "applicable",
+      "ruleSource": "DT:15(16)",
+      "calculationStage": "review",
+      "emptyState": "missing"
+    },
+    {
+      "id": "17",
+      "parentGraph": null,
+      "scope": "declaration",
+      "fieldBindings": [],
+      "fillMode": "mixed",
+      "requiredWhen": true,
+      "applicabilityRule": "applicable",
+      "ruleSource": "DT:15(17)",
+      "calculationStage": "review",
+      "emptyState": "auto_unavailable",
+      "countryNameFrom": "destinationCountry"
+    },
+    {
+      "id": "17a",
+      "parentGraph": "17",
+      "scope": "declaration",
+      "fieldBindings": [
+        "declaration.destinationCountry"
+      ],
+      "fillMode": "mixed",
+      "requiredWhen": true,
+      "applicabilityRule": "applicable",
+      "ruleSource": "DT:15(17)",
+      "calculationStage": "review",
+      "emptyState": "auto_unavailable"
+    },
+    {
+      "id": "18",
+      "parentGraph": null,
+      "scope": "declaration",
+      "fieldBindings": [
+        "transport.registration",
+        "transport.country",
+        "transport.transportType"
+      ],
+      "fillMode": "extract",
+      "requiredWhen": true,
+      "applicabilityRule": "applicable",
+      "ruleSource": "DT:15(18)",
+      "calculationStage": "review",
+      "emptyState": "missing",
+      "entityRole": "arrival"
+    },
+    {
+      "id": "19",
+      "parentGraph": null,
+      "scope": "declaration",
+      "fieldBindings": [
+        "declaration.container"
+      ],
+      "fillMode": "extract",
+      "requiredWhen": true,
+      "applicabilityRule": "applicable",
+      "ruleSource": "DT:15(19)",
+      "calculationStage": "review",
+      "emptyState": "missing"
+    },
+    {
+      "id": "20",
+      "parentGraph": null,
+      "scope": "declaration",
+      "fieldBindings": [
+        "declaration.deliveryCode",
+        "declaration.deliveryPlace"
+      ],
+      "fillMode": "extract",
+      "requiredWhen": true,
+      "applicabilityRule": "applicable",
+      "ruleSource": "DT:15(20)",
+      "calculationStage": "review",
+      "emptyState": "missing"
+    },
+    {
+      "id": "21",
+      "parentGraph": null,
+      "scope": "declaration",
+      "fieldBindings": [
+        "transport.registration",
+        "transport.country",
+        "transport.transportType"
+      ],
+      "fillMode": "extract",
+      "requiredWhen": true,
+      "applicabilityRule": "applicable",
+      "ruleSource": "DT:15(21)",
+      "calculationStage": "review",
+      "emptyState": "missing",
+      "entityRole": "border"
+    },
+    {
+      "id": "22",
+      "parentGraph": null,
+      "scope": "declaration",
+      "fieldBindings": [
+        "declaration.invoiceCurrency",
+        "declaration.invoiceTotal"
+      ],
+      "fillMode": "extract",
+      "requiredWhen": true,
+      "applicabilityRule": "applicable",
+      "ruleSource": "DT:15(22)",
+      "calculationStage": "review",
+      "emptyState": "missing"
+    },
+    {
+      "id": "23",
+      "parentGraph": null,
+      "scope": "declaration",
+      "fieldBindings": [
+        "rate.currency",
+        "rate.value",
+        "rate.nominal",
+        "rate.date",
+        "rate.source",
+        "rate.confirmed"
+      ],
+      "fillMode": "extract",
+      "requiredWhen": true,
+      "applicabilityRule": "applicable",
+      "ruleSource": "DT:15(23)",
+      "calculationStage": "review",
+      "emptyState": "missing"
+    },
+    {
+      "id": "24",
+      "parentGraph": null,
+      "scope": "declaration",
+      "fieldBindings": [
+        "declaration.transactionCode",
+        "declaration.transactionFeature"
+      ],
+      "fillMode": "extract",
+      "requiredWhen": true,
+      "applicabilityRule": "applicable",
+      "ruleSource": "DT:15(24)",
+      "calculationStage": "review",
+      "emptyState": "missing"
+    },
+    {
+      "id": "25",
+      "parentGraph": null,
+      "scope": "declaration",
+      "fieldBindings": [
+        "transport.mode"
+      ],
+      "fillMode": "extract",
+      "requiredWhen": true,
+      "applicabilityRule": "applicable",
+      "ruleSource": "DT:15(25)",
+      "calculationStage": "review",
+      "emptyState": "missing",
+      "entityRole": "border"
+    },
+    {
+      "id": "26",
+      "parentGraph": null,
+      "scope": "declaration",
+      "fieldBindings": [
+        "transport.mode"
+      ],
+      "fillMode": "extract",
+      "requiredWhen": true,
+      "applicabilityRule": "applicable",
+      "ruleSource": "DT:15(26)",
+      "calculationStage": "review",
+      "emptyState": "missing",
+      "entityRole": "arrival"
+    },
+    {
+      "id": "27",
+      "parentGraph": null,
+      "scope": "declaration",
+      "fieldBindings": [],
+      "fillMode": "not_applicable",
+      "requiredWhen": false,
+      "applicabilityRule": "profile_not_filled",
+      "ruleSource": "DT:15(27)",
+      "calculationStage": "review",
+      "emptyState": "missing"
+    },
+    {
+      "id": "28",
+      "parentGraph": null,
+      "scope": "declaration",
+      "fieldBindings": [],
+      "fillMode": "not_applicable",
+      "requiredWhen": false,
+      "applicabilityRule": "profile_not_filled",
+      "ruleSource": "DT:15(28)",
+      "calculationStage": "review",
+      "emptyState": "missing"
+    },
+    {
+      "id": "29",
+      "parentGraph": null,
+      "scope": "declaration",
+      "fieldBindings": [
+        "declaration.borderOfficeCode",
+        "declaration.borderOfficeCountry",
+        "declaration.borderOfficeName"
+      ],
+      "fillMode": "extract",
+      "requiredWhen": true,
+      "applicabilityRule": "applicable",
+      "ruleSource": "DT:15(29)",
+      "calculationStage": "review",
+      "emptyState": "missing"
+    },
+    {
+      "id": "30",
+      "parentGraph": null,
+      "scope": "declaration",
+      "fieldBindings": [
+        "declaration.locationCode",
+        "declaration.locationRegistration",
+        "declaration.locationCountry",
+        "declaration.locationOfficeCode",
+        "declaration.locationAddress"
+      ],
+      "fillMode": "extract",
+      "requiredWhen": true,
+      "applicabilityRule": "applicable",
+      "ruleSource": "DT:15(30)",
+      "calculationStage": "review",
+      "emptyState": "missing"
+    },
+    {
+      "id": "31",
+      "parentGraph": null,
+      "scope": "goods",
+      "fieldBindings": [
+        "goods.description",
+        "goods.packageIds",
+        "goods.packageKind",
+        "goods.packageQuantity",
+        "goods.manufacturer",
+        "goods.tradeMark",
+        "goods.brand",
+        "goods.model",
+        "goods.article",
+        "goods.groupConfirmed",
+        "declaration.containerNumbers"
+      ],
+      "fillMode": "extract",
+      "requiredWhen": true,
+      "applicabilityRule": "applicable",
+      "ruleSource": "DT:15(31)",
+      "calculationStage": "review",
+      "emptyState": "missing"
+    },
+    {
+      "id": "32",
+      "parentGraph": null,
+      "scope": "goods",
+      "fieldBindings": [
+        "goods.ordinal"
+      ],
+      "fillMode": "mixed",
+      "requiredWhen": true,
+      "applicabilityRule": "applicable",
+      "ruleSource": "DT:15(32)",
+      "calculationStage": "review",
+      "emptyState": "auto_unavailable"
+    },
+    {
+      "id": "33",
+      "parentGraph": null,
+      "scope": "goods",
+      "fieldBindings": [
+        "goods.commodityCode",
+        "goods.prohibitionCodes",
+        "goods.intellectualPropertyCode"
+      ],
+      "fillMode": "extract",
+      "requiredWhen": true,
+      "applicabilityRule": "applicable",
+      "ruleSource": "DT:15(33)",
+      "calculationStage": "review",
+      "emptyState": "missing"
+    },
+    {
+      "id": "34",
+      "parentGraph": null,
+      "scope": "goods",
+      "fieldBindings": [
+        "goods.originCountry"
+      ],
+      "fillMode": "extract",
+      "requiredWhen": true,
+      "applicabilityRule": "applicable",
+      "ruleSource": "DT:15(34)",
+      "calculationStage": "review",
+      "emptyState": "missing"
+    },
+    {
+      "id": "35",
+      "parentGraph": null,
+      "scope": "goods",
+      "fieldBindings": [
+        "goods.grossMass"
+      ],
+      "fillMode": "extract",
+      "requiredWhen": true,
+      "applicabilityRule": "applicable",
+      "ruleSource": "DT:15(35)",
+      "calculationStage": "review",
+      "emptyState": "missing"
+    },
+    {
+      "id": "36",
+      "parentGraph": null,
+      "scope": "goods",
+      "fieldBindings": [
+        "goods.hasPreference",
+        "goods.preferenceFee",
+        "goods.preferenceDuty",
+        "goods.preferenceExcise",
+        "goods.preferenceVat",
+        "goods.preferenceBasis"
+      ],
+      "fillMode": "mixed",
+      "requiredWhen": true,
+      "applicabilityRule": "applicable",
+      "ruleSource": "DT:15(36)",
+      "calculationStage": "review",
+      "emptyState": "auto_unavailable"
+    },
+    {
+      "id": "37",
+      "parentGraph": null,
+      "scope": "goods",
+      "fieldBindings": [
+        "declaration.procedure",
+        "goods.previousProcedure",
+        "goods.movementFeature"
+      ],
+      "fillMode": "mixed",
+      "requiredWhen": true,
+      "applicabilityRule": "applicable",
+      "ruleSource": "DT:15(37)",
+      "calculationStage": "review",
+      "emptyState": "auto_unavailable"
+    },
+    {
+      "id": "38",
+      "parentGraph": null,
+      "scope": "goods",
+      "fieldBindings": [
+        "goods.netMass"
+      ],
+      "fillMode": "extract",
+      "requiredWhen": true,
+      "applicabilityRule": "applicable",
+      "ruleSource": "DT:15(38)",
+      "calculationStage": "review",
+      "emptyState": "missing"
+    },
+    {
+      "id": "39",
+      "parentGraph": null,
+      "scope": "goods",
+      "fieldBindings": [
+        "goods.hasQuota",
+        "goods.quotaQuantity",
+        "goods.quotaUnit"
+      ],
+      "fillMode": "extract",
+      "requiredWhen": true,
+      "applicabilityRule": "quota_answer",
+      "ruleSource": "DT:15(39)",
+      "calculationStage": "review",
+      "emptyState": "missing"
+    },
+    {
+      "id": "40",
+      "parentGraph": null,
+      "scope": "goods",
+      "fieldBindings": [],
+      "fillMode": "not_applicable",
+      "requiredWhen": false,
+      "applicabilityRule": "profile_not_filled",
+      "ruleSource": "DT:15(40)",
+      "calculationStage": "review",
+      "emptyState": "missing"
+    },
+    {
+      "id": "41",
+      "parentGraph": null,
+      "scope": "goods",
+      "fieldBindings": [
+        "goods.additionalUnitRequired",
+        "goods.additionalUnit",
+        "goods.additionalQuantity",
+        "goods.secondaryAdditionalUnitRequired",
+        "goods.secondaryAdditionalUnit",
+        "goods.secondaryAdditionalQuantity"
+      ],
+      "fillMode": "mixed",
+      "requiredWhen": true,
+      "applicabilityRule": "tnved_units",
+      "ruleSource": "DT:15(41)",
+      "calculationStage": "review",
+      "emptyState": "auto_unavailable"
+    },
+    {
+      "id": "42",
+      "parentGraph": null,
+      "scope": "goods",
+      "fieldBindings": [
+        "goods.invoiceValue"
+      ],
+      "fillMode": "extract",
+      "requiredWhen": true,
+      "applicabilityRule": "applicable",
+      "ruleSource": "DT:15(42)",
+      "calculationStage": "review",
+      "emptyState": "missing"
+    },
+    {
+      "id": "43",
+      "parentGraph": null,
+      "scope": "goods",
+      "fieldBindings": [
+        "goods.valuationMethod"
+      ],
+      "fillMode": "mixed",
+      "requiredWhen": true,
+      "applicabilityRule": "applicable",
+      "ruleSource": "DT:15(43)",
+      "calculationStage": "review",
+      "emptyState": "auto_unavailable"
+    },
+    {
+      "id": "44",
+      "parentGraph": null,
+      "scope": "goods",
+      "fieldBindings": [
+        "document.kind",
+        "document.name",
+        "document.number",
+        "document.date",
+        "document.dateRequired",
+        "document.validFrom",
+        "document.validUntil",
+        "document.presentationCode",
+        "document.goodsIds",
+        "document.documentIds"
+      ],
+      "fillMode": "extract",
+      "requiredWhen": true,
+      "applicabilityRule": "applicable",
+      "ruleSource": "DT:15(44)",
+      "calculationStage": "review",
+      "emptyState": "missing"
+    },
+    {
+      "id": "45",
+      "parentGraph": null,
+      "scope": "goods",
+      "fieldBindings": [
+        "goods.customsValue"
+      ],
+      "fillMode": "calculated",
+      "requiredWhen": false,
+      "applicabilityRule": "applicable",
+      "ruleSource": "DT:15(45)",
+      "calculationStage": "result",
+      "emptyState": "missing"
+    },
+    {
+      "id": "46",
+      "parentGraph": null,
+      "scope": "goods",
+      "fieldBindings": [
+        "goods.statisticalValue"
+      ],
+      "fillMode": "calculated",
+      "requiredWhen": false,
+      "applicabilityRule": "applicable",
+      "ruleSource": "DT:15(46)",
+      "calculationStage": "result",
+      "emptyState": "missing"
+    },
+    {
+      "id": "47",
+      "parentGraph": null,
+      "scope": "goods",
+      "fieldBindings": [],
+      "fillMode": "calculated",
+      "requiredWhen": false,
+      "applicabilityRule": "applicable",
+      "ruleSource": "DT:15(47)",
+      "calculationStage": "result",
+      "emptyState": "missing"
+    },
+    {
+      "id": "B",
+      "parentGraph": "47",
+      "scope": "declaration",
+      "fieldBindings": [
+        "declaration.paymentFactsAvailable",
+        "payment.code",
+        "payment.amount",
+        "payment.source",
+        "payment.documentNumber",
+        "payment.date"
+      ],
+      "fillMode": "extract",
+      "requiredWhen": false,
+      "applicabilityRule": "payment_facts",
+      "ruleSource": "DT:15(B)",
+      "calculationStage": "calculation",
+      "emptyState": "missing"
+    },
+    {
+      "id": "48",
+      "parentGraph": null,
+      "scope": "declaration",
+      "fieldBindings": [],
+      "fillMode": "not_applicable",
+      "requiredWhen": false,
+      "applicabilityRule": "profile_not_filled",
+      "ruleSource": "DT:15(48)",
+      "calculationStage": "review",
+      "emptyState": "missing"
+    },
+    {
+      "id": "49",
+      "parentGraph": null,
+      "scope": "declaration",
+      "fieldBindings": [],
+      "fillMode": "not_applicable",
+      "requiredWhen": false,
+      "applicabilityRule": "profile_not_filled",
+      "ruleSource": "DT:15(49)",
+      "calculationStage": "review",
+      "emptyState": "missing"
+    },
+    {
+      "id": "50",
+      "parentGraph": null,
+      "scope": "declaration",
+      "fieldBindings": [],
+      "fillMode": "not_applicable",
+      "requiredWhen": false,
+      "applicabilityRule": "profile_not_filled",
+      "ruleSource": "DT:15(50)",
+      "calculationStage": "review",
+      "emptyState": "missing"
+    },
+    {
+      "id": "51",
+      "parentGraph": null,
+      "scope": "declaration",
+      "fieldBindings": [],
+      "fillMode": "not_applicable",
+      "requiredWhen": false,
+      "applicabilityRule": "profile_not_filled",
+      "ruleSource": "DT:15(51)",
+      "calculationStage": "review",
+      "emptyState": "missing"
+    },
+    {
+      "id": "52",
+      "parentGraph": null,
+      "scope": "declaration",
+      "fieldBindings": [],
+      "fillMode": "not_applicable",
+      "requiredWhen": false,
+      "applicabilityRule": "profile_not_filled",
+      "ruleSource": "DT:15(52)",
+      "calculationStage": "review",
+      "emptyState": "missing"
+    },
+    {
+      "id": "53",
+      "parentGraph": null,
+      "scope": "declaration",
+      "fieldBindings": [],
+      "fillMode": "not_applicable",
+      "requiredWhen": false,
+      "applicabilityRule": "profile_not_filled",
+      "ruleSource": "DT:15(53)",
+      "calculationStage": "review",
+      "emptyState": "missing"
+    },
+    {
+      "id": "54",
+      "parentGraph": null,
+      "scope": "declaration",
+      "fieldBindings": [
+        "declaration.signatureDate",
+        "declaration.signatoryPlace",
+        "declaration.signatoryFirstName",
+        "declaration.signatoryLastName",
+        "declaration.signatoryMiddleName",
+        "declaration.signatoryPosition",
+        "declaration.signatoryContact",
+        "declaration.representativeUsed",
+        "declaration.representativeRegistry",
+        "declaration.representativeContractNumber",
+        "declaration.representativeContractDate",
+        "declaration.authorityRequired",
+        "declaration.authorityNumber",
+        "declaration.authorityDate",
+        "declaration.authorityValidUntil"
+      ],
+      "fillMode": "mixed",
+      "requiredWhen": true,
+      "applicabilityRule": "applicable",
+      "ruleSource": "DT:15(54)",
+      "calculationStage": "review",
+      "emptyState": "auto_unavailable"
+    }
+  ]
+}

@@ -15,9 +15,9 @@ export function TariffInfo({row}:{row?:Entity}) {
   if(!tariff || !row) return null;
   return <aside className="tariff-info" aria-label={`Тариф ${tariff.code}`}><p><strong>Базовая ЕТТ: {tariff.duty.raw_text}</strong> · <a href={tariff.sourceUrl} target="_blank" rel="noreferrer">Источник, стр. {tariff.sourcePage}</a></p>
     <p>Дополнительные единицы: {tariff.units.additional_raw}{tariff.units.qualifier?` (${tariff.units.qualifier})`:''}.</p>
-    {row.tariffFromCatalogue===true && <p className={row.tariffConfirmed===true?'':'candidate-warning'}>{row.tariffConfirmed===true?'Применимость ставки подтверждена пользователем.':'Подтвердите применимость ставки ниже: дата, происхождение, льготы, исключения Казахстана и сноски. Справочник содержит базовую ставку; действующая ставка в нём не определена.'}</p>}
+    {row.tariffFromCatalogue===true && <p className={row.tariffConfirmed===true?'':'candidate-warning'}>{row.tariffConfirmed===true?'Применимость ставки подтверждена пользователем.':'Подтвердите применимость ставки на странице расчёта: дата, происхождение, льготы, исключения Казахстана и сноски. Справочник содержит базовую ставку; действующая ставка в нём не определена.'}</p>}
     {tariff.notes.length>0 && <details><summary>Сноски к ставке ({tariff.notes.length})</summary>{tariff.notes.map(note=><p key={note.id}><strong>{note.id}</strong> · {note.text}{note.status_hint==='repealed'?' (в источнике отмечено как утратившее силу)':''}</p>)}<p>Упомянутые в сносках даты не применяются автоматически.</p></details>}
     <details><summary>Правила и источники</summary>{Object.values(tariff.documents).map(doc=><p key={doc.id}><a href={doc.url} target="_blank" rel="noreferrer">{doc.title}</a></p>)}</details>
-    {(row.dutyFormula!=='advalorem' || row.additionalUnitRequired===true || row.secondaryAdditionalUnitRequired===true) && <p className="candidate-warning">Расчёт доступен после заполнения данных. Создание комплекта файлов для этой формулы или дополнительных единиц пока недоступно: их нет в согласованном образце XML.</p>}
+    {(row.dutyFormula!=='advalorem' || row.additionalUnitRequired===true || row.secondaryAdditionalUnitRequired===true) && <p className="candidate-warning">Проверьте единицы и количества товара, параметры специфической части ставки и номинал валютного курса.</p>}
   </aside>;
 }

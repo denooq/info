@@ -48,12 +48,12 @@ test('equivalent country names coalesce and a rejected delivery proposal does no
     $sources = [['documentId' => $id, 'name' => 'invoice.pdf', 'pages' => [['page' => 1, 'blocks' => [['id' => 'p1-b0', 'text' => 'Destination KZ; REPUBLIC OF KAZAKHSTAN. Delivery CPT. HS 29153100']]]]]];
     $citation = ['documentId' => $id, 'page' => 1, 'blockId' => 'p1-b0', 'sheet' => null, 'cell' => null];
     $candidates = [];
-    foreach (['KZ', 'REPUBLIC OF KAZAKHSTAN'] as $value) $candidates[] = ['fieldId' => 'declaration.destinationCountry', 'entityKey' => null, 'rawValue' => $value, 'unit' => null, 'source' => [...$citation, 'quote' => $value]];
+    foreach (['KZ', 'REPUBLIC OF KAZAKHSTAN'] as $value) $candidates[] = ['fieldId' => 'declaration.dispatchCountry', 'entityKey' => null, 'rawValue' => $value, 'unit' => null, 'source' => [...$citation, 'quote' => $value]];
     foreach (['CPT', '29153100'] as $value) $candidates[] = ['fieldId' => 'declaration.deliveryCode', 'entityKey' => null, 'rawValue' => $value, 'unit' => null, 'source' => [...$citation, 'quote' => $value]];
     $state = (new CandidateMerger(new Registry()))->merge(sessionFixture()->create()['state'], ['entities' => [], 'candidates' => $candidates, 'warnings' => []], $sources);
-    same('KZ', $state['draft']['declaration']['destinationCountry']);
+    same('KZ', $state['draft']['declaration']['dispatchCountry']);
     same('CPT', $state['draft']['declaration']['deliveryCode']);
-    $country = array_values(array_filter($state['candidates'], fn($c) => $c['fieldId'] === 'declaration.destinationCountry'));
+    $country = array_values(array_filter($state['candidates'], fn($c) => $c['fieldId'] === 'declaration.dispatchCountry'));
     same(1, count($country)); same(2, count($country[0]['evidenceIds']));
     same(false, $state['draft']['fieldStates']['declaration/_/deliveryCode']['conflict']);
     same(false, $state['draft']['fieldStates']['declaration/_/deliveryCode']['needsReview']);

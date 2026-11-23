@@ -9,13 +9,13 @@ final class Draft
 {
     public function __construct(private readonly Registry $registry) {}
 
-    public function empty(): array
+    public function empty(?int $timestamp = null): array
     {
         $draft = ['declaration' => $this->row('declaration'), 'keden' => $this->row('keden'), 'parties' => [], 'goods' => [], 'transports' => [], 'documents' => [], 'costs' => [], 'rates' => [], 'payments' => [], 'sourceLines' => [], 'packages' => [], 'fieldStates' => [], 'entityAliases' => []];
         foreach (['seller','buyer','consignor','consignee','declarant','financial'] as $role) $draft['parties'][] = ['id' => 'party-' . $role, ...$this->row('party'), 'role' => $role];
         foreach (['arrival','border'] as $stage) $draft['transports'][] = ['id' => 'transport-' . $stage, ...$this->row('transport'), 'stage' => $stage];
         $draft['goods'][] = ['id' => 'goods-1', ...$this->row('goods')];
-        return $draft;
+        return GraphDefaults::apply(DeclarationDate::defaults($draft,$timestamp??time()));
     }
 
     public function row(string $scope): array
@@ -57,15 +57,33 @@ final class Draft
             $value = $candidate['value']; $evidenceIds = $candidate['evidenceIds']; $status = 'selected';
         } else $value = $this->manualValue($field, $value);
         $row =& $this->entity($state['draft'], $field['scope'], $entityId);
+        $oldValue=$row[$field['key']]??null;
         if ($field['scope'] === 'goods' && isset($row['_tariff']) && (in_array($field['key'], TariffDefaults::UNIT_FIELDS, true) || ($field['key'] === 'dutyQuantity' && (TariffDefaults::linkedQuantity($row) !== null || ($row['dutyQuantityBasis'] ?? '') === 'net_mass')))) throw new ApiError('FIELD_READ_ONLY', 'Единица задана кодом ТН ВЭД; связанное количество меняется через исходную массу или количество товара.', 422);
         $row[$field['key']] = $value;
         if ($fieldId === 'document.kind') {
+            $catalog=new Classifiers();$official=$catalog->requireDocument((string)$value,$catalog->version());
+            $row['classifierVersion']=$catalog->version();
+            $nameMeta=$state['draft']['fieldStates'][self::address('document',$entityId,'name')]??[];
+            if(Conditions::missing($row['name']??null)||(!in_array($nameMeta['status']??'',['manual','selected'],true)&&($nameMeta['evidenceIds']??[])===[]))$row['name']=$official['name'];
             $row['dateRequired'] = true;
             foreach (Registry::resource('catalogs')['lists']['documentKinds'] as $kind) if ($kind['code'] === $value) $row['dateRequired'] = $kind['dateRequired'];
         }
         $reviewed = [];
         foreach ($state['candidates'] as $candidate) if ($candidate['address'] === $address) $reviewed[] = $candidate['id'];
         $state['draft']['fieldStates'][$address] = ['status' => $status,'candidateId' => $candidateId,'evidenceIds' => $evidenceIds,'reviewedCandidateIds' => $reviewed,'conflict' => false,'needsReview' => false];
+        if (in_array($fieldId,['declaration.signatureDate','declaration.calculationDate'],true)) {
+            $state['draft']['declaration']['signatureDate']=$value;
+            if($fieldId==='declaration.calculationDate')$state['draft']['fieldStates']['declaration/_/signatureDate']=DeclarationDate::meta('manual');
+            $state['draft']=DeclarationDate::defaults($state['draft'],time());
+            if(isset($state['exchangeRates']))$state['exchangeRates']['status']='stale';
+        }
+        if ($field['scope']==='rate' && $field['key']!=='confirmed') {
+            $row['confirmed']=false;$state['draft']['fieldStates'][self::address('rate',$entityId,'confirmed')]=DeclarationDate::meta('linked');
+            if ($field['key']==='currency' && $value!==$oldValue) {
+                foreach(['value','nominal','source'] as $key){$row[$key]=null;$state['draft']['fieldStates'][self::address('rate',$entityId,$key)]=DeclarationDate::meta('missing');}
+                $row['date']=$state['draft']['declaration']['signatureDate'];unset($row['_nbk']);
+            }
+        }
         return $state;
     }
 
@@ -87,6 +105,7 @@ final class Draft
         if ($type === 'decimal') return (new Normalizer())->value($field, $value, ($field['unit'] ?? '') === 'kg' ? 'kg' : null, 'kg');
         if ($type === 'date') return (new Normalizer())->date($value);
         if ($field['id'] === 'goods.commodityCode') return (new Normalizer())->value($field, $value, null, '');
+        if (in_array($field['id'],['rate.currency','declaration.invoiceCurrency','cost.currency','goods.dutyCurrency'],true)) return strtoupper(trim($value));
         if ($type === 'enum' && isset($field['values']) && !in_array($value, $field['values'], true)) throw new ApiError('FIELD_VALUE', 'Неизвестный вариант значения.');
         return trim($value);
     }

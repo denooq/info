@@ -32,3 +32,13 @@ test('shared invoice and pallets do not duplicate identity; grouping rejects inc
     $split=$model->change($merged,['scope'=>'goods','action'=>'split','id'=>'goods-1','sourceLineIds'=>['manual-line-2']]);
     same(2,count($split['draft']['goods']));same(null,$split['draft']['goods'][0]['invoiceValue']);
 });
+
+test('missing document types and an unconfirmed cost identify the declaration records and actual DTS answer',function():void {
+    $s=completeDraftState();foreach($s['draft']['documents'] as &$document)$document['kind']='99999';unset($document);
+    $s['draft']['costs'][]=['id'=>'test-cost','kind'=>'freight','direction'=>'addition','amount'=>'1','currency'=>'KZT','includedInPrice'=>false,'basis'=>'Проверочный участок','evidenceIds'=>[],'allocationBasis'=>'value','allocationConfirmed'=>true,'goodsIds'=>['goods-1']];
+    $errors=(new Customs\Domain\Validator(new Customs\Domain\Registry()))->validate($s)['errors'];
+    $documents=array_values(array_filter($errors,fn($e)=>$e['code']==='DOCUMENT_REQUIRED'));same(2,count($documents));
+    truth(str_contains($documents[0]['message'],'инвойса'));truth(str_contains($documents[1]['message'],'контракта'));
+    $cost=array_values(array_filter($errors,fn($e)=>$e['code']==='COST_APPLICABILITY'))[0];same('declaration/_/freightApplicable',$cost['address']);
+    truth(str_contains($cost['message'],'«Да»'));
+});

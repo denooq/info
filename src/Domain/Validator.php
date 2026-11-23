@@ -15,6 +15,9 @@ final class Validator
         $this->errors = []; $d = $state['draft']; $normalizer = new Normalizer();
         foreach ($this->registry->fields() as $f) {
             if (in_array('calculated', $f['acquisition'], true)) continue;
+            if($f['scope']==='keden'||$f['id']==='goods.sourceLineIds')continue;
+            $notFilled=['3','4','7','10','13','27','28','40','48','49','50','51','52','53'];
+            if($f['dtGraphs']!==[]&&array_diff($f['dtGraphs'],$notFilled)===[])continue;
             $collection = $this->registry->data()['scopes'][$f['scope']]['collection'];
             $rows = $collection === null ? [$d[$f['scope']]] : $d[$collection];
             if ($f['scope'] === 'payment' && ($d['declaration']['paymentFactsAvailable'] ?? null) !== true) continue;
@@ -33,7 +36,7 @@ final class Validator
                 if (!$required && is_array($f['requiredWhen'])) continue;
                 foreach ($normalizer->issues($f, $value) as $message) {
                     // Partial code lists allow explicit manual confirmation; syntax is always checked.
-                    if (str_contains($message, 'справочник') && in_array($meta['status'] ?? '', ['manual','selected'], true)) continue;
+                    if (str_contains($message, 'справочник') && (in_array($meta['status'] ?? '', ['manual','selected'], true) || ($f['id']==='rate.currency' && ($meta['status']??'')==='nbk' && ($row['_nbk']['currency']??null)===$value))) continue;
                     $this->error($address, 'VALUE', $message);
                 }
                 if (isset($f['fixedValue']) && $value !== $f['fixedValue']) $this->error($address, 'PROFILE', 'Значение не поддерживается профилем ИМ 40 / метод 1.');
@@ -63,7 +66,7 @@ final class Validator
             $this->tariff($d, $g, $prefix);
             if ($g['netMass'] !== null && $g['grossMass'] !== null && BigDecimal::of($g['netMass'])->isGreaterThan($g['grossMass'])) $this->error($prefix.'netMass', 'MASS_ORDER', 'Нетто превышает брутто.');
             foreach ($g['sourceLineIds'] as $line) {
-                if (!isset($d['sourceLines'][$line]) || isset($usedLines[$line])) $this->error($prefix.'sourceLineIds', 'SOURCE_LINE', 'Строка источника отсутствует или включена в другой товар.');
+                if (!isset($d['sourceLines'][$line]) || isset($usedLines[$line])) $this->error($prefix.'groupConfirmed', 'SOURCE_LINE', 'Проверьте группировку в графе 31: исходная строка отсутствует или повторяется в другом товаре.');
                 $usedLines[$line] = true;
             }
             $this->links($prefix.'packageIds', $g['packageIds'], $packageIds);
@@ -77,10 +80,9 @@ final class Validator
             $this->links('document/'.$doc['id'].'/goodsIds', $doc['goodsIds'], $goodsIds);
             $this->links('document/'.$doc['id'].'/documentIds', $doc['documentIds'], array_keys($state['documents']));
         }
-        foreach (['04021','03011'] as $kind) if (!in_array($kind, array_column($d['documents'], 'kind'), true)) $this->error('documents', 'DOCUMENT_REQUIRED', 'Добавьте документ вида '.$kind.' (инвойс / контракт).');
+        foreach ($this->registry->data()['requiredDocuments'] as $required) if (!in_array($required['kind'], array_column($d['documents'], 'kind'), true)) $this->error('documents', 'DOCUMENT_REQUIRED', 'В разделе «Документы» укажите реквизиты '.$required['name'].' (код '.$required['kind'].'). Повторная загрузка файла не требуется.');
         $this->links('declaration/_/valuationDocumentIds', $d['declaration']['valuationDocumentIds'], $docIds);
-        $dutyCurrencies = array_map(fn($g)=>($g['dutyFormula']??'advalorem')==='advalorem'?null:($g['dutyCurrency']??null), $d['goods']);
-        $requiredCurrencies = array_unique(array_filter([$d['declaration']['invoiceCurrency'], 'USD', ...array_column($d['costs'], 'currency'), ...$dutyCurrencies]));
+        $requiredCurrencies = \Customs\Rates\ExchangeRates::required($d);
         $currencies = [];
         foreach ($d['rates'] as $r) {
             $a = 'rate/'.$r['id'].'/';
@@ -88,13 +90,22 @@ final class Validator
             $currencies[$r['currency'] ?? ''] = true;
             if ($r['date'] !== $d['declaration']['calculationDate']) $this->error($a.'date', 'RATE_DATE', 'Дата курса должна совпадать с датой расчёта.');
             if (($r['confirmed'] ?? null) !== true) $this->error($a.'confirmed', 'RATE_CONFIRM', 'Подтвердите курс и источник.');
+            if(isset($r['_nbk']) && $r['value']!==null && $r['nominal']!==null) {
+                try{$changed=!BigDecimal::of($r['value'])->isEqualTo($r['_nbk']['value']) || !BigDecimal::of($r['nominal'])->isEqualTo($r['_nbk']['nominal']) || $r['date']!==$r['_nbk']['date'];}catch(\Throwable){$changed=true;}
+                if($changed && ($d['fieldStates'][$a.'source']['status']??'')!=='manual')$this->error($a.'source','RATE_MANUAL_BASIS','Курс отличается от полученного из НБК. Укажите основание ручной корректировки.');
+            }
         }
         foreach ($requiredCurrencies as $currency) if ($currency !== 'KZT' && !isset($currencies[$currency])) $this->error('rates', 'RATE_REQUIRED', 'Добавьте курс '.$currency.' на расчётную дату.');
         $costKinds = [];
-        foreach ($d['costs'] as $c) {
+        foreach ($d['costs'] as $costIndex=>$c) {
             $a = 'cost/'.$c['id'].'/'; $costKinds[] = $c['kind'];
             $applicable = ($d['declaration'][$c['kind'].'Applicable'] ?? null) === true;
-            if (!$applicable) $this->error($a.'kind', 'COST_APPLICABILITY', 'Подтвердите наличие этого компонента в ответах ДТС.');
+            if (!$applicable) {
+                $question=$this->registry->fields()['declaration.'.$c['kind'].'Applicable']??null;
+                $address=$question===null?$a.'kind':'declaration/_/'.$question['key'];
+                $message=$question===null?'Выберите вид компонента ДТС.':'Для компонента ДТС '.($costIndex+1).' отметьте «'.$question['label'].'» = «Да» или удалите компонент, если он добавлен ошибочно.';
+                $this->error($address, 'COST_APPLICABILITY', $message);
+            }
             if (($c['allocationConfirmed'] ?? null) !== true) $this->error($a.'allocationConfirmed', 'ALLOCATION_CONFIRM', 'Подтвердите распределение расхода.');
             $this->links($a.'goodsIds', $c['goodsIds'], $goodsIds);
             if ($c['direction'] === 'deduction' && $c['includedInPrice'] !== true) $this->error($a.'includedInPrice', 'DEDUCTION_PRICE', 'Вычет допускается для суммы, включённой в цену.');
@@ -115,7 +126,8 @@ final class Validator
             if (!in_array($kind, $costKinds, true)) $this->error('declaration/_/'.$key, 'COST_REQUIRED', 'Добавьте строку соответствующего компонента ДТС.');
         }
         if ($d['declaration']['paymentFactsAvailable'] === true && $d['payments'] === []) $this->error('payments','PAYMENT_REQUIRED','Укажите фактическую уплату с основанием.');
-        return ['valid' => $this->errors === [], 'errors' => $this->errors, 'count' => count($this->errors), 'registryVersion' => $this->registry->data()['version']];
+        foreach((new ReviewValidator())->validate($state)['errors'] as $error)if(!array_filter($this->errors,fn($e)=>$e['address']===$error['address']&&$e['code']===$error['code']))$this->errors[]=$error;
+        return ['valid' => $this->errors === [], 'errors' => $this->errors, 'count' => count($this->errors), 'registryVersion' => $this->registry->data()['version'],'stage'=>'calculation'];
     }
 
     public function requireValid(array $state): void

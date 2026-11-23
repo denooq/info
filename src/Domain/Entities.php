@@ -16,10 +16,36 @@ final class Entities
         $model = new Draft($this->registry); $d =& $state['draft'];
         $collection = $scope === 'package' ? 'packages' : $model->collection($scope);
         $action = $request['action'] ?? 'add';
-        if ($action === 'add') {
+        if ($scope === 'document' && in_array($action,['required','record'],true)) {
+            $kind=$request['kind']??null;
+            if(!is_string($kind))throw new ApiError('REQUIRED_DOCUMENT_KIND','Выберите официальный вид документа.',422);
+            $catalog=new Classifiers();$official=$catalog->requireDocument($kind,$catalog->version());
+            if($action==='required'&&!in_array($kind,array_column($this->registry->data()['requiredDocuments'],'kind'),true))throw new ApiError('REQUIRED_DOCUMENT_KIND','Этот вид документа не входит в обязательные формы.',422);
+            if(!is_string($request['fieldId']??null))throw new ApiError('REQUIRED_DOCUMENT_FIELD','Укажите поле документа.',422);
+            $field=$this->registry->field($request['fieldId']);
+            if($field['scope']!=='document' || in_array($field['key'],['kind','dateRequired'],true) || !array_key_exists('value',$request))throw new ApiError('REQUIRED_DOCUMENT_FIELD','Заполните реквизит выбранного документа.',422);
+            $id=null;
+            foreach($d['documents'] as $document)if($document['kind']===$kind){$id=$document['id'];break;}
+            if($id===null) {
+                if(count($d['documents'])>=200)throw new ApiError('ENTITY_LIMIT','Достигнут лимит строк раздела.');
+                $id='document-'.bin2hex(random_bytes(8));$dateRequired=true;
+                foreach(Registry::resource('catalogs')['lists']['documentKinds'] as $entry)if($entry['code']===$kind)$dateRequired=$entry['dateRequired'];
+                $fileIds=array_keys(array_filter($state['documents'],fn($file)=>($file['documentKind']??null)===$kind));
+                $d['documents'][]=['id'=>$id,...$model->row('document'),'kind'=>$kind,'name'=>$official['name'],'dateRequired'=>$dateRequired,'documentIds'=>$fileIds,'goodsIds'=>count($d['goods'])===1?[$d['goods'][0]['id']]:[],'classifierVersion'=>$catalog->version(),'_displayKey'=>'proposed-'.$kind];
+                foreach(['kind','dateRequired'] as $key)$d['fieldStates'][Draft::address('document',$id,$key)]=DeclarationDate::meta('profile');
+            }
+            return $model->edit($state,$field['id'],$id,$request['value']);
+        } elseif ($action === 'add') {
             if (count($d[$collection]) >= 200) throw new ApiError('ENTITY_LIMIT','Достигнут лимит строк раздела.');
             $id = $scope.'-'.bin2hex(random_bytes(8));
             $row = $scope === 'package' ? ['id'=>$id,'label'=>'','quantity'=>null,'kind'=>null] : ['id'=>$id,...$model->row($scope)];
+            if($scope==='document'&&isset($request['kind'])) {
+                $catalog=new Classifiers();$official=$catalog->requireDocument($request['kind'],$request['version']??$catalog->version());
+                $row['kind']=$official['code'];$row['name']=$official['name'];$row['dateRequired']=true;$row['classifierVersion']=$catalog->version();
+                foreach(Registry::resource('catalogs')['lists']['documentKinds'] as $kind)if($kind['code']===$row['kind'])$row['dateRequired']=$kind['dateRequired'];
+                $row['goodsIds']=count($d['goods'])===1?[$d['goods'][0]['id']]:[];
+            }
+            if($scope==='rate'){$row['date']=$d['declaration']['signatureDate']??$d['declaration']['calculationDate'];$d['fieldStates']['rate/'.$id.'/date']=DeclarationDate::meta('linked');}
             $createPackage = $scope === 'package' && (array_key_exists('label',$request) || array_key_exists('quantity',$request) || array_key_exists('goodsIds',$request));
             $packageGoods = [];
             if ($createPackage) {
@@ -59,6 +85,7 @@ final class Entities
         } elseif ($scope === 'package' && $action === 'update') {
             foreach ($d['packages'] as &$p) if ($p['id']===($request['id']??'')) {
                 $p=array_replace($p,$this->packageValues($request));
+                unset($p['_fromCount']);
                 return $state;
             }
             throw new ApiError('ENTITY_UNKNOWN','Группа грузовых мест не найдена.');
@@ -116,6 +143,7 @@ final class Entities
             foreach ($this->registry->fields() as $f) if ($f['scope']==='goods') $d['fieldStates'][Draft::address('goods',$merged['id'],$f['key'])]=['status'=>'manual','candidateId'=>null,'evidenceIds'=>[],'conflict'=>false,'needsReview'=>false];
             foreach ($d['entityAliases'] as $key=>$id) if (in_array($id,$ids,true)) $d['entityAliases'][$key]=$merged['id'];
         } else throw new ApiError('ENTITY_ACTION','Неизвестное действие со строкой.');
+        $state['draft']=DeclarationDate::defaults($state['draft'],time());
         return $state;
     }
     private function packageValues(array $request): array

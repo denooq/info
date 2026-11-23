@@ -23,6 +23,7 @@ final class SourceIndex
     {
         $document = $this->documents[$documentId] ?? [];
         if (isset($document['allowsNewGoods'])) return (bool) $document['allowsNewGoods'];
+        if(array_key_exists('documentKind',$document)&&!in_array($document['sourceRole']??null,['invoice','packing'],true))return false;
         $text = '';
         foreach ($document['pages'] ?? [] as $page) foreach ($page['blocks'] as $block) $text .= "\n" . $block['text'];
         $header = mb_substr($text, 0, 6000);
@@ -54,6 +55,6 @@ final class SourceIndex
             }
         }
         if ($text === null || !str_contains(self::text($text), self::text($citation['quote']))) throw new ApiError('EVIDENCE_INVALID', 'Цитата не подтверждается указанным источником.');
-        return ['id' => hash('sha256', json_encode([$citation['documentId'],$position,$citation['quote']], JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR)), 'documentId' => $citation['documentId'], 'documentName' => $document['name'], ...$position, 'quote' => $citation['quote'], 'context' => $text];
+        return ['id' => hash('sha256', json_encode([$citation['documentId'],$position,$citation['quote']], JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR)), 'documentId' => $citation['documentId'], 'documentName' => $document['name'],...array_intersect_key($document,array_flip(['documentKind','classifierVersion','sourceRole'])), ...$position, 'quote' => $citation['quote'], 'context' => $text];
     }
 }

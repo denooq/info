@@ -102,12 +102,9 @@ test('interrupted lease recovers and bounded retries do not loop on access error
     same('failed',array_values($store->read($id)['jobs'])[1]['status']);
 });
 
-test('late generation never overwrites a newer revision', function (): void {
-    [$config,$store,$session,$queue] = queueFixture(); $id=$session['state']['id'];
-    $queue->enqueue($id,'generate');
-    $queue->tick(['generate'=>['run'=>function() use($store,$id):array { $store->mutate($id,0,fn(array $s):array=>$s); return ['old'=>true]; },'apply'=>function(array $s):array { $s['artifactSet']=['revision'=>0]; return $s; }]]);
-    same(null,$store->read($id)['artifactSet']);
-    same('cancelled',array_values($store->read($id)['jobs'])[0]['status']);
+test('the graph profile rejects export jobs without scheduling work',function():void {
+    [$config,$store,$session,$queue]=queueFixture();$id=$session['state']['id'];
+    errorCode('EXPORT_DISABLED',fn()=>$queue->enqueue($id,'generate'));same([], $store->read($id)['jobs']);
 });
 
 test('worker releases the session lock while an external stage runs', function (): void {

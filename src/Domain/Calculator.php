@@ -43,6 +43,7 @@ final class Calculator
 
     public function calculate(array $state, bool $validate = true): array
     {
+        $state['draft']=GraphDefaults::apply($state['draft']);
         if($validate)(new Validator(new Registry()))->requireValid($state);
         $d=$state['draft']; $goods=$d['goods']; $count=count($goods);
         if($count<1)throw new ApiError('GOODS_REQUIRED','Добавьте товары.',422);

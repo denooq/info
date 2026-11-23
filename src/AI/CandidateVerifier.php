@@ -14,7 +14,7 @@ final class CandidateVerifier
     public function verify(array $candidate): array
     {
         $field = $this->registry->field($candidate['fieldId']);
-        if (!in_array('extract', $field['acquisition'], true)) throw new ApiError('FIELD_NOT_EXTRACTABLE', 'Это поле не заполняется AI.');
+        if (!isset($this->registry->extractable()[$field['id']])) throw new ApiError('FIELD_NOT_EXTRACTABLE', 'Это поле не заполняется AI в текущем профиле граф.');
         $evidence = $this->sources->verify($candidate['source']);
         $raw = SourceIndex::text($candidate['rawValue']);
         $quote = SourceIndex::text($evidence['quote']);
@@ -32,6 +32,7 @@ final class CandidateVerifier
         $normalizer = new Normalizer();
         $value = $normalizer->value($field, $candidate['rawValue'], $candidate['unit'], $evidence['context']);
         $issues = $normalizer->issues($field, $value);
+        if($field['id']==='declaration.sourcePackageCount'&&(!is_int($value)||$value<1||!preg_match('/packages?|pallets?|places?|количеств\p{L}*\s+мест|мест\b|паллет/ui',$evidence['context'])))$issues[]='Количество мест не подтверждено явным заголовком документа.';
         if (in_array($field['id'], ['goods.grossMass','goods.netMass'], true)) {
             $label=$field['id']==='goods.grossMass'?'/gross|брутто|毛重/ui':'/net(?:to)?(?:\s|weight|mass|\b)|нетто|净重/ui';
             if(!preg_match($label,$evidence['context']))$issues[]='Источник не содержит явного признака брутто/нетто рядом с данными; подтвердите значение вручную.';

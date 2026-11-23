@@ -23,7 +23,8 @@ test('mapping establishes shipment goods before permits and preserves document r
 test('the existing OCR and mapping pipeline fills TN VED from a cited English name without an extra model request', function (): void {
     $config = new Config(['runtime_dir' => sys_get_temp_dir() . '/customs-tnved-pipeline-' . bin2hex(random_bytes(6)), 'mistral_api_key' => 'test-placeholder']);
     $store = new SessionStore($config); $session = $store->create(); $id = $session['state']['id'];
-    (new Uploads($config, $store))->addFromPath($id, dirname(__DIR__, 2) . '/reference/source-documents/example2/авиа.pdf', 'invoice.pdf', 0);
+    $typed=$store->mutate($id,0,fn($s)=>(new Customs\Documents\UploadGroups())->change($s,['code'=>'04021','version'=>'378-2026-11-23']));
+    (new Uploads($config, $store))->addFromPath($id, dirname(__DIR__, 2) . '/reference/source-documents/example2/авиа.pdf', 'invoice.pdf', $typed['dataRevision'],false,'kind-04021');
     $ocrCalls = 0; $mappingCalls = 0;
     $client = new MistralClient($config, function (string $url, array $body) use (&$ocrCalls, &$mappingCalls): array {
         if (str_ends_with($url, '/ocr')) { $ocrCalls++; return ['status' => 200, 'body' => json_encode(['pages' => [['index' => 0, 'markdown' => 'Invoice ETHYL ACETATE']]])]; }
@@ -47,7 +48,7 @@ test('the existing OCR and mapping pipeline fills TN VED from a cited English na
     same('reference', $state['draft']['fieldStates']['goods/goods-1/commodityCode']['status']);
 });
 
-test('parallel OCR checkpoints survive one failed document and mapping waits for every document', function (): void {
+test('parallel OCR checkpoints survive a terminal failure and retry reuses successful OCR', function (): void {
     $config = new Config(['runtime_dir' => sys_get_temp_dir() . '/customs-test-' . bin2hex(random_bytes(8)), 'mistral_api_key' => 'test-placeholder']);
     $store = new SessionStore($config); $session = $store->create(); $id = $session['state']['id'];
     $directory = $store->directory($id);
@@ -70,14 +71,14 @@ test('parallel OCR checkpoints survive one failed document and mapping waits for
             }
             return ['status' => 200, 'body' => json_encode(['pages' => [['index' => 0, 'markdown' => $name]]])];
         }
-        foreach ($store->read($id)['documents'] as $document) same('recognized', $document['status']);
         $mappingCalls++;
         return ['status' => 200, 'body' => json_encode(['choices' => [['finish_reason' => 'stop', 'message' => ['content' => json_encode(['entities' => [], 'candidates' => [], 'classificationQueries' => [], 'warnings' => []])]]]])];
     });
     $pipeline = new Pipeline($config, $store, $client);
     $pipeline->start($id); $pipeline->tick();
     same(['first' => 1, 'second' => 1], $calls);
-    same(0, $mappingCalls);
+    truth($mappingCalls > 0);
+    same('reviewing',$store->read($id)['phase']);
     same('error', $store->read($id)['documents']['second']['status']);
     $pipeline->start($id, true); $pipeline->tick();
     same(['first' => 1, 'second' => 2], $calls);
@@ -89,7 +90,8 @@ test('parallel OCR checkpoints survive one failed document and mapping waits for
 test('complete extraction pipeline maps from OCR, preserves manual changes and never reruns cached OCR on remap', function (): void {
     $config=new Config(['runtime_dir'=>sys_get_temp_dir().'/customs-test-'.bin2hex(random_bytes(8)),'mistral_api_key'=>'test-placeholder']);
     $store=new SessionStore($config); $session=$store->create(); $id=$session['state']['id'];
-    $state=(new Uploads($config,$store))->addFromPath($id,dirname(__DIR__,2).'/reference/source-documents/example2/авиа.pdf','test.pdf',0);
+    $typed=$store->mutate($id,0,fn($s)=>(new Customs\Documents\UploadGroups())->change($s,['code'=>'04021','version'=>'378-2026-11-23']));
+    $state=(new Uploads($config,$store))->addFromPath($id,dirname(__DIR__,2).'/reference/source-documents/example2/авиа.pdf','test.pdf',$typed['dataRevision'],false,'kind-04021');
     $documentId=array_key_first($state['documents']); $ocrCalls=0; $mappingCalls=0;
     $client=new MistralClient($config,function(string $url,array $body)use(&$ocrCalls,&$mappingCalls,$documentId):array{
         if(str_ends_with($url,'/ocr')) {

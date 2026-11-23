@@ -35,6 +35,18 @@ test('real HTTP adds review rows, renews activity cookies and retains documents 
     const document=join(sessionRoot,'documents','a'.repeat(32)+'.pdf');const ocr=join(sessionRoot,'ocr','source.json');
     const originalDocument=await readFile(document);const originalOcr=await readFile(ocr);
     assert.equal(state.expiresAt,initial+120);
+    const invoiceId=state.draft.documents.find(doc=>doc.kind==='04021').id;
+    result=await call('/api/entities','POST',{revision:state.dataRevision,scope:'document',action:'required',kind:'04021',fieldId:'document.number',value:'HTTP-INVOICE'});
+    assert.equal(result.response.status,200,JSON.stringify(result.payload));state=result.payload;
+    assert.equal(state.draft.documents.length,2);assert.equal(state.draft.documents.find(doc=>doc.id===invoiceId).number,'HTTP-INVOICE');
+    const contractId=state.draft.documents.find(doc=>doc.kind==='03011').id;
+    result=await call('/api/entities','POST',{revision:state.dataRevision,scope:'document',action:'remove',id:contractId});assert.equal(result.response.status,200);state=result.payload;
+    result=await call('/api/session');state=result.payload;assert.equal(state.draft.documents.length,1,'Opening the form must not persist fake documentary records');
+    for(const [fieldId,value] of [['document.number','HTTP-CONTRACT'],['document.date','2026-10-28']]) {
+      result=await call('/api/entities','POST',{revision:state.dataRevision,scope:'document',action:'required',kind:'03011',fieldId,value});
+      assert.equal(result.response.status,200,JSON.stringify(result.payload));state=result.payload;assert.equal(state.draft.documents.length,2);
+    }
+    assert.equal(state.draft.documents.find(doc=>doc.kind==='03011').number,'HTTP-CONTRACT');
     await writeFile(join(root,'clock'),String(initial+110));
     result=await call('/api/session');assert.equal(result.payload.expiresAt,initial+120,'Polling must not renew server TTL');
     result=await call('/api/draft','PATCH',{revision:state.dataRevision,changes:[{fieldId:'party.name',entityId:'party-seller',value:'Ручная правка без перезагрузки'}]});
@@ -43,6 +55,10 @@ test('real HTTP adds review rows, renews activity cookies and retains documents 
     const expires=/expires=([^;]+)/i.exec(result.header);assert.ok(expires);assert.equal(Date.parse(expires[1])/1000,state.expiresAt);
     await writeFile(join(root,'clock'),String(initial+130));
     result=await call('/api/session');assert.equal(result.response.status,200,'The original two-minute deadline must not end an active session');state=result.payload;
+    result=await call('/api/draft','PATCH',{revision:state.dataRevision,changes:[{fieldId:'declaration.invoiceCurrency',value:'KRW'}]});assert.equal(result.response.status,200);state=result.payload;
+    result=await call('/api/rates','POST',{revision:state.dataRevision});assert.equal(result.response.status,200,JSON.stringify(result.payload));state=result.payload;
+    const won=state.draft.rates.find(rate=>rate.currency==='KRW');assert.equal(won.value,'34.32');assert.equal(won.nominal,'100');assert.equal(won.confirmed,true);
+    assert.equal(state.exchangeRates.date,'2026-10-28');assert.equal(state._nbkCache,undefined);
     for(const [scope,collection] of [['rate','rates'],['cost','costs'],['payment','payments']]) {
       const count=state.draft[collection].length;
       result=await call('/api/entities','POST',{revision:state.dataRevision,scope,action:'add'});

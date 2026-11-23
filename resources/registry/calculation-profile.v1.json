@@ -67,7 +67,7 @@
     }
   ],
   "exchangeRatePolicy": {
-    "dateField": "declaration.calculationDate",
+    "dateField": "declaration.signatureDate",
     "quote": "KZT per nominal units",
     "formula": "amount * value / nominal",
     "requireFor": [
@@ -76,7 +76,12 @@
       "costCurrencies",
       "specificDutyCurrency"
     ],
-    "requireConfirmed": true
+    "requireConfirmed": true,
+    "autoProvider": "nationalbank.kz/rss/get_rates.cfm",
+    "requireExactProviderDate": true,
+    "preserveNominal": true,
+    "manualOverrideRequiresBasis": true,
+    "autoConfirmedOfficialRate": true
   },
   "method1Formula": "basisKzt + additionsKzt - deductionsKzt",
   "statisticalFormula": "(basisOnBorderKzt + statisticalAddition - statisticalDeduction) / usdKztPerUnit",

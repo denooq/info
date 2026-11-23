@@ -37,9 +37,9 @@ final class SessionStore
             'id' => $id, 'createdAt' => $now, 'expiresAt' => $now + $this->config->get('session_ttl'),
             'dataRevision' => 0, 'phase' => 'uploading', 'csrfToken' => bin2hex(random_bytes(24)),
             'documents' => [], 'candidates' => [], 'evidence' => [], 'jobs' => [],
-            'draft' => (new \Customs\Domain\Draft(new \Customs\Domain\Registry()))->empty(),
+            'draft' => (new \Customs\Domain\Draft(new \Customs\Domain\Registry()))->empty($now),
             'calculation' => null, 'confirmed' => null, 'artifactSet' => null, 'error' => null,
-            'registryVersion' => '0.1.0',
+            'registryVersion' => '2.0.0','schemaVersion'=>2,'profile'=>'im40-kz-graphs','uploadGroups'=>[],
         ];
         $this->writeState($directory, $state);
         return ['token' => $token, 'state' => $state];
@@ -80,6 +80,7 @@ final class SessionStore
                 $changed['artifactSet'] = null;
                 if (!in_array($changed['phase'], ['uploading','recognizing'], true)) $changed['phase'] = 'reviewing';
             } else $changed['dataRevision'] = $state['dataRevision'];
+            $changed['draft']=\Customs\Domain\GraphDefaults::apply(\Customs\Domain\DeclarationDate::defaults($changed['draft'],$this->now()));
             $this->writeState($this->directory($id), $changed);
             return $changed;
         } finally { flock($handle, LOCK_UN); fclose($handle); }
@@ -104,12 +105,17 @@ final class SessionStore
 
     public function publicView(array $state): array
     {
-        $copy = array_intersect_key($state, array_flip(['createdAt','expiresAt','dataRevision','phase','csrfToken','draft','candidates','evidence','calculation','error','registryVersion','mappingIssues']));
-        $copy['documents'] = array_map(fn(array $doc): array => array_intersect_key($doc, array_flip(['id','name','mime','size','pages','status','error','kind'])), array_values($state['documents']));
+        $copy = array_intersect_key($state, array_flip(['createdAt','expiresAt','dataRevision','phase','csrfToken','draft','candidates','evidence','calculation','error','registryVersion','mappingIssues','exchangeRates']));
+        $copy['capabilities']=['nbkRates'=>true,'graphs'=>true,'export'=>false];
+        $copy['profile']='im40-kz-graphs';$copy['uploadGroups']=array_values($state['uploadGroups']??[]);
+        $copy['graphProjection']=(new \Customs\Domain\GraphProjection())->project($state);
+        $copy['documents'] = array_map(fn(array $doc): array => array_intersect_key($doc, array_flip(['id','name','mime','size','pages','status','error','kind','groupId','documentKind','classifierVersion'])), array_values($state['documents']));
         $copy['jobs'] = array_map(fn(array $job): array => array_intersect_key($job, array_flip(['id','kind','documentId','chunkStart','status','attempts','nextAttemptAt','error'])), array_values($state['jobs']));
-        $copy['ready'] = $state['artifactSet'] !== null && ($state['artifactSet']['revision'] ?? -1) === $state['dataRevision'];
+        $copy['ready'] = false;
         $copy['limits'] = $this->config->clientLimits();
-        $copy['validation'] = (new \Customs\Domain\Validator(new \Customs\Domain\Registry()))->validate($state);
+        $copy['reviewValidation']=(new \Customs\Domain\ReviewValidator())->validate($state);
+        $copy['calculationValidation']=(new \Customs\Domain\Validator(new \Customs\Domain\Registry()))->validate($state);
+        $copy['validation']=$copy['reviewValidation'];
         return $copy;
     }
 
@@ -175,7 +181,7 @@ final class SessionStore
         catch (\JsonException) { throw new ApiError('STORAGE_ERROR', 'Не удалось прочитать состояние сессии.', 503); }
         if (!is_array($state) || ($state['id'] ?? null) !== $id) throw new ApiError('STORAGE_ERROR', 'Неверное состояние сессии.', 503);
         if ($this->now() >= $state['expiresAt']) throw new ApiError('SESSION_EXPIRED', 'Срок сессии истёк. Загрузите документы заново.', 410);
-        return $state;
+        return SessionMigration::upgrade($state);
     }
 
     private function lock(string $id, int $mode)

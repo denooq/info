@@ -4,12 +4,13 @@ import { ApiError, request } from './api';
 import { UploadPage } from './UploadPage';
 import { ReviewPage } from './ReviewPage';
 import { CalculationPage } from './CalculationPage';
-import { ResultPage } from './ResultPage';
 import type { Session, Registry, FieldChange } from './types';
+import {rateRequestKey,ratesComplete} from './ExchangeRates';
 import './style.css';
 
 function App() {
   const [session,setSession]=useState<Session|null>(null); const current=useRef<Session|null>(null);
+  const [ratesLoading,setRatesLoading]=useState(false);const [ratesError,setRatesError]=useState('');const lastRateRequest=useRef<string|null>(null);
   const [busy,setBusy]=useState(false); const blocking=useRef(0); const tail=useRef<Promise<unknown>>(Promise.resolve());
   const [errors,setErrors]=useState<string[]>([]); const [fatal,setFatal]=useState<string|null>(null);
   const [connection,setConnection]=useState<{code:string;message:string}|null>(null);
@@ -48,7 +49,7 @@ function App() {
   useEffect(()=>{void request<Registry>('/api/registry').then(setRegistry).catch(e=>setFatal(e.message));},[]);
   useEffect(()=>{if(session?.phase==='reviewing')setPage(p=>p==='calculation'?p:null);},[session?.phase]);
   useEffect(()=>{
-    if(!session || !['recognizing','generating'].includes(session.phase) || (session.error && !session.jobs.some(job=>['queued','running'].includes(job.status))))return;
+    if(!session || session.phase!=='recognizing' || (session.error && !session.jobs.some(job=>['queued','running'].includes(job.status))))return;
     const timer=window.setInterval(()=>{
       // A poll must not replace a newer successful edit with an older response.
       const revision=current.current?.dataRevision;
@@ -58,6 +59,17 @@ function App() {
     },2500);
     return ()=>window.clearInterval(timer);
   },[session?.phase,session?.jobs,update]);
+  async function refreshRates(force=false) {
+    setRatesLoading(true);setRatesError('');
+    try {await mutate(active=>request<Session>('/api/rates',{method:'POST',body:JSON.stringify({revision:active.dataRevision,force})},active.csrfToken),false);}
+    catch(error){setRatesError((error as Error).message);}finally{setRatesLoading(false);}
+  }
+  const rateKey=session?.capabilities?.nbkRates && ['reviewing','calculation','calculated'].includes(session.phase)?rateRequestKey(session):null;
+  useEffect(()=>{
+    if(!rateKey || !session || ratesLoading || lastRateRequest.current===rateKey)return;
+    lastRateRequest.current=rateKey;
+    if(!ratesComplete(session))void refreshRates();
+  },[rateKey,ratesLoading]);
   async function reconnect() {
     setErrors([]);
     try {await mutate(()=>request<Session>('/api/session'));} catch { /* Keep the current form and its unsaved inputs. */ }
@@ -67,12 +79,12 @@ function App() {
     try {await tail.current;update(await request<Session>('/api/session',{method:'POST'}));setConnection(null);setErrors([]);setPage('upload');}
     catch(error){setErrors([(error as Error).message]);}finally{stopBlocking();}
   }
-  async function upload(files:File[]) {
+  async function upload(files:File[],groupId:string) {
     if(!current.current || busy || files.length===0)return;
     startBlocking();const failures:string[]=[];setErrors([]);
     try {
       for(const file of files)try {
-        await mutate(active=>{const body=new FormData();body.set('revision',String(active.dataRevision));body.set('file',file);return request<Session>('/api/documents',{method:'POST',body},active.csrfToken);},false);
+        await mutate(active=>{const body=new FormData();body.set('revision',String(active.dataRevision));body.set('groupId',groupId);body.set('file',file);return request<Session>('/api/documents',{method:'POST',body},active.csrfToken);},false);
       }catch(error){failures.push(`${file.name}: ${(error as Error).message}`);}
       setErrors(failures);
     }finally{stopBlocking();}
@@ -80,6 +92,16 @@ function App() {
   async function remove(id:string) {
     setErrors([]);
     try {await mutate(active=>request<Session>(`/api/documents/${id}`,{method:'DELETE',body:JSON.stringify({revision:active.dataRevision})},active.csrfToken));}
+    catch(error){setErrors([(error as Error).message]);}
+  }
+  async function group(body:Record<string,unknown>) {
+    setErrors([]);
+    try{await mutate(active=>request<Session>('/api/upload-groups',{method:'POST',body:JSON.stringify({...body,revision:active.dataRevision})},active.csrfToken));}
+    catch(error){setErrors([(error as Error).message]);throw error;}
+  }
+  async function assign(fileId:string,groupId:string) {
+    setErrors([]);
+    try{await mutate(active=>request<Session>(`/api/documents/${fileId}/type`,{method:'PATCH',body:JSON.stringify({revision:active.dataRevision,groupId})},active.csrfToken));}
     catch(error){setErrors([(error as Error).message]);}
   }
   async function recognize() {
@@ -90,7 +112,9 @@ function App() {
   async function change(change:FieldChange) {
     setErrors([]);
     // Blur saves are queued without disabling the button the user is clicking.
-    await mutate(active=>request<Session>('/api/draft',{method:'PATCH',body:JSON.stringify({revision:active.dataRevision,changes:[change]})},active.csrfToken),false);
+    await mutate(active=>change.requiredDocumentKind||change.recordKind
+      ?request<Session>('/api/entities',{method:'POST',body:JSON.stringify({revision:active.dataRevision,scope:'document',action:change.recordKind?'record':'required',kind:change.recordKind??change.requiredDocumentKind,fieldId:change.fieldId,value:change.value})},active.csrfToken)
+      :request<Session>('/api/draft',{method:'PATCH',body:JSON.stringify({revision:active.dataRevision,changes:[change]})},active.csrfToken),false);
   }
   async function entity(body:Record<string,unknown>) {
     setErrors([]);
@@ -101,23 +125,27 @@ function App() {
     try {await mutate(active=>request<Session>('/api/calculate',{method:'POST',body:JSON.stringify({revision:active.dataRevision})},active.csrfToken));setPage('calculation');}
     catch(error){setErrors([(error as Error).message]);}
   }
+  async function validate() {
+    setErrors([]);
+    try {await mutate(()=>request<Session>('/api/session'));}
+    catch(error){setErrors([(error as Error).message]);}
+  }
   async function propose(id:string,key:string,value:string|null) {
     await mutate(active=>request<Session>('/api/calculation',{method:'PATCH',body:JSON.stringify({revision:active.dataRevision,entityId:id,key,value})},active.csrfToken));
   }
-  async function create() {
+  async function enterCalculation() {
     setErrors([]);
-    try {
-      await mutate(active=>{
-        const calculation=active.calculation as {hash:string}|null;
-        if(!calculation)throw new ApiError('CALC_STALE','Данные изменились. Пересчитайте декларацию.',409,null);
-        return request<Session>('/api/confirm',{method:'POST',body:JSON.stringify({revision:active.dataRevision,calculationHash:calculation.hash})},active.csrfToken);
-      });setPage(null);
-    }catch(error){setErrors([(error as Error).message]);}
+    try{await mutate(active=>request<Session>('/api/review/complete',{method:'POST',body:JSON.stringify({revision:active.dataRevision})},active.csrfToken));setPage('calculation');}
+    catch(error){setErrors([(error as Error).message]);}
   }
-  const step=session?.phase==='reviewing'?2:session?.phase==='calculated'?3:['ready','generating'].includes(session?.phase??'')?4:1;
-  return <main><header className="app-header"><span className="brand">Декларация ИМ 40</span><nav aria-label="Этапы подготовки">{['Документы','Проверка','Расчёт','Результат'].map((label,index)=><span key={label} className={index+1===step?'active':''} aria-current={index+1===step?'step':undefined}>{index+1}. {label}</span>)}</nav></header>
+  const step=page==='upload'?1:page==='review'?2:page==='calculation'?3:['calculation','calculated'].includes(session?.phase??'')?3:session?.phase==='reviewing'?2:1;
+  return <main><header className="app-header"><span className="brand">Декларация ИМ 40</span><nav aria-label="Этапы подготовки">{['Документы','Проверка','Расчёт'].map((label,index)=><span key={label} className={index+1===step?'active':''} aria-current={index+1===step?'step':undefined}>{index+1}. {label}</span>)}</nav></header>
     {connection && <div className="notice error session-connection" role="alert"><p>{connection.message}</p><p>{connection.code==='SESSION_EXPIRED'?'Серверные данные этой временной сессии больше недоступны. Новая сессия начнётся только по вашей кнопке.':'Откройте приложение по прежнему адресу и проверьте, что cookies разрешены. Проверка соединения не запускает повторное распознавание.'}</p><button className="secondary" disabled={busy} onClick={()=>void reconnect()}>Проверить сессию</button>{connection.code==='SESSION_EXPIRED' && <button className="text-button" disabled={busy} onClick={()=>void newSession()}>Начать новую сессию</button>}</div>}
-    {fatal?<div className="notice error" role="alert"><p>{fatal}</p><button className="primary" onClick={()=>{void initialize();void request<Registry>('/api/registry').then(setRegistry).catch(e=>setFatal(e.message));}}>Повторить подключение</button></div>:!session || !registry?<p className="loading" role="status">Подготавливаем временную сессию…</p>:page===null && ['ready','generating'].includes(session.phase)?<ResultPage session={session} busy={busy} onBack={()=>setPage('review')} onRetry={()=>void create()}/>:page==='calculation' || (page===null && session.phase==='calculated')?<CalculationPage session={session} registry={registry} busy={busy} errors={errors} onChange={change} onRecalculate={()=>void calculate()} onPropose={propose} onBack={()=>setPage('review')} onCreate={()=>void create()}/>:page!=='upload' && (session.phase==='reviewing' || page==='review')?<ReviewPage session={session} registry={registry} busy={busy} onChange={change} onEntity={entity} onBack={()=>setPage('upload')} onCalculate={()=>void calculate()} errors={errors}/>:<><UploadPage session={session} busy={busy} errors={errors} onUpload={files=>void upload(files)} onRemove={id=>void remove(id)} onRecognize={()=>void recognize()}/>{session.phase==='reviewing' && <button className="primary" onClick={()=>setPage('review')}>К проверке данных</button>}</>}
+    {fatal?<div className="notice error" role="alert"><p>{fatal}</p><button className="primary" onClick={()=>{void initialize();void request<Registry>('/api/registry').then(setRegistry).catch(e=>setFatal(e.message));}}>Повторить подключение</button></div>
+      :!session||!registry?<p className="loading" role="status">Подготавливаем временную сессию…</p>
+      :page==='calculation'||(page===null&&['calculation','calculated'].includes(session.phase))?<CalculationPage session={session} registry={registry} busy={busy} errors={errors} onChange={change} onEntity={entity} onRecalculate={()=>void calculate()} onPropose={propose} onBack={()=>setPage('review')} onRates={()=>void refreshRates(true)} ratesLoading={ratesLoading} ratesError={ratesError}/>
+      :page!=='upload'&&(session.phase==='reviewing'||page==='review')?<ReviewPage session={session} registry={registry} busy={busy} onChange={change} onEntity={entity} onBack={()=>setPage('upload')} onCalculate={()=>void enterCalculation()} onValidate={()=>void validate()} onRates={()=>void refreshRates(true)} ratesLoading={ratesLoading} ratesError={ratesError} errors={errors}/>
+      :<><UploadPage session={session} busy={busy} errors={errors} onUpload={(files,groupId)=>void upload(files,groupId)} onGroup={group} onAssign={assign} onRemove={id=>void remove(id)} onRecognize={()=>void recognize()}/>{['reviewing','calculated','calculation'].includes(session.phase)&&<button className="primary" onClick={()=>setPage('review')}>К проверке данных</button>}</>}
   </main>;
 }
 

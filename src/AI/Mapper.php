@@ -8,7 +8,7 @@ use Customs\Http\ApiError;
 
 final class Mapper
 {
-    public const PROMPT_VERSION = 'customs-mapping-v5-tnved-query';
+    public const PROMPT_VERSION = 'customs-mapping-v7-shared-catalogs';
     public function __construct(private readonly MistralClient $client, private readonly Registry $registry) {}
 
     public function request(array $sources, ?array $fieldIds = null, array $knownGoods = []): array
@@ -31,14 +31,18 @@ final class Mapper
         if ($blocks === []) return ['entities' => [],'candidates' => [],'warnings' => []];
         $prompt = file_get_contents(dirname(__DIR__, 2) . '/resources/prompts/mapping.v1.txt');
         $catalogs = Registry::resource('catalogs');
-        $fieldContext = [];
+        $fieldContext = []; $catalogContext=[];
         foreach ($fields as $field) {
             $item = array_intersect_key($field, array_flip(['id','scope','label','type','unit','sourceHints','values','validWhen']));
+            $item['graphs']=array_values(array_map(fn($g)=>['id'=>$g['id'],'title'=>$g['title'],'priorities'=>$g['priorities'],'entityRole'=>$g['entityRole']??null],array_filter((new \Customs\Domain\GraphRegistry())->graphs(),fn($g)=>in_array($field['id'],$g['fieldBindings'],true))));
             $catalog = $catalogs['fieldCatalogs'][$field['id']] ?? null;
-            if ($catalog !== null) $item['knownCodes'] = array_map(static fn(array $entry): array => array_intersect_key($entry, array_flip(['code','label','aliases'])), $catalogs['lists'][$catalog]);
+            if ($catalog !== null) {
+                $codes=array_map(static fn(array $entry): array => array_intersect_key($entry, array_flip(['code','label','aliases'])), $catalogs['lists'][$catalog]);
+                if(count($codes)>40){$item['catalogRef']=$catalog;$catalogContext[$catalog]=$codes;}else $item['knownCodes']=$codes;
+            }
             $fieldContext[] = $item;
         }
-        $input = json_encode(['fields' => $fieldContext, 'knownGoods' => $knownGoods, 'sources' => $blocks], JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
+        $input = json_encode(['graphVersion'=>(new \Customs\Domain\GraphRegistry())->data()['version'],'classifierVersion'=>(new \Customs\Domain\Classifiers())->version(),'fields' => $fieldContext,'catalogs'=>$catalogContext, 'knownGoods' => $knownGoods, 'sources' => $blocks], JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
         if (strlen($input) > 600_000) throw new ApiError('MAPPING_CONTEXT_LIMIT', 'Требуется разбиение сопоставления на части.');
         $response = $this->client->structured($prompt, $input, $wireSchema);
         $choice = $response['choices'][0] ?? null;
@@ -70,13 +74,13 @@ final class Mapper
                 if (trim($block['text']) === '') continue;
                 $id = 's' . (count($references) + 1);
                 $references[$id] = ['documentId' => $source['documentId'],'page' => $page['page'],'blockId' => $block['id'],'sheet' => null,'cell' => null];
-                $blocks[] = ['sourceId' => $id,'document' => $source['name'], 'allowsNewGoods' => $allowsNewGoods, 'page' => $page['page'],'text' => $block['text']];
+                $blocks[] = ['sourceId' => $id,'document' => $source['name'],...array_intersect_key($source,array_flip(['documentKind','classifierVersion','sourceRole'])), 'allowsNewGoods' => $allowsNewGoods, 'page' => $page['page'],'text' => $block['text']];
             }
             foreach ($source['sheets'] ?? [] as $sheet) foreach ($sheet['cells'] as $cell => $data) {
                 if ($data['value'] === null || $data['value'] === '') continue;
                 $id = 's' . (count($references) + 1);
                 $references[$id] = ['documentId' => $source['documentId'],'page' => null,'blockId' => null,'sheet' => $sheet['name'],'cell' => $cell];
-                $blocks[] = ['sourceId' => $id,'document' => $source['name'], 'allowsNewGoods' => $allowsNewGoods, 'sheet' => $sheet['name'],'cell' => $cell,'text' => (string) $data['value']];
+                $blocks[] = ['sourceId' => $id,'document' => $source['name'],...array_intersect_key($source,array_flip(['documentKind','classifierVersion','sourceRole'])), 'allowsNewGoods' => $allowsNewGoods, 'sheet' => $sheet['name'],'cell' => $cell,'text' => (string) $data['value']];
             }
         }
         return [$blocks,$references];
