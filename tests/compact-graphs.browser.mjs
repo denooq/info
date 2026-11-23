@@ -5,6 +5,26 @@ import {graphServer} from './support/graph-server.mjs';
 
 async function seed(page,count=2){await page.goto('/');await page.getByRole('heading',{name:'Подготовьте декларацию ИМ 40',exact:true}).waitFor();await page.evaluate(async n=>{const s=await(await fetch('/api/session')).json();const response=await fetch('/fixture/seed',{method:'POST',headers:{'Content-Type':'application/json','X-CSRF-Token':s.csrfToken},body:JSON.stringify({goodsCount:n})});if(!response.ok)throw Error(await response.text());},count);await page.reload();await page.locator('#graph-2').waitFor();}
 
+test('empty and unmatched goods and legacy source metadata do not crash review',async()=>{
+  const server=await graphServer();const browser=await chromium.launch({channel:'msedge',headless:true,timeout:10000});
+  try {
+    const page=await browser.newPage({baseURL:server.base,viewport:{width:1440,height:960}});const errors=[];page.on('pageerror',error=>errors.push(error.message));await seed(page,1);
+    await page.getByRole('button',{name:'Добавить товар',exact:true}).click();
+    const selector=page.getByRole('combobox',{name:'Товар для граф 31–47'});await expect(selector.locator('option')).toHaveCount(2);
+    const id=await selector.locator('option').last().getAttribute('value');await selector.selectOption(id);
+    await expect(page.locator('#graph-33 input')).toHaveValue('');await expect(page.locator('#graph-33')).toContainText('Укажите описание товара');
+    const description=page.locator('#graph-31 textarea');await description.fill('неттакоготовара xyz123');await description.blur();
+    await expect(page.locator('#graph-33')).toContainText('Код по этому наименованию не найден');await expect(page.locator('.graphs-grid > .graph-card')).toHaveCount(54);
+    await page.reload();await selector.selectOption(id);await expect(description).toHaveValue('неттакоготовара xyz123');
+    // Older sessions can carry TN VED lookup information without a list of citations.
+    for(const evidenceIds of [undefined,null]) {
+      await page.route('**/api/session',async route=>{const response=await route.fetch();const s=await response.json();s.capabilities.nbkRates=false;for(const meta of Object.values(s.draft.fieldStates))meta.evidenceIds=evidenceIds;await route.fulfill({response,json:s});},{times:1});
+      await page.reload();await selector.selectOption(id);await expect(page.locator('#graph-33 input')).toHaveValue('');await expect(description).toHaveValue('неттакоготовара xyz123');
+    }
+    assert.deepEqual(errors,[]);
+  }finally{await browser.close();await server.stop();}
+});
+
 test('every graph has identical framed dimensions at desktop mobile and enlarged zoom',async()=>{
   const server=await graphServer();const browser=await chromium.launch({channel:'msedge',headless:true,timeout:10000});
   try{

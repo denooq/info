@@ -7,6 +7,21 @@ use Customs\Domain\Registry;
 use Customs\Domain\TnvedCatalogue;
 use Customs\Domain\TnvedSuggestions;
 
+test('empty unmatched and existing TN VED values always retain complete source metadata', function (): void {
+    $service=new TnvedSuggestions();
+    foreach([''=>'missing_name','неттакоготовара xyz123'=>'not_found'] as $description=>$expected) {
+        $state=sessionFixture()->create()['state'];$state['draft']['goods'][0]['description']=$description;
+        $state=$service->apply($state);$address='goods/goods-1/commodityCode';$meta=$state['draft']['fieldStates'][$address];
+        same($expected,$meta['tnved']['status']);same([],$meta['evidenceIds']??null);same('unknown',$meta['status']??null);same(false,$meta['conflict']??null);
+        // Legacy sessions may have cached the lookup before source metadata was populated.
+        unset($state['draft']['fieldStates'][$address]['evidenceIds'],$state['draft']['fieldStates'][$address]['status']);
+        $state=$service->apply($state);same([],$state['draft']['fieldStates'][$address]['evidenceIds']??null);
+        same('unknown',$state['draft']['fieldStates'][$address]['status']??null);same(null,$state['draft']['goods'][0]['commodityCode']);same([],$state['candidates']);
+    }
+    $state=sessionFixture()->create()['state'];$state['draft']['goods'][0]['description']='Этилацетат';$state['draft']['goods'][0]['commodityCode']='2915310000';
+    $state=$service->apply($state);same('2915310000',$state['draft']['goods'][0]['commodityCode']);same([],$state['draft']['fieldStates']['goods/goods-1/commodityCode']['evidenceIds']??null);
+});
+
 test('TN VED catalogue preserves terminal codes, leading zeros, source metadata and the supplied source hash', function (): void {
     $catalogue = new TnvedCatalogue();
     same(18014, $catalogue->metadata()['record_count']); same(13294, $catalogue->metadata()['leaf_count']);

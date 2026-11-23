@@ -17,7 +17,9 @@ final class TnvedSuggestions
             if ($goodsIds !== null && !in_array($id, $goodsIds, true)) continue;
             $description = trim((string) ($goods['description'] ?? ''));
             $address = Draft::address('goods', $id, 'commodityCode');
-            $meta = $state['draft']['fieldStates'][$address] ?? [];
+            $meta = array_replace(DeclarationDate::meta('unknown'), $state['draft']['fieldStates'][$address] ?? []);
+            $meta['evidenceIds'] ??= [];
+            $state['draft']['fieldStates'][$address] = $meta;
             $wasReference = ($meta['status'] ?? '') === 'reference';
             $query = $state['tnvedQueries'][$id][TnvedCatalogue::normalize($description)] ?? null;
             if ($query !== null && array_diff($query['evidenceIds'], array_keys($state['evidence'])) !== []) $query = null;
