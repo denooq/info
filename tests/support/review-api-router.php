@@ -15,6 +15,7 @@ if($_SERVER['REQUEST_METHOD']==='GET'&&($assetPath==='/'||str_starts_with($asset
 header('Content-Type: application/json; charset=utf-8');header('Cache-Control: no-store');
 try {
     $path=parse_url($_SERVER['REQUEST_URI'],PHP_URL_PATH);$method=$_SERVER['REQUEST_METHOD'];
+    if($path==='/api/documents'&&$method==='POST')file_put_contents($runtime.'/last-upload.json',json_encode(['groupId'=>$_POST['groupId']??null,'revision'=>$_POST['revision']??null,'name'=>$_FILES['file']['name']??null,'uploaded'=>is_uploaded_file($_FILES['file']['tmp_name']??'')],JSON_THROW_ON_ERROR));
     if($path==='/fixture/seed' && $method==='POST') {
         $state=$store->fromToken($_COOKIE['customs_session']??null);
         if(!hash_equals($state['csrfToken'],$_SERVER['HTTP_X_CSRF_TOKEN']??''))throw new Customs\Http\ApiError('CSRF_INVALID','Fixture CSRF',403);
@@ -29,6 +30,19 @@ try {
             return $state;
         });
         $result=$store->publicView($state);
+    } elseif($path==='/fixture/recognition'&&$method==='POST') {
+        $state=$store->fromToken($_COOKIE['customs_session']??null);
+        if(!hash_equals($state['csrfToken'],$_SERVER['HTTP_X_CSRF_TOKEN']??''))throw new Customs\Http\ApiError('CSRF_INVALID','Fixture CSRF',403);
+        $body=json_decode(file_get_contents('php://input'),true)??[];$stage=$body['stage']??'partial';
+        if(!in_array($stage,['partial','mapping','mapping-partial','success','partial-error','all-error','mapping-error'],true))throw new Customs\Http\ApiError('FIXTURE_STAGE','Unknown fixture stage',422);
+        $terminal=in_array($stage,['success','partial-error','all-error','mapping-error'],true);
+        $state=$store->mutate($state['id'],$state['dataRevision'],function($s)use($stage,$terminal,$config,$store){
+            $ids=array_keys($s['documents']);$failure=['code'=>'MISTRAL_REQUEST','message'=>'Проверочная конечная ошибка обработки.'];
+            foreach($ids as $i=>$id){$status=$stage==='all-error'||(in_array($stage,['partial-error','mapping-partial'],true)&&$i>0)?'error':($stage==='partial'&&$i>0?'recognizing':'recognized');$s['documents'][$id]['status']=$status;$s['documents'][$id]['error']=$status==='error'?$failure:null;}
+            foreach($s['jobs'] as &$job)if($job['kind']==='ocr'){$status=$s['documents'][$job['documentId']]['status'];$job['status']=match($status){'error'=>'failed','recognized'=>'done',default=>'running'};$job['error']=$status==='error'?$failure:null;}unset($job);
+            if(in_array($stage,['mapping','mapping-partial','success','partial-error','mapping-error'],true))$s['jobs']['fixture-mapping']=['id'=>'fixture-mapping','kind'=>'mapping','documentId'=>null,'fingerprint'=>(new Customs\Jobs\Queue($config,$store))->fingerprint($s,'mapping',null),'status'=>in_array($stage,['mapping','mapping-partial'],true)?'running':($stage==='mapping-error'?'failed':'done'),'error'=>$stage==='mapping-error'?$failure:null];
+            $s['phase']=$terminal?'reviewing':'recognizing';$s['error']=in_array($stage,['partial-error','all-error','mapping-error'],true)?$failure:null;return $s;
+        },$terminal);$result=$store->publicView($state);
     } elseif($path==='/fixture/candidates'&&$method==='POST') {
         $state=$store->fromToken($_COOKIE['customs_session']??null);if(!hash_equals($state['csrfToken'],$_SERVER['HTTP_X_CSRF_TOKEN']??''))throw new Customs\Http\ApiError('CSRF_INVALID','Fixture CSRF',403);
         $body=json_decode(file_get_contents('php://input'),true)??[];$count=($body['count']??1)===2?2:1;

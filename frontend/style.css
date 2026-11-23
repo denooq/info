@@ -153,6 +153,8 @@ input[type=checkbox] { accent-color: #245cf2; width: 16px; height: 16px; flex-sh
 .upload-group-heading { display: flex; gap: 10px; align-items: center; font-size: 12px; }
 .upload-group-heading > strong { flex: 1; overflow-wrap: anywhere; }
 .upload-group-heading .secondary { padding: 5px 10px; min-height: 28px; font-size: 12px; white-space: nowrap; }
+.upload-group-heading > .icon-button { height: 26px; width: 26px; flex-basis: 26px; font-size: 18px; }
+.upload-file-error { margin: 4px 0; font-size: 11px; overflow-wrap: anywhere; }
 .upload-group .file-list { margin: 5px 0; }
 .upload-group .file-row { padding: 5px 0; min-height: 30px; }
 .upload-group .file-name { font-size: 12px; }

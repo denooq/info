@@ -89,7 +89,11 @@ final class Queue
                                 if ($job['status'] === 'running' && $job['leaseUntil'] <= $this->store->now()) {
                                     $job['status'] = $job['attempts'] >= $this->config->get('job_attempts') ? 'failed' : 'queued';
                                     $job['error'] = ['code' => 'JOB_INTERRUPTED','message' => 'Предыдущая обработка прервана.'];
-                                    if ($job['status'] === 'failed') $state['error'] = $job['error'];
+                                    if ($job['status'] === 'failed') {
+                                        $state['error'] = $job['error'];
+                                        if($job['kind']==='ocr'&&isset($state['documents'][$job['documentId']])){$state['documents'][$job['documentId']]['status']='error';$state['documents'][$job['documentId']]['error']=$job['error'];}
+                                        if($job['kind']==='mapping')$state['phase']='reviewing';
+                                    }
                                 }
                                 if ($job['status'] !== 'queued' || $job['nextAttemptAt'] > $this->store->now()) continue;
                                 try { $currentFingerprint = $this->fingerprint($state, $job['kind'], $job['documentId'], $job['chunkStart'] ?? 0); }

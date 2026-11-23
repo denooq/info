@@ -36,5 +36,9 @@ test('HTTP official selector groups multiple files, rejects invented codes and a
     r=await call(`/api/documents/${ids[1]}`,'DELETE',{revision:state.dataRevision});assert.equal(r.response.status,200);state=r.payload;assert.equal(state.documents.length,1);
     r=await call('/api/upload-groups','POST',{revision:state.dataRevision,id:'kind-04021',action:'remove'});assert.equal(r.response.status,200);assert.equal(r.payload.uploadGroups.length,1);
     assert.equal(r.payload.graphProjection.graphs.length,57);
+    state=r.payload;
+    r=await call('/api/upload-groups','POST',{revision:state.dataRevision-1,id:'kind-02017',action:'remove'});assert.equal(r.response.status,409);
+    r=await call('/api/session');assert.equal(r.payload.documents.length,1);state=r.payload;
+    r=await call('/api/upload-groups','POST',{revision:state.dataRevision,id:'kind-02017',action:'remove'});assert.equal(r.response.status,200);assert.equal(r.payload.documents.length,0);assert.equal(r.payload.uploadGroups.length,0);assert.equal(r.payload.dataRevision,state.dataRevision+1);
   }finally{if(child.exitCode===null){child.kill();await once(child,'exit');}await rm(root,{recursive:true,force:true});}
 });

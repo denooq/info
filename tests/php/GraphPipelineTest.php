@@ -19,3 +19,23 @@ test('duplicate bytes of the same official type keep two files but provide one m
     $pipeline=new Customs\AI\Pipeline($config,$store,new Customs\AI\MistralClient($config));$sources=(new ReflectionMethod($pipeline,'sources'))->invoke($pipeline,$s,$dir);
     same(2,count($s['documents']));same(1,count($sources));same('first',$sources[0]['documentId']);
 });
+
+test('a repeated start cannot requeue a failed file while another part of the current batch is active',function():void {
+    [$config,$store,$uploads,$s,$ids]=attachmentFixture();$pipeline=new Customs\AI\Pipeline($config,$store,new Customs\AI\MistralClient($config));
+    $s=$pipeline->start($s['id']);$keys=array_keys($s['jobs']);
+    $s=$store->mutate($s['id'],null,function($s)use($keys,$ids){$s['jobs'][$keys[0]]['status']='failed';$s['documents'][$ids[0]]['status']='error';return $s;},false);
+    $again=$pipeline->start($s['id'],true);same($s['jobs'],$again['jobs']);same($s['dataRevision'],$again['dataRevision']);
+});
+
+test('exhausted interrupted OCR and mapping leases reach terminal review instead of an endless recognizing phase',function():void {
+    foreach(['ocr','mapping'] as $kind) {
+        [$config,$store,$uploads,$s,$ids]=attachmentFixture();$queue=new Customs\Jobs\Queue($config,$store);
+        $s=$store->mutate($s['id'],null,function($s)use($kind){foreach($s['documents'] as &$d)$d['status']=$kind==='mapping'?'recognized':'recognizing';unset($d);return $s;},false);
+        if($kind==='ocr')foreach($ids as $id)$queue->enqueue($s['id'],'ocr',$id);else $queue->enqueue($s['id'],'mapping');
+        $store->mutate($s['id'],null,function($s)use($config){foreach($s['jobs'] as &$job){$job['status']='running';$job['leaseOwner']='interrupted';$job['attempts']=$config->get('job_attempts');$job['leaseUntil']=0;}unset($job);return $s;},false);
+        $client=new Customs\AI\MistralClient($config,fn()=>throw new RuntimeException('Exhausted work must not call a provider'));
+        (new Customs\AI\Pipeline($config,$store,$client))->tick(100,$s['id']);$after=$store->read($s['id']);same('reviewing',$after['phase']);
+        truth(!array_filter($after['jobs'],fn($j)=>in_array($j['status'],['running','queued'],true)));
+        if($kind==='ocr')foreach($after['documents'] as $document)same('error',$document['status']);
+    }
+});

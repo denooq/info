@@ -26,11 +26,16 @@ try {
     if($classifiers->country('KZ')['name']!=='КАЗАХСТАН'||(new Customs\Domain\TariffCatalogue())->get('2915310000')===null)throw new RuntimeException('Runtime catalog read failed');
     $config=new Customs\Config(['runtime_dir'=>$target.'/private-runtime','secure_cookie'=>false]);$store=new Customs\Storage\SessionStore($config);$session=$store->create();
     $view=$store->publicView($session['state']);if(count($view['graphProjection']['graphs'])!==57||$view['capabilities']['export']!==false||$view['ready'])throw new RuntimeException('Wrong session profile');
+    $uploads=new Customs\Documents\Uploads($config,$store);$state=$uploads->changeGroup($session['state']['id'],['code'=>'04021','version'=>$classifiers->version()],$session['state']['dataRevision']);
+    $png=$store->directory($state['id']).'/scratch/smoke.png';$image=imagecreatetruecolor(1,1);imagepng($image,$png);imagedestroy($image);
+    $state=$uploads->addFromPath($state['id'],$png,'smoke.png',$state['dataRevision'],false,'kind-04021');$file=reset($state['documents']);$revision=$state['dataRevision'];
+    $state=$uploads->changeGroup($state['id'],['action'=>'remove','id'=>'kind-04021'],$revision);
+    if($state['documents']!==[]||$state['uploadGroups']!==[]||$state['dataRevision']!==$revision+1||is_file($store->directory($state['id']).'/documents/'.$file['storageName']))throw new RuntimeException('Attachment row removal failed in release');
     $_COOKIE['customs_session']=$session['token'];$app=new Customs\Http\Application($config,$store);$reply=$app->handle('GET','/api/registry');if(count($reply['graphs']['graphs'])!==57)throw new RuntimeException('Registry API unavailable');
     try{$app->handle('GET','/api/download/pdf');throw new RuntimeException('Export enabled');}catch(Customs\Http\ApiError $error){if($error->errorCode!=='EXPORT_DISABLED')throw $error;}
     $index=file_get_contents($target.'/public/assets-app/index.html');preg_match_all('#(?:src|href)="(/assets-app/[^\"]+)"#',$index,$assets);
     if(count($assets[1])<2)throw new RuntimeException('Frontend entry missing');foreach($assets[1] as $asset)if(!is_file($target.'/public'.$asset))throw new RuntimeException('Frontend asset missing');
-    echo json_encode(['profile'=>$manifest['profile'],'manifestFiles'=>count($manifest['files']),'allHashesMatch'=>true,'graphs'=>57,'documentPositions'=>331,'countries'=>249,'runtimeWithoutReference'=>true,'exportDisabled'=>true,'frontendAssets'=>count($assets[1])],JSON_UNESCAPED_UNICODE|JSON_THROW_ON_ERROR).PHP_EOL;
+    echo json_encode(['profile'=>$manifest['profile'],'manifestFiles'=>count($manifest['files']),'allHashesMatch'=>true,'graphs'=>57,'documentPositions'=>331,'countries'=>249,'runtimeWithoutReference'=>true,'attachmentRowDeletion'=>true,'exportDisabled'=>true,'frontendAssets'=>count($assets[1])],JSON_UNESCAPED_UNICODE|JSON_THROW_ON_ERROR).PHP_EOL;
 } finally {
     // Only the exact verified temporary extraction directory is removed; never follow links.
     if(realpath($directory)!==$target||dirname($target)!==$base)throw new RuntimeException('Unsafe smoke cleanup');

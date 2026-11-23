@@ -9,6 +9,7 @@ final class UploadGroups
 {
     public function change(array $state, array $request): array
     {
+        self::requireMutable($state);
         $state['uploadGroups']??=[];$action=$request['action']??'add';$id=$request['id']??null;
         if($action==='remove') {
             if(!is_string($id)||!isset($state['uploadGroups'][$id]))throw new ApiError('UPLOAD_GROUP_UNKNOWN','Вид не добавлен в эту сессию.',404);
@@ -27,6 +28,7 @@ final class UploadGroups
     }
     public function assign(array $state,string $documentId,string $groupId):array
     {
+        self::requireMutable($state);
         if(!isset($state['documents'][$documentId]))throw new ApiError('DOCUMENT_NOT_FOUND','Файл не найден.',404);
         $state['documents'][$documentId]=array_replace($state['documents'][$documentId],self::identity($state,$groupId));
         return $state;
@@ -36,5 +38,10 @@ final class UploadGroups
         $group=$state['uploadGroups'][$groupId]??throw new ApiError('UPLOAD_GROUP_UNKNOWN','Сначала добавьте вид документа из классификатора.',422);
         (new Classifiers())->requireDocument($group['code'],$group['version']);
         return ['groupId'=>$groupId,'documentKind'=>$group['code'],'classifierVersion'=>$group['version']];
+    }
+
+    public static function requireMutable(array $state):void
+    {
+        foreach($state['jobs']??[] as $job)if(in_array($job['kind'],['ocr','mapping'],true)&&in_array($job['status'],['queued','running'],true))throw new ApiError('EXTRACTION_ACTIVE','Дождитесь завершения распознавания и заполнения граф, прежде чем менять вложения.',409);
     }
 }

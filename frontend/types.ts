@@ -1,4 +1,5 @@
 export type Value = string | number | boolean | null | string[];
+export type UploadFailure = {groupId:string;name:string;message:string};
 export type Entity = { id: string; [key: string]: unknown };
 export type FieldState = { status: string; candidateId: string | null; evidenceIds: string[]; conflict?: boolean; needsReview?: boolean; tnved?: { status: string; message: string; total?: number } };
 export type Candidate = { id: string; address: string; fieldId: string; entityId: string | null; value: Value; unit: string | null; valid: boolean; issues: string[]; evidenceIds: string[];rank?:number|null };

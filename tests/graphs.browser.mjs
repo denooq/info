@@ -7,14 +7,14 @@ test('official document selector supports code/name search, keyboard and multipl
   const server=await graphServer();const browser=await chromium.launch({channel:'msedge',headless:true,timeout:10000});
   try{
     const page=await browser.newPage({viewport:{width:1366,height:900}});await page.goto(server.base);
-    const search=page.getByRole('combobox',{name:'Вид документа',exact:true});await search.fill('04021');await page.getByRole('option').filter({hasText:'04021'}).waitFor();await search.press('Enter');await page.getByRole('button',{name:'+ Добавить',exact:true}).click();
+    const search=page.getByRole('combobox',{name:'Вид документа',exact:true});await search.fill('04021');await page.getByRole('option').filter({hasText:'04021'}).waitFor();await search.press('Enter');
     await page.locator('.upload-group').waitFor();await expect(page.locator('.upload-group')).toHaveCount(1);
     await page.locator('input[type=file]').setInputFiles(['reference/source-documents/example2/авиа.pdf','reference/source-documents/смр.pdf']);await expect(page.locator('.file-row')).toHaveCount(2);
     const geometry=await page.locator('.file-row').first().evaluate(el=>({height:el.getBoundingClientRect().height,font:getComputedStyle(el.querySelector('.file-name')).fontSize}));assert.ok(geometry.height<65);assert.equal(geometry.font,'12px');
     await expect(page.getByRole('button',{name:'Распознать документы',exact:true})).toBeEnabled();
     await page.locator('input[type=file]').setInputFiles({name:'broken.pdf',mimeType:'application/pdf',buffer:Buffer.from('not a PDF')});await expect(page.getByRole('alert')).toBeVisible();await expect(page.locator('.file-row')).toHaveCount(2);
     await search.fill('CMR');await expect(page.getByText('Совпадений нет.',{exact:true})).toBeVisible();
-    await search.fill('упаковочный');await page.getByRole('option').filter({hasText:'04131'}).click();await page.getByRole('button',{name:'+ Добавить',exact:true}).click();await expect(page.locator('.upload-group')).toHaveCount(2);
+    await search.fill('упаковочный');await page.getByRole('option').filter({hasText:'04131'}).click();await expect(page.locator('.upload-group')).toHaveCount(2);
     await expect(page.locator('.file-row')).toHaveCount(2);await expect(page.getByRole('button',{name:'Распознать документы',exact:true})).toBeEnabled();
     await page.getByRole('button',{name:'Удалить смр.pdf',exact:true}).click();await expect(page.locator('.file-row')).toHaveCount(1);
     await search.fill('');await page.getByRole('button',{name:/Показать ещё/}).waitFor();await page.getByRole('button',{name:/Показать ещё/}).click();await expect(page.getByRole('option')).toHaveCount(80);

@@ -119,6 +119,41 @@ final class SessionStore
         return $copy;
     }
 
+    /** Retry only server-recorded file removals; never accept these paths over HTTP. */
+    public function cleanupDeletedFiles(?string $onlySessionId=null):array
+    {
+        $removed=0;$errors=0;
+        $ids=$onlySessionId===null?array_map('basename',glob($this->root.'/sessions/*',GLOB_ONLYDIR)):[$onlySessionId];
+        foreach($ids as $id) {
+            if(!preg_match('/^[a-f0-9]{64}$/D',$id))continue;
+            try {
+                if(($this->read($id)['pendingFileCleanup']??[])===[])continue;
+                $directory=$this->directory($id);
+                $this->mutate($id,null,function(array $state)use($directory,&$removed,&$errors):array {
+                    $pending=[];
+                    foreach($state['pendingFileCleanup']??[] as $relative) {
+                        if(!is_string($relative)||!preg_match('#^(documents/[a-f0-9]{32}\.(pdf|jpg|png|xlsx)|ocr/([a-f0-9]{32}-[a-f0-9]{16}|mapping-[a-f0-9]{16}-[0-9]+)\.json((\.[a-f0-9]{16})?\.tmp)?)$#D',$relative)){$pending[]=$relative;$errors++;continue;}
+                        $target=$directory.'/'.$relative;$parent=dirname($target);$realParent=realpath($parent);
+                        if(is_link($parent)||$realParent===false||!Config::inside($realParent,$directory)){$pending[]=$relative;$errors++;continue;}
+                        if(!file_exists($target)&&!is_link($target))continue;
+                        if((is_file($target)||is_link($target))&&@unlink($target))$removed++;
+                        else{$pending[]=$relative;$errors++;}
+                    }
+                    if($pending===[])unset($state['pendingFileCleanup']);else $state['pendingFileCleanup']=$pending;
+                    return $state;
+                },false);
+            } catch(ApiError $error) {
+                // Expiry cleanup also handles incomplete/unsupported sessions. Do not interpret
+                // their contents as removal paths or generate a new cron error every minute.
+                if(in_array($error->errorCode,['SESSION_EXPIRED','SESSION_REQUIRED'],true))continue;
+                if($onlySessionId===null&&in_array($error->errorCode,['STORAGE_ERROR','SESSION_VERSION'],true))continue;
+                $errors++;
+            }
+        }
+        if($errors>0)error_log('Temporary attachment cleanup is pending; verify private storage permissions.');
+        return ['removed'=>$removed,'errors'=>$errors];
+    }
+
     public function cleanupExpired(): array
     {
         $removed = 0; $errors = 0;

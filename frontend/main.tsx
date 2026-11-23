@@ -4,8 +4,9 @@ import { ApiError, request } from './api';
 import { UploadPage } from './UploadPage';
 import { ReviewPage } from './ReviewPage';
 import { CalculationPage } from './CalculationPage';
-import type { Session, Registry, FieldChange } from './types';
+import type { Session, Registry, FieldChange, UploadFailure } from './types';
 import {rateRequestKey,ratesComplete} from './ExchangeRates';
+import {recognitionKey,recognitionProgress} from './recognition';
 import './style.css';
 
 function App() {
@@ -13,8 +14,10 @@ function App() {
   const [ratesLoading,setRatesLoading]=useState(false);const [ratesError,setRatesError]=useState('');const lastRateRequest=useRef<string|null>(null);
   const [busy,setBusy]=useState(false); const blocking=useRef(0); const tail=useRef<Promise<unknown>>(Promise.resolve());
   const [errors,setErrors]=useState<string[]>([]); const [fatal,setFatal]=useState<string|null>(null);
+  const [uploadFailures,setUploadFailures]=useState<UploadFailure[]>([]);
   const [connection,setConnection]=useState<{code:string;message:string}|null>(null);
   const [registry,setRegistry]=useState<Registry|null>(null); const [page,setPage]=useState<'upload'|'review'|'calculation'|null>(null);
+  const [awaitingRecognition,setAwaitingRecognition]=useState(false);const recognitionTarget=useRef<string|null>(null);
   const update=useCallback((value:Session)=>{current.current=value;setSession(value);},[]);
   function startBlocking(){blocking.current++;setBusy(true);}
   function stopBlocking(){blocking.current--;setBusy(blocking.current>0);}
@@ -47,17 +50,27 @@ function App() {
   },[update]);
   useEffect(()=>{void initialize();},[initialize]);
   useEffect(()=>{void request<Registry>('/api/registry').then(setRegistry).catch(e=>setFatal(e.message));},[]);
-  useEffect(()=>{if(session?.phase==='reviewing')setPage(p=>p==='calculation'?p:null);},[session?.phase]);
   useEffect(()=>{
-    if(!session || session.phase!=='recognizing' || (session.error && !session.jobs.some(job=>['queued','running'].includes(job.status))))return;
+    if(!session)return;
+    const key=recognitionKey(session);const progress=recognitionProgress(session);
+    if(progress.active){recognitionTarget.current??=key;setAwaitingRecognition(true);}
+    else if(recognitionTarget.current!==null) {
+      if(recognitionTarget.current!==key){recognitionTarget.current=null;setAwaitingRecognition(false);}
+      else if(progress.terminal){recognitionTarget.current=null;setAwaitingRecognition(false);setPage('review');}
+    }
+  },[session]);
+  useEffect(()=>{
+    if(!session || session.phase!=='recognizing')return;
+    let mounted=true;let inFlight=false;const controller=new AbortController();
     const timer=window.setInterval(()=>{
-      // A poll must not replace a newer successful edit with an older response.
-      const revision=current.current?.dataRevision;
-      void request<Session>('/api/session').then(value=>{
-        if(current.current?.dataRevision===revision && value.dataRevision>=revision!)update(value);
-      }).catch(connectionError);
+      if(inFlight||!current.current)return;inFlight=true;
+      const snapshot=current.current;const key=recognitionKey(snapshot);
+      void request<Session>('/api/session',{signal:controller.signal}).then(value=>{
+        // Progress does not bump dataRevision: also check session, file set and effect lifetime.
+        if(mounted&&current.current?.dataRevision===snapshot.dataRevision&&recognitionKey(current.current)===key&&recognitionKey(value)===key&&value.dataRevision>=snapshot.dataRevision){update(value);setConnection(null);}
+      }).catch(error=>{if(mounted)connectionError(error);}).finally(()=>{inFlight=false;});
     },2500);
-    return ()=>window.clearInterval(timer);
+    return ()=>{mounted=false;controller.abort();window.clearInterval(timer);};
   },[session?.phase,session?.jobs,update]);
   async function refreshRates(force=false) {
     setRatesLoading(true);setRatesError('');
@@ -76,17 +89,18 @@ function App() {
   }
   async function newSession() {
     startBlocking();
-    try {await tail.current;update(await request<Session>('/api/session',{method:'POST'}));setConnection(null);setErrors([]);setPage('upload');}
+    try {await tail.current;recognitionTarget.current=null;setAwaitingRecognition(false);update(await request<Session>('/api/session',{method:'POST'}));setConnection(null);setErrors([]);setUploadFailures([]);setPage('upload');}
     catch(error){setErrors([(error as Error).message]);}finally{stopBlocking();}
   }
   async function upload(files:File[],groupId:string) {
     if(!current.current || busy || files.length===0)return;
-    startBlocking();const failures:string[]=[];setErrors([]);
+    startBlocking();const failures:UploadFailure[]=[];setErrors([]);
+    setUploadFailures(previous=>previous.filter(f=>f.groupId!==groupId||!files.some(file=>file.name===f.name)));
     try {
       for(const file of files)try {
         await mutate(active=>{const body=new FormData();body.set('revision',String(active.dataRevision));body.set('groupId',groupId);body.set('file',file);return request<Session>('/api/documents',{method:'POST',body},active.csrfToken);},false);
-      }catch(error){failures.push(`${file.name}: ${(error as Error).message}`);}
-      setErrors(failures);
+      }catch(error){failures.push({groupId,name:file.name,message:(error as Error).message});}
+      setUploadFailures(previous=>[...previous,...failures]);
     }finally{stopBlocking();}
   }
   async function remove(id:string) {
@@ -96,7 +110,7 @@ function App() {
   }
   async function group(body:Record<string,unknown>) {
     setErrors([]);
-    try{await mutate(active=>request<Session>('/api/upload-groups',{method:'POST',body:JSON.stringify({...body,revision:active.dataRevision})},active.csrfToken));}
+    try{await mutate(active=>request<Session>('/api/upload-groups',{method:'POST',body:JSON.stringify({...body,revision:active.dataRevision})},active.csrfToken));if(body.action==='remove')setUploadFailures(previous=>previous.filter(f=>f.groupId!==body.id));}
     catch(error){setErrors([(error as Error).message]);throw error;}
   }
   async function assign(fileId:string,groupId:string) {
@@ -105,9 +119,10 @@ function App() {
     catch(error){setErrors([(error as Error).message]);}
   }
   async function recognize() {
-    setErrors([]);
+    if(blocking.current>0||!current.current||recognitionProgress(current.current).active)return;
+    setErrors([]);setAwaitingRecognition(true);recognitionTarget.current=recognitionKey(current.current);
     try {await mutate(active=>request<Session>('/api/recognize',{method:'POST',body:JSON.stringify({retry:true})},active.csrfToken));}
-    catch(error){setErrors([(error as Error).message]);}
+    catch(error){recognitionTarget.current=null;setAwaitingRecognition(false);setErrors([(error as Error).message]);}
   }
   async function change(change:FieldChange) {
     setErrors([]);
@@ -145,7 +160,7 @@ function App() {
       :!session||!registry?<p className="loading" role="status">Подготавливаем временную сессию…</p>
       :page==='calculation'||(page===null&&['calculation','calculated'].includes(session.phase))?<CalculationPage session={session} registry={registry} busy={busy} errors={errors} onChange={change} onEntity={entity} onRecalculate={()=>void calculate()} onPropose={propose} onBack={()=>setPage('review')} onRates={()=>void refreshRates(true)} ratesLoading={ratesLoading} ratesError={ratesError}/>
       :page!=='upload'&&(session.phase==='reviewing'||page==='review')?<ReviewPage session={session} registry={registry} busy={busy} onChange={change} onEntity={entity} onBack={()=>setPage('upload')} onCalculate={()=>void enterCalculation()} onValidate={()=>void validate()} onRates={()=>void refreshRates(true)} ratesLoading={ratesLoading} ratesError={ratesError} errors={errors}/>
-      :<><UploadPage session={session} busy={busy} errors={errors} onUpload={(files,groupId)=>void upload(files,groupId)} onGroup={group} onAssign={assign} onRemove={id=>void remove(id)} onRecognize={()=>void recognize()}/>{['reviewing','calculated','calculation'].includes(session.phase)&&<button className="primary" onClick={()=>setPage('review')}>К проверке данных</button>}</>}
+      :<><UploadPage session={session} busy={busy} recognizing={awaitingRecognition} errors={errors} uploadFailures={uploadFailures} onUpload={(files,groupId)=>void upload(files,groupId)} onGroup={group} onAssign={assign} onRemove={id=>void remove(id)} onRecognize={()=>void recognize()}/>{!awaitingRecognition&&['reviewing','calculated','calculation'].includes(session.phase)&&<button className="primary" onClick={()=>setPage('review')}>К проверке данных</button>}</>}
   </main>;
 }
 

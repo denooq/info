@@ -34,7 +34,7 @@ final class Application
         if(in_array($path,['/api/confirm','/api/create','/api/generate'],true)||str_starts_with($path,'/api/download/'))throw new ApiError('EXPORT_DISABLED','Формирование PDF и XML отключено в профиле подготовки 54 граф.',409);
         if($method==='POST' && $path==='/api/upload-groups') {
             $body=$this->body();if(!is_int($body['revision']??null))throw new ApiError('REVISION_REQUIRED','Нужна текущая версия данных.');
-            return $this->view($this->store->mutate($state['id'],$body['revision'],fn($s)=>(new \Customs\Documents\UploadGroups())->change($s,$body),true,true));
+            return $this->view((new \Customs\Documents\Uploads($this->config,$this->store))->changeGroup($state['id'],$body,$body['revision'],true));
         }
         if($method==='PATCH' && preg_match('#^/api/documents/([a-f0-9]{32})/type$#D',$path,$match)) {
             $body=$this->body();if(!is_int($body['revision']??null)||!is_string($body['groupId']??null))throw new ApiError('UPLOAD_GROUP_REQUEST','Выберите вид и текущую версию данных.',422);

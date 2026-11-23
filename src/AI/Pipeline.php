@@ -27,6 +27,7 @@ final class Pipeline
     {
         $state = $this->store->read($sessionId);
         if ($state['documents'] === []) throw new ApiError('DOCUMENTS_REQUIRED', 'Сначала приложите документы.');
+        foreach($state['jobs'] as $job)if(in_array($job['kind'],['ocr','mapping'],true)&&in_array($job['status'],['queued','running'],true))return $state;
         foreach ($state['documents'] as $document) {
             $step = $document['extension'] === 'xlsx' ? $document['pages'] : Ocr::CHUNK_PAGES;
             for ($start = 0; $start < $document['pages']; $start += $step) $this->queue->enqueue($sessionId, 'ocr', $document['id'], $retry, $start);
