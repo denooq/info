@@ -23,6 +23,7 @@ final class SessionMigration
         foreach($state['jobs'] as &$job)if($job['kind']==='generate')$job['status']='cancelled';unset($job);
         $resourceHash = hash('sha256', json_encode(\Customs\Domain\StatutoryRules::resource(), JSON_UNESCAPED_UNICODE|JSON_THROW_ON_ERROR));
         $first = ($state['draft']['compactVersion'] ?? null) !== \Customs\Domain\GraphEditors::VERSION;
+        $hasOldMapping=isset($state['graphMappingFingerprint'])||isset($state['graphMapping'])||!empty($state['graphMappingParts']);
         $oldRulesHash = $state['draft']['statutoryRules']['hash'] ?? null;
         $changedVersion = ($state['draft']['ruleResourceHash'] ?? null) !== $resourceHash;
         $legacy = [];
@@ -38,6 +39,7 @@ final class SessionMigration
             $state['draft']['legacyStatutory'] = $legacy;
         }
         $state['draft']['compactVersion'] = \Customs\Domain\GraphEditors::VERSION;
+        if(!$new&&$first&&$hasOldMapping)$state['mappingNeedsExplicitRetry']=true;
         $state['draft']['ruleResourceHash'] = $resourceHash;
         $state = (new \Customs\Domain\StatutoryRules())->apply($state);
         if (!$new && ($first || $changedVersion || $oldRulesHash !== $state['draft']['statutoryRules']['hash'])) {

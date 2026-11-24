@@ -39,8 +39,9 @@ final class Queue
         if ($kind !== 'ocr') {
             $parts[] = $state['registryVersion'];
             $parts[] = $this->config->get('mapping_model');
-            $parts[] = hash('sha256',json_encode((new \Customs\Domain\Registry())->extractable(),JSON_UNESCAPED_UNICODE|JSON_THROW_ON_ERROR));
-            $parts[] = hash_file('sha256', dirname(__DIR__, 2) . '/resources/prompts/mapping.v1.txt');
+            $parts[] = hash('sha256',json_encode((new \Customs\Domain\GraphMappingContract())->data(),JSON_UNESCAPED_UNICODE|JSON_THROW_ON_ERROR));
+            $parts[] = hash_file('sha256', dirname(__DIR__, 2) . '/resources/prompts/graph-mapping.v2.txt');
+            $parts[] = hash_file('sha256', dirname(__DIR__, 2) . '/resources/schemas/graph-mapping.v2.json');
             $parts[] = \Customs\AI\Pipeline::MAPPING_PLAN_VERSION;
             $parts[] = \Customs\AI\Mapper::PROMPT_VERSION;
             $parts[] = (new \Customs\Domain\TnvedCatalogue())->version();

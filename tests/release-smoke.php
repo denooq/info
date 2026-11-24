@@ -6,8 +6,9 @@ $archive=dirname(__DIR__).'/release/customs-declaration-mvp.zip';
 $zip=new ZipArchive();if($zip->open($archive)!==true)throw new RuntimeException('Release archive missing');
 $manifest=json_decode($zip->getFromName('release-manifest.json'),true,512,JSON_THROW_ON_ERROR);
 if(($manifest['profile']??'')!=='im40-kz-graphs'||($manifest['export']??'')!=='disabled')throw new RuntimeException('Wrong release profile');
-if(($manifest['editorVersion']??'')!=='3.0.0'||($manifest['statutoryRulesVersion']??'')!=='kz-im40-2026.1')throw new RuntimeException('Missing compact contract');
+if(($manifest['editorVersion']??'')!=='3.1.0'||($manifest['statutoryRulesVersion']??'')!=='kz-im40-2026.1')throw new RuntimeException('Missing compact contract');
 if(($manifest['statutoryRulesSha256']??null)!==($manifest['files']['resources/registry/statutory-rules.kz.v1.json']??null))throw new RuntimeException('Wrong statutory resource hash');
+foreach(['resources/registry/graph-mapping.v2.json','resources/schemas/graph-mapping.v2.json','resources/prompts/graph-mapping.v2.txt','docs/autofill-acceptance.md','docs/compact-graph-review.md','docs/graph-mapping-contract.md','docs/graph-mapping-results.md','docs/graph-mapping-verification.md','docs/mapping-limits.md','docs/source-manifest.md'] as $required)if(!isset($manifest['files'][$required]))throw new RuntimeException('Release is missing '.$required);
 foreach($manifest['files'] as $name=>$hash){$bytes=$zip->getFromName($name);if($bytes===false||hash('sha256',$bytes)!==$hash)throw new RuntimeException('Release hash mismatch: '.$name);}
 $forbidden=['reference/','tests/','.local-tools/','runtime/','.git/'];
 for($i=0;$i<$zip->numFiles;$i++){
@@ -23,8 +24,10 @@ try {
     if(!$zip->extractTo($target))throw new RuntimeException('Cannot extract release');$zip->close();
     if(is_dir($target.'/reference'))throw new RuntimeException('Reference is not a production dependency');
     require $target.'/src/bootstrap.php';
-    $registry=(new Customs\Domain\Registry())->data();$graphs=(new Customs\Domain\GraphRegistry())->data();$classifiers=new Customs\Domain\Classifiers();
+    $registry=(new Customs\Domain\Registry())->data();$graphs=(new Customs\Domain\GraphRegistry())->data();$classifiers=new Customs\Domain\Classifiers();$mappingContract=new Customs\Domain\GraphMappingContract();
     if(count($graphs['graphs'])!==57||count($classifiers->data()['documents'])!==331||count($classifiers->data()['countries'])!==249)throw new RuntimeException('Incomplete runtime resources');
+    $mappingSchema=json_decode(file_get_contents($target.'/resources/schemas/graph-mapping.v2.json'),true,128,JSON_THROW_ON_ERROR);
+    if(count($mappingContract->positions())!==57||($mappingSchema['properties']['schemaVersion']['const']??null)!=='graph-mapping-v2'||count((new Customs\Domain\GraphEditors())->data()['graphs'])!==54)throw new RuntimeException('Graph mapping/editor contract unavailable in release');
     if($classifiers->country('KZ')['name']!=='КАЗАХСТАН'||(new Customs\Domain\TariffCatalogue())->get('2915310000')===null)throw new RuntimeException('Runtime catalog read failed');
     $config=new Customs\Config(['runtime_dir'=>$target.'/private-runtime','secure_cookie'=>false]);$store=new Customs\Storage\SessionStore($config);$session=$store->create();
     $view=$store->publicView($session['state']);if(count($view['graphProjection']['graphs'])!==57||count($view['graphProjection']['editors'])!==54||$view['capabilities']['export']!==false||$view['ready'])throw new RuntimeException('Wrong session profile');

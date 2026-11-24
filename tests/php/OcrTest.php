@@ -59,6 +59,16 @@ test('OCR rejects missing and incorrectly indexed pages and preserves table text
     truth(str_contains($result['pages'][0]['blocks'][1]['text'],'кг'));
 });
 
+test('OCR preserves table rows, header roles, cell coordinates and reported language', function (): void {
+    $config = new Config(); $ocr = new Ocr($config, new MistralClient($config));
+    $result = $ocr->normalize(['pages' => [['index'=>0,'language'=>'en','markdown'=>'Invoice table','tables'=>[['id'=>'invoice-lines','content'=>'<table><tr><th>Goods</th><th>Quantity</th></tr><tr><td>ETHYL ACETATE</td><td>24480 KGS</td></tr></table>']]]]], [0]);
+    $page = $result['pages'][0];
+    same('en', $page['language']); same(2, count($page['tables'][0]['rows']));
+    same('header', $page['tables'][0]['rows'][0]['cells'][0]['kind']);
+    same('ETHYL ACETATE', $page['tables'][0]['rows'][1]['cells'][0]['text']);
+    same(2, $page['tables'][0]['rows'][1]['cells'][1]['column']);
+});
+
 test('twelve-page contract runs as two independent chunks and cached chunks are not billed twice', function (): void {
     $config=new Config(['runtime_dir'=>sys_get_temp_dir().'/customs-test-'.bin2hex(random_bytes(8)),'mistral_api_key'=>'test-placeholder']);
     $store=new SessionStore($config); $session=$store->create(); $id=$session['state']['id'];

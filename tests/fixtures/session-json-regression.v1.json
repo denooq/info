@@ -1,0 +1,19 @@
+{
+  "schemaVersion": "session-json-regression-v1",
+  "origin": "Sanitized regression summary of the user-provided session.json. Only document kinds and error codes/counts are retained; all identifiers, session tokens, names and values are synthetic or omitted.",
+  "sourceKinds": ["02015", "09013", "04021", "03011"],
+  "observedIssueCounts": {
+    "SOURCE_ROLE_UNCONFIRMED": 14,
+    "VALUE_UNSUPPORTED": 4,
+    "EVIDENCE_INVALID": 3,
+    "DATE_INVALID": 3,
+    "CANDIDATE_ENTITY": 2
+  },
+  "syntheticSourceText": {
+    "02015": "Net 24480 kg; Gross 27860 kg",
+    "09013": "Transit document T-123",
+    "04021": "Seller: Example Exporter Ltd.; REPUBLIC OF KAZAKHSTAN; Invoice date 09.10.2026; Total USD 37454.40",
+    "03011": "Buyer: Example Importer LLP; Contract No C-1"
+  },
+  "sensitiveKeysExcluded": ["csrfToken", "sessionId", "cookie", "apiKey"]
+}

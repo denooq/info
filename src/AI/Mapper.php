@@ -3,86 +3,299 @@ declare(strict_types=1);
 
 namespace Customs\AI;
 
-use Customs\Domain\Registry;
+use Customs\Domain\GraphMappingContract;
 use Customs\Http\ApiError;
 
+/** Whole-bundle semantic mapper with bounded source windows and repairs. */
 final class Mapper
 {
-    public const PROMPT_VERSION = 'customs-mapping-v7-shared-catalogs';
-    public function __construct(private readonly MistralClient $client, private readonly Registry $registry) {}
+    public const PROMPT_VERSION = 'customs-graph-mapping-v2.1.0';
+    private GraphMappingContract $contract;
 
-    public function request(array $sources, ?array $fieldIds = null, array $knownGoods = []): array
+    public function __construct(private readonly MistralClient $client)
     {
-        $fields = $this->registry->extractable();
-        if ($fieldIds !== null) $fields = array_intersect_key($fields, array_flip($fieldIds));
-        if ($fields === []) throw new ApiError('MAPPING_FIELDS', 'Нет разрешённых полей для сопоставления.');
-        $schema = json_decode(file_get_contents(dirname(__DIR__, 2) . '/resources/schemas/mapping.v1.json'), true, 128, JSON_THROW_ON_ERROR);
-        $schema['properties']['candidates']['items']['properties']['fieldId']['enum'] = array_keys($fields);
-        [$blocks, $references] = $this->sourceReferences($sources);
-        $wireSchema = $schema;
-        $wireSchema['required'][] = 'classificationQueries';
-        $entityScopes=array_values(array_diff(array_unique(array_column($fields,'scope')),['declaration','keden']));
-        if($entityScopes!==[])$wireSchema['properties']['entities']['items']['properties']['scope']['enum']=$entityScopes;
-        $citation = ['type' => 'object', 'additionalProperties' => false, 'required' => ['sourceId','quote'], 'properties' => [
-            'sourceId' => ['type' => 'string','enum' => array_keys($references)],
-            'quote' => ['type' => 'string','minLength' => 1,'maxLength' => 1000],
-        ]];
-        foreach (['entities','candidates','classificationQueries'] as $key) $wireSchema['properties'][$key]['items']['properties']['source'] = $citation;
-        if ($blocks === []) return ['entities' => [],'candidates' => [],'warnings' => []];
-        $prompt = file_get_contents(dirname(__DIR__, 2) . '/resources/prompts/mapping.v1.txt');
-        $catalogs = Registry::resource('catalogs');
-        $fieldContext = []; $catalogContext=[];
-        foreach ($fields as $field) {
-            $item = array_intersect_key($field, array_flip(['id','scope','label','type','unit','sourceHints','values','validWhen']));
-            $item['graphs']=array_values(array_map(fn($g)=>['id'=>$g['id'],'title'=>$g['title'],'priorities'=>$g['priorities'],'entityRole'=>$g['entityRole']??null],array_filter((new \Customs\Domain\GraphRegistry())->graphs(),fn($g)=>in_array($field['id'],$g['fieldBindings'],true))));
-            $catalog = $catalogs['fieldCatalogs'][$field['id']] ?? null;
-            if ($catalog !== null) {
-                $codes=array_map(static fn(array $entry): array => array_intersect_key($entry, array_flip(['code','label','aliases'])), $catalogs['lists'][$catalog]);
-                if(count($codes)>40){$item['catalogRef']=$catalog;$catalogContext[$catalog]=$codes;}else $item['knownCodes']=$codes;
-            }
-            $fieldContext[] = $item;
-        }
-        $input = json_encode(['graphVersion'=>(new \Customs\Domain\GraphRegistry())->data()['version'],'classifierVersion'=>(new \Customs\Domain\Classifiers())->version(),'fields' => $fieldContext,'catalogs'=>$catalogContext, 'knownGoods' => $knownGoods, 'sources' => $blocks], JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
-        if (strlen($input) > 600_000) throw new ApiError('MAPPING_CONTEXT_LIMIT', 'Требуется разбиение сопоставления на части.');
-        $response = $this->client->structured($prompt, $input, $wireSchema);
-        $choice = $response['choices'][0] ?? null;
-        if (($choice['finish_reason'] ?? null) !== 'stop') throw new ApiError('MAPPING_INCOMPLETE', 'Структурированный ответ сопоставления не завершён.', 502);
-        $content = $choice['message']['content'] ?? null;
-        if (!is_string($content)) throw new ApiError('MAPPING_RESPONSE', 'Нет структурированного ответа сопоставления.', 502);
-        try { $object = json_decode($content, false, 128, JSON_THROW_ON_ERROR); }
-        catch (\JsonException) { throw new ApiError('MAPPING_SCHEMA', 'AI вернул JSON, не соответствующий схеме.', 502); }
-        $validator = new \Opis\JsonSchema\Validator();
-        $validation = $validator->validate($object, json_decode(json_encode($wireSchema, JSON_THROW_ON_ERROR)));
-        if (!$validation->isValid()) throw new ApiError('MAPPING_SCHEMA', 'AI вернул поля или типы вне разрешённой схемы.', 502);
-        $result = json_decode($content, true, 128, JSON_THROW_ON_ERROR);
-        foreach (['entities','candidates','classificationQueries'] as $key) foreach ($result[$key] as &$item) {
-            $item['source'] = [...$references[$item['source']['sourceId']], 'quote' => $item['source']['quote']];
-        }
-        unset($item);
-        $result['usage'] = $response['usage'] ?? [];
-        $result['promptVersion'] = self::PROMPT_VERSION;
-        return $result;
+        $this->contract = new GraphMappingContract();
     }
 
-    /** Short server-issued references prevent the model from reconstructing document/page/block pointers. */
-    private function sourceReferences(array $sources): array
+    /** Build deterministic source windows; all windows retain the same graph registry. */
+    public function plan(array $manifest, int $maxContextBytes, int $maxWindows): array
     {
-        $blocks = []; $references = [];
-        foreach ($sources as $source) {
-            $allowsNewGoods = $source['allowsNewGoods'] ?? (new SourceIndex([$source]))->supportsNewGoods($source['documentId']);
-            foreach ($source['pages'] ?? [] as $page) foreach ($page['blocks'] as $block) {
-                if (trim($block['text']) === '') continue;
-                $id = 's' . (count($references) + 1);
-                $references[$id] = ['documentId' => $source['documentId'],'page' => $page['page'],'blockId' => $block['id'],'sheet' => null,'cell' => null];
-                $blocks[] = ['sourceId' => $id,'document' => $source['name'],...array_intersect_key($source,array_flip(['documentKind','classifierVersion','sourceRole'])), 'allowsNewGoods' => $allowsNewGoods, 'page' => $page['page'],'text' => $block['text']];
+        $this->assertManifest($manifest);
+        [$units] = $this->sourceUnits($manifest['sources']);
+        if ($units === []) return [];
+        $fixed = [
+            'mappingVersion' => $this->contract->data()['schemaVersion'],
+            'sourceManifestVersion' => SourceManifest::VERSION,
+            'registry' => $this->contract->data(),
+            'sources' => [], 'knownGoods' => [], 'searchWindow' => [], 'contextRequests' => [],
+        ];
+        $budget = $maxContextBytes - strlen(json_encode($fixed, JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR)) - 1200;
+        if ($budget < 1024) throw new ApiError('MAPPING_CONTEXT_LIMIT', 'Лимит контекста меньше реестра граф и схемы.', 503);
+
+        $rawWindows = []; $current = []; $bytes = 0;
+        foreach ($units as $unit) {
+            $length = strlen(json_encode($unit, JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR)) + 1;
+            if ($length > $budget) throw new ApiError('MAPPING_SOURCE_UNIT_LIMIT', 'Один OCR-блок слишком велик для безопасного сопоставления.', 413);
+            if ($bytes + $length > $budget && $current !== []) { $rawWindows[] = $current; $current = []; $bytes = 0; }
+            $current[] = $unit; $bytes += $length;
+        }
+        if ($current !== []) $rawWindows[] = $current;
+
+        $allIds = [];
+        foreach ($units as $unit) {
+            $allIds[] = $unit['sourceId'];
+            foreach ($unit['cells'] ?? [] as $cell) $allIds[] = $cell['sourceId'];
+        }
+        $allIds = array_values(array_unique($allIds));
+        $withinLimit = count($rawWindows) <= $maxWindows;
+        $rawWindows = array_slice($rawWindows, 0, $maxWindows);
+        $included = [];
+        foreach ($rawWindows as $rawWindow) foreach ($rawWindow as $unit) {
+            $included[] = $unit['sourceId'];
+            foreach ($unit['cells'] ?? [] as $cell) $included[] = $cell['sourceId'];
+        }
+        $included = array_values(array_unique($included));
+        $count = count($rawWindows); $plan = [];
+        foreach ($rawWindows as $index => $rawWindow) {
+            $ids = [];
+            foreach ($rawWindow as $unit) {
+                $ids[] = $unit['sourceId'];
+                foreach ($unit['cells'] ?? [] as $cell) $ids[] = $cell['sourceId'];
             }
-            foreach ($source['sheets'] ?? [] as $sheet) foreach ($sheet['cells'] as $cell => $data) {
-                if ($data['value'] === null || $data['value'] === '') continue;
-                $id = 's' . (count($references) + 1);
-                $references[$id] = ['documentId' => $source['documentId'],'page' => null,'blockId' => null,'sheet' => $sheet['name'],'cell' => $cell];
-                $blocks[] = ['sourceId' => $id,'document' => $source['name'],...array_intersect_key($source,array_flip(['documentKind','classifierVersion','sourceRole'])), 'allowsNewGoods' => $allowsNewGoods, 'sheet' => $sheet['name'],'cell' => $cell,'text' => (string) $data['value']];
+            $ids = array_values(array_unique($ids));
+            $plan[] = [
+                'index' => $index, 'count' => $count, 'sourceIds' => $ids, 'allSourceIds' => $allIds,
+                'completeBundle' => $withinLimit, 'wholeBundleInWindow' => $withinLimit && count($ids) === count($allIds),
+                'omittedSourceCount' => count(array_diff($allIds, $included)),
+            ];
+        }
+        return $plan;
+    }
+
+    /** Execute one bounded source window and repair omissions/citations at most twice. */
+    public function request(array $manifest, array $knownGoods = [], array $options = []): array
+    {
+        $this->assertManifest($manifest);
+        [$allUnits, $allIds] = $this->sourceUnits($manifest['sources']);
+        if ($allUnits === []) throw new ApiError('OCR_REQUIRED', 'Нет распознанного текста для сопоставления.', 409);
+        $window = $options['window'] ?? ['index' => 0, 'count' => 1, 'sourceIds' => array_keys($allIds), 'allSourceIds' => array_keys($allIds), 'completeBundle' => true, 'wholeBundleInWindow' => true, 'omittedSourceCount' => 0];
+        $wanted = array_fill_keys($window['sourceIds'] ?? array_keys($allIds), true);
+        $units = array_values(array_filter($allUnits, static function (array $unit) use ($wanted): bool {
+            if (isset($wanted[$unit['sourceId']])) return true;
+            foreach ($unit['cells'] ?? [] as $cell) if (isset($wanted[$cell['sourceId']])) return true;
+            return false;
+        }));
+        if ($units === []) throw new ApiError('MAPPING_WINDOW_EMPTY', 'Окно сопоставления не содержит доступных источников.', 422);
+
+        $context = [
+            'mappingVersion' => $this->contract->data()['schemaVersion'],
+            'sourceManifestVersion' => SourceManifest::VERSION,
+            'registry' => $this->contract->data(),
+            'sources' => $units,
+            'knownGoods' => array_values($knownGoods),
+            'knownDocumentRecords' => array_values($options['knownDocumentRecords'] ?? []),
+            'searchWindow' => $window,
+            'contextRequests' => array_values($options['contextRequests'] ?? []),
+        ];
+        $maxContextBytes = (int)($options['maxContextBytes'] ?? 180000);
+        $prompt = file_get_contents(dirname(__DIR__, 2) . '/resources/prompts/graph-mapping.v2.txt');
+        if (!is_string($prompt) || $prompt === '') throw new \LogicException('Graph mapping prompt is missing.');
+        $schema = $this->contract->responseSchema();
+        $maxRepairs = max(0, min(2, (int)($options['maxRepairs'] ?? 2)));
+        $repairRequest = null; $usage = []; $calls = 0; $totalInputBytes = 0; $mapping = null; $failure = null;
+
+        for ($attempt = 0; $attempt <= $maxRepairs; $attempt++) {
+            $requestContext = $context;
+            if ($repairRequest !== null) $requestContext['repairRequest'] = $repairRequest;
+            $input = json_encode($requestContext, JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
+            if (strlen($input) > $maxContextBytes) throw new ApiError('MAPPING_CONTEXT_LIMIT', 'Окно документов превышает безопасный лимит контекста.', 413);
+            $totalInputBytes += strlen($input);
+            $response = $this->client->structured($prompt, $input, $schema);
+            $calls++;
+            foreach ($response['usage'] ?? [] as $key => $value) if (is_numeric($value)) $usage[$key] = ($usage[$key] ?? 0) + $value;
+            $choice = $response['choices'][0] ?? null;
+            if (($choice['finish_reason'] ?? null) !== 'stop') {
+                if (($choice['finish_reason'] ?? null) === 'length') {
+                    $mapping = $this->incompleteMapping([], 'Ответ AI ограничен размером окна вывода.');
+                    $failure = 'MAPPING_OUTPUT_LIMIT';
+                    break;
+                }
+                throw new ApiError('MAPPING_INCOMPLETE', 'Ответ сопоставления граф не завершён.', 502);
+            }
+
+            try {
+                $content = $choice['message']['content'] ?? null;
+                if (!is_string($content)) throw new ApiError('GRAPH_MAPPING_SCHEMA', 'В ответе сопоставления отсутствует JSON.', 502);
+                $candidate = json_decode($content, true, 256, JSON_THROW_ON_ERROR);
+                $this->contract->validateResponse($candidate);
+                $this->verifyEvidence($candidate, $manifest['sources'], $allIds);
+                (new GraphMappingVerifier($this->contract))->verify($candidate, $manifest['sources']);
+                $missing = $this->missingTargets($candidate, $window);
+                if ($missing !== [] && $attempt < $maxRepairs) {
+                    $repairRequest = ['reason' => 'missing_graph_results', 'targets' => $missing, 'attempt' => $attempt + 1];
+                    continue;
+                }
+                foreach ($missing as $target) $candidate['results'][] = $this->incompleteResult($target, 'AI не вернул результат после ограниченных попыток исправления.');
+                $mapping = $this->normalizeWindowAbsence($candidate, $window);
+                break;
+            } catch (ApiError $error) {
+                if (!in_array($error->errorCode, ['GRAPH_MAPPING_SCHEMA', 'GRAPH_MAPPING_VALUE', 'EVIDENCE_INVALID', 'GRAPH_VALUE_CANONICAL', 'GRAPH_VALUE_CURRENCY', 'GRAPH_VALUE_SEMANTIC', 'UNIT_UNCONFIRMED'], true)) throw $error;
+                $failure = $error->errorCode;
+                if ($attempt < $maxRepairs) {
+                    $repairRequest = ['reason' => $error->errorCode, 'instruction' => 'Перепроверь значения и цитаты по переданным sourceId; не повторяй непроверенное предложение.', 'attempt' => $attempt + 1];
+                    continue;
+                }
+                $mapping = $this->incompleteMapping([], $error->getMessage());
+            } catch (\JsonException) {
+                $failure = 'GRAPH_MAPPING_SCHEMA';
+                if ($attempt < $maxRepairs) { $repairRequest = ['reason' => $failure, 'instruction' => 'Верни только корректный JSON по переданной схеме.', 'attempt' => $attempt + 1]; continue; }
+                $mapping = $this->incompleteMapping([], 'Ответ не соответствует JSON-схеме после двух исправлений.');
+            }
+            break;
+        }
+        if (!is_array($mapping)) $mapping = $this->incompleteMapping([], 'Сопоставление не завершено.');
+        $this->contract->validateResponse($mapping);
+        return [
+            'mapping' => $mapping, 'usage' => $usage, 'calls' => $calls, 'repairs' => max(0, $calls - 1),
+            'failureCode' => $failure, 'promptVersion' => self::PROMPT_VERSION,
+            'inputBytes' => $totalInputBytes, 'window' => $window,
+        ];
+    }
+
+    private function assertManifest(array $manifest): void
+    {
+        if (($manifest['version'] ?? null) !== SourceManifest::VERSION || !is_array($manifest['sources'] ?? null)) {
+            throw new ApiError('SOURCE_MANIFEST_INVALID', 'Для сопоставления нужен полный манифест распознанных документов.', 422);
+        }
+    }
+
+    private function missingTargets(array $mapping, array $window = []): array
+    {
+        $present = [];
+        foreach ($mapping['results'] ?? [] as $result) {
+            $key = $result['graphId'] . '/' . ($result['itemKey'] ?? '_');
+            $needsRepair = ($window['wholeBundleInWindow'] ?? false) && $result['status'] === 'incomplete';
+            if (($window['wholeBundleInWindow'] ?? false) && $result['status'] === 'not_found') {
+                $needsRepair = array_diff($window['sourceIds'] ?? [], $result['searchedSourceIds'] ?? []) !== [];
+            }
+            if (!$needsRepair) $present[$key] = true;
+        }
+        $items = array_column($mapping['items'] ?? [], 'itemKey');
+        $missing = [];
+        foreach ($this->contract->positions() as $id => $position) {
+            if ($position['scope'] === 'document') continue;
+            $eligible = array_filter($position['bindings'], static fn(array $binding): bool => $binding['aiProposalAllowed']) !== []
+                || (isset($position['positionValue']) && in_array($position['positionValue']['owner'], ['document', 'manual'], true));
+            if (!$eligible) continue;
+            $targets = $position['scope'] === 'goods' ? $items : [null];
+            foreach ($targets as $itemKey) {
+                $key = $id . '/' . ($itemKey ?? '_');
+                if (!isset($present[$key])) $missing[] = ['graphId' => (string)$id, 'itemKey' => $itemKey];
             }
         }
-        return [$blocks,$references];
+        return $missing;
+    }
+
+    private function incompleteResult(array $target, string $reason): array
+    {
+        return ['graphId' => $target['graphId'], 'itemKey' => $target['itemKey'], 'status' => 'incomplete', 'values' => [], 'positionValue' => null, 'searchedSourceIds' => [], 'reason' => $reason];
+    }
+
+    private function incompleteMapping(array $mapping, string $reason): array
+    {
+        $base = ['schemaVersion' => GraphMappingContract::SCHEMA_VERSION, 'items' => [], 'results' => [], 'documentRecords' => [], 'dtsFacts' => [], 'referenceSelections' => [], 'catalogRequests' => [], 'contextRequests' => [], 'warnings' => [$reason]];
+        foreach ($this->missingTargets($base) as $target) $base['results'][] = $this->incompleteResult($target, $reason);
+        return $base;
+    }
+
+    private function normalizeWindowAbsence(array $mapping, array $window): array
+    {
+        foreach ($mapping['results'] as &$result) if ($result['status'] === 'not_found') {
+            $searchedAllWindow = array_diff($window['sourceIds'] ?? [], $result['searchedSourceIds'] ?? []) === [];
+            if (($window['wholeBundleInWindow'] ?? false) && ($window['completeBundle'] ?? false) && $searchedAllWindow) continue;
+            $result['status'] = 'incomplete';
+            $result['reason'] = 'Значение не найдено во всех источниках этого ответа; полный комплект ещё не проверен.';
+        }
+        unset($result);
+        if (!($window['completeBundle'] ?? true)) $mapping['warnings'][] = 'Обработка остановлена на установленном пределе окон; часть источников не проверена.';
+        return $mapping;
+    }
+
+    /** Flatten OCR blocks, table rows/cells and spreadsheet cells without dropping their stable IDs. */
+    private function sourceUnits(array $sources): array
+    {
+        $units = []; $ids = []; $classifiers = new \Customs\Domain\Classifiers();
+        foreach ($sources as $source) {
+            $document = array_intersect_key($source, array_flip(['documentId', 'name', 'documentKind', 'classifierVersion', 'sourceRole', 'allowsNewGoods']));
+            if (is_string($source['documentKind'] ?? null)) $document['documentKindName'] = $classifiers->document($source['documentKind'])['name'] ?? null;
+            foreach ($source['pages'] ?? [] as $page) {
+                foreach ($page['blocks'] ?? [] as $block) {
+                    if (trim((string)($block['text'] ?? '')) === '' || !isset($block['sourceId'])) continue;
+                    $units[] = [...$document, 'kind' => 'ocr_block', 'sourceId' => $block['sourceId'], 'page' => $page['page'], 'language' => $page['language'] ?? null, 'text' => $block['text'], 'bbox' => $block['bbox'] ?? null];
+                    $ids[$block['sourceId']] = true;
+                }
+                foreach ($page['tables'] ?? [] as $table) foreach ($table['rows'] ?? [] as $row) {
+                    $cells = [];
+                    foreach ($row['cells'] ?? [] as $cell) {
+                        if (!isset($cell['sourceId'])) continue;
+                        $cells[] = ['column' => $cell['column'], 'kind' => $cell['kind'] ?? 'data', 'sourceId' => $cell['sourceId'], 'text' => $cell['text']];
+                        $ids[$cell['sourceId']] = true;
+                    }
+                    if ($cells === [] || !isset($row['sourceId'])) continue;
+                    $units[] = [...$document, 'kind' => 'table_row', 'sourceId' => $row['sourceId'], 'page' => $page['page'], 'language' => $table['language'] ?? $page['language'] ?? null, 'tableId' => $table['id'], 'row' => $row['row'], 'bbox' => $table['bbox'] ?? null, 'cells' => $cells];
+                    $ids[$row['sourceId']] = true;
+                }
+            }
+            foreach ($source['sheets'] ?? [] as $sheet) foreach ($sheet['cells'] ?? [] as $address => $cell) {
+                if (($cell['value'] ?? null) === null || $cell['value'] === '' || !isset($cell['sourceId'])) continue;
+                $units[] = [...$document, 'kind' => 'spreadsheet_cell', 'sourceId' => $cell['sourceId'], 'sheet' => $sheet['name'], 'cell' => (string)$address, 'language' => $sheet['language'] ?? null, 'text' => (string)$cell['value']];
+                $ids[$cell['sourceId']] = true;
+            }
+        }
+        $priorityTerms = [];
+        foreach ($this->contract->positions() as $position) foreach ($position['priorities'] as $rank => $priority) {
+            if (is_string($priority) && trim($priority) !== '') $priorityTerms[] = ['text' => self::normalizeText($priority), 'rank' => $rank];
+        }
+        $sequence = 0;
+        foreach ($units as &$unit) { $unit['_priorityScore'] = $this->priorityScore($unit, $priorityTerms); $unit['_sequence'] = $sequence++; }
+        unset($unit);
+        usort($units, static fn(array $a, array $b): int => [$a['_priorityScore'], $a['_sequence']] <=> [$b['_priorityScore'], $b['_sequence']]);
+        foreach ($units as &$unit) { unset($unit['_priorityScore'], $unit['_sequence']); }
+        unset($unit);
+        return [$units, $ids];
+    }
+
+    private function priorityScore(array $unit, array $priorities): int
+    {
+        $label = self::normalizeText((string)($unit['documentKindName'] ?? ''));
+        if ($label === '') return 1000;
+        $rankTotal = 0; $matches = 0;
+        foreach ($priorities as $priority) if (str_contains($label, $priority['text'])) { $rankTotal += $priority['rank']; $matches++; }
+        return $matches === 0 ? 1000 : (int)round(($rankTotal / $matches) * 100);
+    }
+
+    private static function normalizeText(string $value): string
+    {
+        return mb_strtolower(trim(preg_replace('/\s+/u', ' ', $value)));
+    }
+
+    /** Validate citations and searched-source references against the server-side manifest. */
+    private function verifyEvidence(array $mapping, array $sources, array $knownIds): void
+    {
+        $index = new SourceIndex($sources);
+        $walk = function (mixed $value) use (&$walk, $index, $knownIds): void {
+            if (!is_array($value)) return;
+            if (isset($value['sourceId'], $value['quote'])) {
+                if (!isset($knownIds[$value['sourceId']])) throw new ApiError('EVIDENCE_INVALID', 'Сопоставление сослалось на источник вне текущего комплекта.');
+                $index->verify($value);
+                return;
+            }
+            foreach ($value as $key => $child) {
+                if (in_array($key, ['searchedSourceIds', 'sourceIds'], true) && is_array($child))
+                    foreach ($child as $sourceId) if (!is_string($sourceId) || !isset($knownIds[$sourceId])) throw new ApiError('EVIDENCE_INVALID', 'Сопоставление указало неизвестный источник.');
+                $walk($child);
+            }
+        };
+        $walk($mapping);
     }
 }

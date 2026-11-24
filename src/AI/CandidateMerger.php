@@ -25,9 +25,6 @@ final class CandidateMerger
             try {
                 $candidate = $verifier->verify($proposal);
                 if(array_key_exists('documentKind',$candidate['evidence'])) {
-                    $roleRow=[];
-                    foreach($response['entities'] as $entity)if($entity['key']===$candidate['entityKey']&&$entity['scope']===$candidate['scope'])$roleRow=['role'=>$entity['role'],'stage'=>$entity['role']];
-                    if(\Customs\Domain\GraphSources::rank($candidate['fieldId'],$roleRow,$candidate['evidence']['documentKind'])===null)throw new ApiError('SOURCE_ROLE_UNCONFIRMED','Выбранный официальный вид источника не подтверждён для этой графы; проверьте вид или заполните вручную.');
                     if($candidate['fieldId']==='document.kind'&&$candidate['value']!==$candidate['evidence']['documentKind'])throw new ApiError('DOCUMENT_TYPE_MISMATCH','Распознанный код документа отличается от выбранного вида вложения.');
                 }
                 $verified[] = $candidate;
@@ -69,7 +66,6 @@ final class CandidateMerger
                 $rank=null;
                 if(array_key_exists('documentKind',$evidence)) {
                     $rank=\Customs\Domain\GraphSources::rank($candidate['fieldId'],$target,$evidence['documentKind']);
-                    if($rank===null)throw new ApiError('SOURCE_ROLE_UNCONFIRMED','Официальный вид источника не связан с приоритетами этой графы. Исправьте вид или заполните поле вручную.');
                     if($candidate['fieldId']==='document.kind'&&$candidate['value']!==$evidence['documentKind'])throw new ApiError('DOCUMENT_TYPE_MISMATCH','Распознанный вид противоречит выбранному виду вложения. Проверьте файл и назначенный код.');
                     $kindAddress=Draft::address('document',$entityId,'kind');
                     if($scope==='document'&&!in_array($state['draft']['fieldStates'][$kindAddress]['status']??'',['manual','selected'],true)) {
@@ -157,6 +153,8 @@ final class CandidateMerger
             if(isset($row['_sourceSignature']))continue;
             $empty = true;
             foreach ($this->registry->fields() as $field) if ($field['scope'] === $scope && !isset($field['fixedValue']) && !in_array('calculated', $field['acquisition'], true) && !in_array($field['key'], ['stage','role'], true)) {
+                $address = \Customs\Domain\Draft::address($scope,$row['id'],$field['key']);
+                if (($draft['fieldStates'][$address]['status'] ?? null) === 'profile') continue;
                 if($field['id']==='goods.ratesDate' && ($draft['fieldStates'][Draft::address($scope,$row['id'],$field['key'])]['status']??'')==='linked')continue;
                 if (($row[$field['key']] ?? null) !== null && ($row[$field['key']] ?? null) !== []) { $empty = false; break; }
             }

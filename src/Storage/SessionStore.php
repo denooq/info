@@ -109,10 +109,11 @@ final class SessionStore
     public function publicView(array $state): array
     {
         $state = (new \Customs\Domain\StatutoryRules())->apply($state);
-        $copy = array_intersect_key($state, array_flip(['createdAt','expiresAt','dataRevision','phase','csrfToken','draft','candidates','evidence','calculation','error','registryVersion','mappingIssues','exchangeRates','migrationNotices']));
+        $copy = array_intersect_key($state, array_flip(['createdAt','expiresAt','dataRevision','phase','csrfToken','draft','candidates','evidence','calculation','error','registryVersion','mappingIssues','exchangeRates','migrationNotices','graphMappingResults']));
         $copy['capabilities']=['nbkRates'=>true,'graphs'=>true,'export'=>false];
         $copy['profile']='im40-kz-graphs';$copy['uploadGroups']=array_values($state['uploadGroups']??[]);
         $copy['graphProjection']=(new \Customs\Domain\GraphProjection())->project($state);
+        $copy['graphMappingResults']=$copy['graphProjection']['mappingResults'];
         $copy['documents'] = array_map(fn(array $doc): array => array_intersect_key($doc, array_flip(['id','name','mime','size','pages','status','error','kind','groupId','documentKind','classifierVersion'])), array_values($state['documents']));
         $copy['jobs'] = array_map(fn(array $job): array => array_intersect_key($job, array_flip(['id','kind','documentId','chunkStart','status','attempts','nextAttemptAt','error'])), array_values($state['jobs']));
         $copy['ready'] = false;

@@ -60,6 +60,14 @@ test('official rates auto-fill every required currency, use the session cache, a
     truth(!isset($store->publicView($s)['_nbkCache']));
 });
 
+test('manual exchange quote is stored atomically per currency unit and survives a later NBK refresh',function():void {
+    [$store,$s]=bankState(['invoiceCurrency'=>'KRW']);$client=new NationalBankClient(fn()=>['status'=>200,'body'=>bankFixture()]);$service=new ExchangeRates($store,$client);$s=$service->refresh($s['id'],$s['dataRevision']);
+    $s=$store->mutate($s['id'],$s['dataRevision'],fn($current)=>$service->manual($current,'KRW','0.3432'));
+    $quote=array_values(array_filter($s['draft']['rates'],fn($row)=>$row['currency']==='KRW'))[0];same('0.3432',$quote['value']);same('1',$quote['nominal']);same('manual',$quote['source']);same(true,$quote['confirmed']);
+    same('3432.00',(new Calculator())->convert('10000','KRW',[$quote]));$s=$service->refresh($s['id'],$s['dataRevision']);$quote=array_values(array_filter($s['draft']['rates'],fn($row)=>$row['currency']==='KRW'))[0];same('0.3432',$quote['value']);same(['KRW'],$s['exchangeRates']['protectedManual']);
+    errorCode('RATE_VALUE',fn()=>$service->manual($s,'KRW','0'));
+});
+
 test('date changes do not use another days quotes and provider failure leaves editable missing values',function():void {
     [$store,$s]=bankState();$client=new NationalBankClient(fn()=>['status'=>200,'body'=>bankFixture()]);$service=new ExchangeRates($store,$client);
     $s=$service->refresh($s['id'],$s['dataRevision']);$model=new Draft(new Registry());

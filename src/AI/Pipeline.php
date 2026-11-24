@@ -4,28 +4,26 @@ declare(strict_types=1);
 namespace Customs\AI;
 
 use Customs\Config;
-use Customs\Domain\Registry;
 use Customs\Http\ApiError;
 use Customs\Jobs\Queue;
 use Customs\Storage\SessionStore;
 
 final class Pipeline
 {
-    public const MAPPING_PLAN_VERSION='typed-graphs-v2-terminal-ocr';
+    public const MAPPING_PLAN_VERSION='bounded-graph-windows-v3-entity-identities';
     private Queue $queue;
     private Ocr $ocr;
-    private Registry $registry;
 
     public function __construct(private readonly Config $config, private readonly SessionStore $store, private readonly MistralClient $client)
     {
         $this->queue = new Queue($config, $store);
         $this->ocr = new Ocr($config, $client);
-        $this->registry = new Registry();
     }
 
     public function start(string $sessionId, bool $retry = false): array
     {
         $state = $this->store->read($sessionId);
+        if($retry&&($state['mappingNeedsExplicitRetry']??false))$state=$this->store->mutate($sessionId,null,function(array $current):array{unset($current['mappingNeedsExplicitRetry']);return $current;},false);
         if ($state['documents'] === []) throw new ApiError('DOCUMENTS_REQUIRED', 'Сначала приложите документы.');
         foreach($state['jobs'] as $job)if(in_array($job['kind'],['ocr','mapping'],true)&&in_array($job['status'],['queued','running'],true))return $state;
         foreach ($state['documents'] as $document) {
@@ -59,6 +57,7 @@ final class Pipeline
     private function scheduleMapping(string $sessionId, bool $retry): void
     {
         $state = $this->store->read($sessionId);
+        if(($state['mappingNeedsExplicitRetry']??false)&&!$retry)return;
         if ($state['documents'] === []) return;
         foreach($state['jobs'] as $job)if($job['kind']==='ocr'&&in_array($job['status'],['queued','running'],true))return;
         foreach ($state['documents'] as $document) if (!in_array($document['status'],['recognized','error'],true)) return;
@@ -66,18 +65,23 @@ final class Pipeline
             if($state['phase']==='recognizing')$this->store->mutate($sessionId,null,function($s){$s['phase']='reviewing';$s['error']??=['code'=>'OCR_ALL_FAILED','message'=>'Документы не распознаны. Заполните графы вручную или повторите неуспешные файлы.'];return $s;},false);
             return;
         }
+        $fingerprint = $this->queue->fingerprint($state, 'mapping', null);
+        if (($state['graphMappingFingerprint'] ?? null) !== $fingerprint || $retry) {
+            try { $manifest = $this->sources($state, $this->store->directory($sessionId)); }
+            catch (ApiError $error) { if ($error->errorCode === 'OCR_REQUIRED') return; throw $error; }
+            $plan = $this->plan($manifest);
+            $expected = $plan[0]['allSourceIds'] ?? [];
+            $state = $this->store->mutate($sessionId, null, fn(array $current): array => (new GraphMappingResultStore())->resetForRun($current, $fingerprint, $expected), false);
+        }
         $this->queue->enqueue($sessionId, 'mapping', null, $retry);
     }
 
     private function sources(array $state, string $directory): array
     {
-        $sources = []; $seen=[];
+        $sources = [];
         foreach ($state['documents'] as $document) {
             if($document['status']!=='recognized')continue;
-            $identity=$document['hash'].'|'.($document['documentKind']??'');
-            if(isset($seen[$identity]))continue;
-            $seen[$identity]=true;
-            $source = ['documentId' => $document['id'],'name' => $document['name'],'documentKind'=>$document['documentKind']??null,'classifierVersion'=>$document['classifierVersion']??null,'sourceRole'=>\Customs\Domain\SourceRoles::forCode($document['documentKind']??null),'pages' => [],'sheets' => []];
+            $source = ['documentId' => $document['id'],'name' => $document['name'],'contentHash'=>$document['hash'],'documentKind'=>$document['documentKind']??null,'classifierVersion'=>$document['classifierVersion']??null,'sourceRole'=>\Customs\Domain\SourceRoles::forCode($document['documentKind']??null),'pages' => [],'sheets' => []];
             foreach (glob($directory . '/ocr/' . $document['id'] . '-*.json') as $path) {
                 $raw = @file_get_contents($path);
                 if ($raw === false) throw new ApiError('SESSION_EXPIRED', 'Данные сессии недоступны.', 410);
@@ -93,94 +97,128 @@ final class Pipeline
             if ($source['pages'] === [] && $source['sheets'] === []) throw new ApiError('OCR_REQUIRED', 'Не все документы имеют сохранённый OCR.');
             $sources[] = $source;
         }
-        return $sources;
+        return (new SourceManifest())->build($sources, $state['id']);
     }
 
     private function plan(array $sources): array
     {
-        $chunks = []; $current = []; $bytes = 0;
-        foreach ($sources as $source) {
-            $parts = [];
-            foreach ($source['pages'] as $page) foreach ($page['blocks'] as $block) $parts[] = [...array_intersect_key($source,array_flip(['documentId','name','documentKind','classifierVersion','sourceRole','allowsNewGoods'])), 'pages' => [['page' => $page['page'],'blocks' => [$block]]], 'sheets' => []];
-            foreach ($source['sheets'] as $sheet) {
-                $cells = [];
-                foreach ($sheet['cells'] as $address => $cell) if ($cell['value'] !== null && $cell['value'] !== '') $cells[$address] = $cell;
-                foreach (array_chunk($cells, 600, true) as $cellChunk) $parts[] = [...array_intersect_key($source,array_flip(['documentId','name','documentKind','classifierVersion','sourceRole','allowsNewGoods'])), 'pages' => [],'sheets' => [['name' => $sheet['name'],'cells' => $cellChunk]]];
-            }
-            foreach ($parts as $part) {
-                $length = strlen(json_encode($part, JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR));
-                if ($length > 400_000) throw new ApiError('MAPPING_BLOCK_LIMIT', 'Слишком большой блок документа для сопоставления.');
-                if ($bytes + $length > 400_000 && $current !== []) { $chunks[] = $this->combineSources($current); $current = []; $bytes = 0; }
-                $current[] = $part; $bytes += $length;
-            }
-            // Map each document with all factual fields together. Mixing unrelated contracts,
-            // invoices and payment orders in a long context caused unreliable role/citation choices.
-            if ($current !== []) { $chunks[] = $this->combineSources($current); $current = []; $bytes = 0; }
-        }
-        if ($current !== []) $chunks[] = $this->combineSources($current);
-        if ($chunks === []) return [];
-        // Establish shipment items before asking supporting permits about those items.
-        $order=static fn(array $source):int=>match($source['sourceRole']??null){'invoice'=>0,'packing'=>1,default=>$source['allowsNewGoods']?1:2};
-        usort($chunks,static fn(array $a,array $b):int=>$order($a[0])<=>$order($b[0]));
-        $plan = [];
-        foreach ($chunks as $chunk) foreach ([['declaration','party','transport'],['goods','cost'],['document']] as $scopes) {
-            $fields=array_filter($this->registry->extractable(),fn(array $f):bool=>in_array($f['scope'],$scopes,true));
-            if($fields!==[])$plan[]=['sources'=>$chunk,'fieldIds'=>array_keys($fields)];
-        }
-        return $plan;
-    }
-
-    private function combineSources(array $parts): array
-    {
-        $result = [];
-        foreach ($parts as $part) {
-            $id = $part['documentId']; $result[$id] ??= [...array_intersect_key($part,array_flip(['documentId','name','documentKind','classifierVersion','sourceRole','allowsNewGoods'])), 'pages' => [],'sheets' => []];
-            foreach ($part['pages'] as $page) {
-                $number = $page['page'];
-                $result[$id]['pages'][$number] ??= ['page' => $number,'blocks' => []];
-                array_push($result[$id]['pages'][$number]['blocks'], ...$page['blocks']);
-            }
-            foreach ($part['sheets'] as $sheet) {
-                $name = $sheet['name'];
-                $result[$id]['sheets'][$name] ??= ['name' => $name,'cells' => []];
-                $result[$id]['sheets'][$name]['cells'] += $sheet['cells'];
-            }
-        }
-        foreach ($result as &$source) { $source['pages'] = array_values($source['pages']); $source['sheets'] = array_values($source['sheets']); }
-        unset($source);
-        return array_values($result);
+        if (($sources['version'] ?? null) !== SourceManifest::VERSION || ($sources['sources'] ?? []) === []) return [];
+        return (new Mapper($this->client))->plan($sources, $this->config->get('mapping_context_bytes'), $this->config->get('mapping_max_windows'));
     }
 
     private function mapPart(array $job, array $state, string $directory): array
     {
-        $sources = $this->sources($state, $directory);
-        $plan = $this->plan($sources);
+        $manifest = $this->sources($state, $directory);
+        $plan = $this->plan($manifest);
         $cursor = $state['mappingProgress'][$job['fingerprint']] ?? 0;
-        if ($cursor >= count($plan)) return ['response' => ['entities' => [],'candidates' => [],'warnings' => []], 'sources' => $sources, 'cursor' => $cursor, 'more' => false];
-        $part = $plan[$cursor];
+        $contextRequests = $state['mappingContextRequests'] ?? [];
+        if ($cursor >= count($plan) && $contextRequests === []) return ['response' => ['mapping' => ['schemaVersion' => 'graph-mapping-v2']], 'sources' => $manifest['sources'], 'cursor' => $cursor, 'more' => false, 'window' => null, 'servedContextRequests' => []];
+        $part = $plan[$cursor] ?? ['index' => $cursor, 'count' => count($plan), 'sourceIds' => [], 'allSourceIds' => [], 'completeBundle' => false, 'wholeBundleInWindow' => false, 'omittedSourceCount' => 0];
+        $contextIds = [];
+        foreach ($contextRequests as $request) foreach ($request['sourceIds'] ?? [] as $sourceId) $contextIds[] = $sourceId;
+        $part['sourceIds'] = array_values(array_unique([...($part['sourceIds'] ?? []), ...$contextIds]));
+        if ($contextIds !== []) $part['wholeBundleInWindow'] = count(array_unique($part['sourceIds'])) === count($part['allSourceIds'] ?? []);
         $cache = $directory . '/ocr/mapping-' . substr($job['fingerprint'], 0, 16) . '-' . $cursor . '.json';
         if (is_file($cache)) $response = json_decode(file_get_contents($cache), true, 128, JSON_THROW_ON_ERROR);
         else {
             $knownGoods = [];
-            foreach ($state['draft']['goods'] as $goods) if (($goods['description'] ?? null) !== null) $knownGoods[] = ['key' => $goods['id'], 'description' => $goods['description'], 'commodityCode' => $goods['commodityCode'] ?? null];
-            $response = (new Mapper($this->client, $this->registry))->request($part['sources'], $part['fieldIds'], $knownGoods);
+            foreach ($state['draft']['goods'] as $goods) if (($goods['description'] ?? null) !== null) $knownGoods[$goods['id']] = ['key' => $goods['id'], 'description' => $goods['description'], 'commodityCode' => $goods['commodityCode'] ?? null];
+            $knownDocumentRecords = [];
+            foreach ($state['draft']['documents'] ?? [] as $document) if (is_string($document['id'] ?? null)) {
+                $knownDocumentRecords[$document['id']] = ['key' => $document['id'], 'values' => []];
+                foreach (['kind' => 'document.kind', 'name' => 'document.name', 'number' => 'document.number', 'date' => 'document.date'] as $key => $fieldId) {
+                    if (($document[$key] ?? null) !== null && $document[$key] !== '') $knownDocumentRecords[$document['id']]['values'][] = ['fieldId' => $fieldId, 'value' => $document[$key]];
+                }
+            }
+            foreach ($state['graphMappingParts'] ?? [] as $previous) {
+                foreach ($previous['items'] ?? [] as $item) if (is_string($item['itemKey'] ?? null) && is_string($item['description'] ?? null)) {
+                    $knownGoods[$item['itemKey']] = ['key' => $item['itemKey'], 'description' => $item['description'], 'commodityCode' => null];
+                }
+                foreach ($previous['documentRecords'] ?? [] as $record) if (is_string($record['recordKey'] ?? null)) {
+                    $knownDocumentRecords[$record['recordKey']] ??= ['key' => $record['recordKey'], 'values' => []];
+                    foreach ($record['values'] ?? [] as $value) if (isset($value['fieldId'], $value['normalizedValue'])) {
+                        $identity = $value['fieldId'] . "\0" . (string)$value['normalizedValue'];
+                        $knownDocumentRecords[$record['recordKey']]['values'][$identity] = ['fieldId' => $value['fieldId'], 'value' => $value['normalizedValue']];
+                    }
+                }
+            }
+            foreach ($knownDocumentRecords as &$record) $record['values'] = array_values($record['values']);
+            unset($record);
+            $response = (new Mapper($this->client))->request($manifest, $knownGoods, [
+                'window' => $part, 'maxContextBytes' => $this->config->get('mapping_context_bytes'),
+                'maxRepairs' => $this->config->get('mapping_max_repairs'), 'contextRequests' => $contextRequests,
+                'knownDocumentRecords' => array_values($knownDocumentRecords),
+            ]);
             $json = json_encode($response, JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
             $used=0;
             foreach(new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($this->config->get('runtime_dir'),\FilesystemIterator::SKIP_DOTS)) as $file)if($file->isFile()&&!$file->isLink())$used+=$file->getSize();
             if($used+strlen($json)>$this->config->get('max_runtime_bytes'))throw new ApiError('STORAGE_LIMIT','Недостаточно места для сопоставления.',503);
             if (@file_put_contents($cache . '.tmp', $json, LOCK_EX) !== strlen($json) || !@rename($cache . '.tmp', $cache)) throw new ApiError('STORAGE_ERROR', 'Не удалось сохранить сопоставление.', 503);
         }
-        return ['response' => $response,'sources' => $sources,'cursor' => $cursor + 1,'more' => $cursor + 1 < count($plan)];
+        $newContext = $response['mapping']['contextRequests'] ?? [];
+        $more = $cursor + 1 < count($plan) || $contextRequests !== [] || ($newContext !== [] && ($state['mappingContextRequestsServed'] ?? 0) < $this->config->get('mapping_max_context_requests'));
+        return ['response' => $response,'sources' => $manifest['sources'],'cursor' => $cursor + 1,'more' => $more,'window' => $part,'servedContextRequests' => $contextRequests];
     }
 
     private function applyPart(array $state, array $payload, array $job): array
     {
-        $state = (new CandidateMerger($this->registry))->merge($state, $payload['response'], $payload['sources']);
-        $state = (new \Customs\Domain\TnvedSuggestions())->apply($state);
+        if (($payload['window'] ?? null) === null) {
+            $state['mappingProgress'][$job['fingerprint']] = $payload['cursor'];
+            $state['graphMappingRunComplete'] = true;
+            $state['graphMappingResults'] = (new GraphMappingResultStore())->project($state);
+            $state['phase'] = 'reviewing';
+            return $state;
+        }
+        $state['graphMapping'] = $payload['response']['mapping'] ?? ['schemaVersion' => 'graph-mapping-v2'];
+        $state['graphMappingParts'] ??= [];
+        if (($payload['response']['mapping']['schemaVersion'] ?? null) === 'graph-mapping-v2') {
+            $knownGoods = [];
+            foreach ($state['draft']['goods'] ?? [] as $goods) if (($goods['description'] ?? null) !== null) $knownGoods[] = ['key' => $goods['id'], 'description' => $goods['description']];
+            $knownDocumentKeys = array_column($state['draft']['documents'] ?? [], 'id');
+            $linked = (new GraphMappingIdentityLinker())->link($payload['response']['mapping'], $state['id'], $payload['sources'] ?? [], $state['graphMappingIdentity'] ?? [], $knownGoods, $knownDocumentKeys);
+            $state['graphMapping'] = $linked['mapping'];
+            $state['graphMappingIdentity'] = $linked['registry'];
+            $state['graphMappingParts'][] = $linked['mapping'];
+            $state = (new GraphMappingResultStore())->apply($state, $linked['mapping'], $payload['sources'] ?? []);
+        }
+        $state['graphMappingUsage'] = $this->addUsage($state['graphMappingUsage'] ?? [], $payload['response']['usage'] ?? []);
+        $state['graphMappingCalls'] = ($state['graphMappingCalls'] ?? 0) + (int)($payload['response']['calls'] ?? 0);
+        $state['graphMappingRepairs'] = ($state['graphMappingRepairs'] ?? 0) + (int)($payload['response']['repairs'] ?? 0);
+        $state['graphMappingInputBytes'] = ($state['graphMappingInputBytes'] ?? 0) + (int)($payload['response']['inputBytes'] ?? 0);
+        if (($payload['response']['failureCode'] ?? null) !== null) $state['graphMappingFailures'][] = ['code' => $payload['response']['failureCode'], 'window' => $payload['window']['index'] ?? null];
+        $state['graphMappingPromptVersion'] = $payload['response']['promptVersion'] ?? Mapper::PROMPT_VERSION;
         $state['draft'] = \Customs\Domain\DeclarationDate::defaults($state['draft'], $this->store->now());
         $state = (new \Customs\Domain\TariffDefaults())->apply($state);
         $state['mappingProgress'][$job['fingerprint']] = $payload['cursor'];
         $state['phase'] = $payload['more'] ? 'recognizing' : 'reviewing';
+        $state['graphMappingRunComplete'] = !$payload['more'];
+        if (($payload['servedContextRequests'] ?? []) !== []) {
+            $served = [];
+            foreach ($payload['servedContextRequests'] as $request) foreach ($request['sourceIds'] ?? [] as $id) $served[$id] = true;
+            $state['mappingContextRequests'] = array_values(array_filter($state['mappingContextRequests'] ?? [], static fn(array $request): bool => array_diff($request['sourceIds'] ?? [], array_keys($served)) !== []));
+            $state['mappingContextRequestsServed'] = ($state['mappingContextRequestsServed'] ?? 0) + 1;
+        }
+        $requestedIds = [];
+        foreach ($state['mappingContextRequests'] ?? [] as $request) foreach ($request['sourceIds'] ?? [] as $id) $requestedIds[$id] = true;
+        foreach ($state['graphMapping']['contextRequests'] ?? [] as $request) {
+            if (($state['mappingContextRequestsServed'] ?? 0) >= $this->config->get('mapping_max_context_requests')) break;
+            $ids = array_values(array_filter($request['sourceIds'] ?? [], static fn(string $id): bool => !isset($requestedIds[$id])));
+            if ($ids === []) continue;
+            $state['mappingContextRequests'][] = ['graphId' => $request['graphId'], 'itemKey' => $request['itemKey'], 'sourceIds' => $ids, 'reason' => $request['reason']];
+            foreach ($ids as $id) $requestedIds[$id] = true;
+        }
+        if (($state['mappingContextRequestsServed'] ?? 0) >= $this->config->get('mapping_max_context_requests') && ($state['graphMapping']['contextRequests'] ?? []) !== []) {
+            $state['graphMapping']['warnings'][] = 'Запрос дополнительного контекста не выполнен: достигнут предел запросов.';
+        }
+        $state['mappingWindowProgress'] = ['completed' => $payload['cursor'], 'lastWindow' => $payload['window'], 'contextRequestsServed' => $state['mappingContextRequestsServed'] ?? 0, 'calls' => $state['graphMappingCalls'], 'repairs' => $state['graphMappingRepairs'], 'inputBytes' => $state['graphMappingInputBytes']];
+        if (($state['mappingContextRequests'] ?? []) !== [] && !$payload['more']) $state['graphMapping']['warnings'][] = 'Запрос дополнительного контекста не обработан: достигнут лимит запросов.';
+        $state['graphMappingResults'] = (new GraphMappingResultStore())->project($state);
         return $state;
+    }
+
+    private function addUsage(array $current, array $additional): array
+    {
+        foreach ($additional as $key => $value) if (is_numeric($value)) $current[$key] = ($current[$key] ?? 0) + $value;
+        return $current;
     }
 }

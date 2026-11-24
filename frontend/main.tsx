@@ -129,7 +129,7 @@ function App() {
     setErrors([]);
     // Blur saves are queued without disabling the button the user is clicking.
     await mutate(active=>change.requiredDocumentKind||change.recordKind
-      ?request<Session>('/api/entities',{method:'POST',body:JSON.stringify({revision:active.dataRevision,scope:'document',action:change.recordKind?'record':'required',kind:change.recordKind??change.requiredDocumentKind,fieldId:change.fieldId,value:change.value})},active.csrfToken)
+      ?request<Session>('/api/entities',{method:'POST',body:JSON.stringify({revision:active.dataRevision,scope:'document',action:change.recordKind?'record':'required',kind:change.recordKind??change.requiredDocumentKind,...(change.recordId?{recordId:change.recordId}:{}),...(change.recordFileId?{fileId:change.recordFileId}:{}),fieldId:change.fieldId,value:change.value})},active.csrfToken)
       :request<Session>('/api/draft',{method:'PATCH',body:JSON.stringify({revision:active.dataRevision,changes:[change]})},active.csrfToken),false);
   }
   async function entity(body:Record<string,unknown>) {
@@ -146,6 +146,10 @@ function App() {
     try {await mutate(()=>request<Session>('/api/session'));}
     catch(error){setErrors([(error as Error).message]);}
   }
+  async function manualRate(currency:string,value:string) {
+    if(!session)return;
+    await mutate(active=>request<Session>('/api/rates/manual',{method:'POST',body:JSON.stringify({revision:active.dataRevision,currency,value})},active.csrfToken),false);
+  }
   async function propose(id:string,key:string,value:string|null) {
     await mutate(active=>request<Session>('/api/calculation',{method:'PATCH',body:JSON.stringify({revision:active.dataRevision,entityId:id,key,value})},active.csrfToken));
   }
@@ -160,7 +164,7 @@ function App() {
     {fatal?<div className="notice error" role="alert"><p>{fatal}</p><button className="primary" onClick={()=>{void initialize();void request<Registry>('/api/registry').then(setRegistry).catch(e=>setFatal(e.message));}}>Повторить подключение</button></div>
       :!session||!registry?<p className="loading" role="status">Подготавливаем временную сессию…</p>
       :page==='calculation'||(page===null&&['calculation','calculated'].includes(session.phase))?<CalculationPage session={session} registry={registry} busy={busy} errors={errors} onChange={change} onEntity={entity} onRecalculate={()=>void calculate()} onPropose={propose} onBack={()=>setPage('review')} onRates={()=>void refreshRates(true)} ratesLoading={ratesLoading} ratesError={ratesError}/>
-      :page!=='upload'&&(session.phase==='reviewing'||page==='review')?<ReviewPage session={session} registry={registry} busy={busy} onChange={change} onEntity={entity} onBack={()=>setPage('upload')} onCalculate={()=>void enterCalculation()} onValidate={()=>void validate()} onRates={()=>void refreshRates(true)} ratesLoading={ratesLoading} ratesError={ratesError} errors={errors}/>
+      :page!=='upload'&&(session.phase==='reviewing'||page==='review')?<ReviewPage session={session} registry={registry} busy={busy} onChange={change} onEntity={entity} onBack={()=>setPage('upload')} onCalculate={()=>void enterCalculation()} onValidate={()=>void validate()} onRates={()=>void refreshRates(true)} onManualRate={manualRate} ratesLoading={ratesLoading} ratesError={ratesError} errors={errors}/>
       :<><UploadPage session={session} busy={busy} recognizing={awaitingRecognition} errors={errors} uploadFailures={uploadFailures} onUpload={(files,groupId)=>void upload(files,groupId)} onGroup={group} onAssign={assign} onRemove={id=>void remove(id)} onRecognize={()=>void recognize()}/>{!awaitingRecognition&&['reviewing','calculated','calculation'].includes(session.phase)&&<button className="primary" onClick={()=>setPage('review')}>К проверке данных</button>}</>}
   </main>;
 }

@@ -33,11 +33,18 @@ final class CandidateVerifier
         $value = $normalizer->value($field, $candidate['rawValue'], $candidate['unit'], $evidence['context']);
         $issues = $normalizer->issues($field, $value);
         if($field['id']==='declaration.sourcePackageCount'&&(!is_int($value)||$value<1||!preg_match('/packages?|pallets?|places?|количеств\p{L}*\s+мест|мест\b|паллет/ui',$evidence['context'])))$issues[]='Количество мест не подтверждено явным заголовком документа.';
-        if (in_array($field['id'], ['goods.grossMass','goods.netMass'], true)) {
-            $label=$field['id']==='goods.grossMass'?'/gross|брутто|毛重/ui':'/net(?:to)?(?:\s|weight|mass|\b)|нетто|净重/ui';
-            if(!preg_match($label,$evidence['context']))$issues[]='Источник не содержит явного признака брутто/нетто рядом с данными; подтвердите значение вручную.';
+        if (in_array($field['unit'] ?? null, ['invoiceCurrency', 'currency'], true)) {
+            $currency = strtoupper(trim((string)($candidate['unit'] ?? '')));
+            $quote = $evidence['context'];
+            if (!preg_match('/^[A-Z]{3}$/D', $currency) || !preg_match('/(?<![A-Z])' . preg_quote($currency, '/') . '(?![A-Z])/i', $quote)) {
+                $issues[] = 'Валюта суммы не подтверждена тем же исходным фрагментом.';
+            }
+        }
+        if ($field['id'] === 'document.number' && EvidenceTypeGuard::isMeasuredNumber($candidate['rawValue'], $evidence['context'])) {
+            $issues[] = 'Значение похоже на массу или денежную сумму, а не на номер документа.';
         }
         unset($evidence['context']);
         return ['fieldId' => $field['id'], 'scope' => $field['scope'], 'entityKey' => $candidate['entityKey'], 'value' => $value, 'rawValue' => $candidate['rawValue'], 'sourceUnit' => $candidate['unit'], 'unit' => $field['unit'] ?? null, 'evidence' => $evidence, 'valid' => $issues === [], 'issues' => $issues];
     }
+
 }

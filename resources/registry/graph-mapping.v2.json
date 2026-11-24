@@ -1,0 +1,45 @@
+{
+  "version": "1.1.0",
+  "sourceGraphVersion": "2.0.0",
+  "sourceBindingVersion": "2.0.0",
+  "sourceDtsMatrix": "fields.v1.json:dtsMatrixCoverage",
+  "positionOwners": {
+    "15": "document",
+    "17": "profile"
+  },
+  "positionTypes": {
+    "15": "country-name",
+    "17": "country-name"
+  },
+  "fieldOwnerOverrides": {
+    "23": {
+      "rate.currency": "document"
+    },
+    "36": {
+      "goods.hasPreference": "profile",
+      "goods.preferenceFee": "profile",
+      "goods.preferenceDuty": "profile",
+      "goods.preferenceExcise": "profile",
+      "goods.preferenceVat": "profile",
+      "goods.preferenceBasis": "document"
+    },
+    "37": {
+      "declaration.procedure": "profile",
+      "goods.previousProcedure": "document",
+      "goods.movementFeature": "document"
+    },
+    "44": {
+      "document.kind": "reference",
+      "document.dateRequired": "reference",
+      "document.presentationCode": "reference"
+    },
+    "B": {
+      "declaration.paymentFactsAvailable": "document",
+      "payment.code": "document",
+      "payment.amount": "document",
+      "payment.source": "document",
+      "payment.documentNumber": "document",
+      "payment.date": "document"
+    }
+  }
+}

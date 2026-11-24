@@ -1,0 +1,1090 @@
+{
+  "version": "1.0.0",
+  "basis": "Primary document visual/text review; reference outputs are comparison only. Manual means no pre-asserted documentary answer: evidence-backed extra findings are permitted, invented values are not.",
+  "cases": {
+    "reference-cpt": {
+      "inputs": [
+        "reference/source-documents/Акт идентификации.pdf",
+        "reference/source-documents/брокерский договор.pdf",
+        "reference/source-documents/договор+с+УНК.pdf",
+        "reference/source-documents/инвойс.pdf",
+        "reference/source-documents/отказной по СЭС.pdf",
+        "reference/source-documents/платеж+13.10.2026.pdf",
+        "reference/source-documents/Приложение 25.pdf",
+        "reference/source-documents/смр.pdf",
+        "reference/source-documents/тд.pdf",
+        "reference/source-documents/экспортная.pdf"
+      ],
+      "comparisonOnly": [
+        "reference/expected-output/ДТ 55411_281026_0028206.pdf",
+        "reference/expected-output/S116510021328.xml",
+        "reference/expected-output/DTS_20261105121051096.xml"
+      ],
+      "positions": [
+        {
+          "graphId": "1",
+          "expected": "profile",
+          "values": [],
+          "sources": [],
+          "note": "Backend-owned; not a missing documentary fact."
+        },
+        {
+          "graphId": "2",
+          "expected": "found",
+          "values": [
+            "ANHUI",
+            "RUIBAI"
+          ],
+          "sources": [
+            "reference/source-documents/инвойс.pdf",
+            "reference/source-documents/смр.pdf"
+          ],
+          "note": ""
+        },
+        {
+          "graphId": "3",
+          "expected": "not_applicable",
+          "values": [],
+          "sources": [],
+          "note": "Backend-owned; not a missing documentary fact."
+        },
+        {
+          "graphId": "4",
+          "expected": "not_applicable",
+          "values": [],
+          "sources": [],
+          "note": "Backend-owned; not a missing documentary fact."
+        },
+        {
+          "graphId": "5",
+          "expected": "calculated",
+          "values": [],
+          "sources": [],
+          "note": "Backend-owned; not a missing documentary fact."
+        },
+        {
+          "graphId": "6",
+          "expected": "found",
+          "values": [
+            "34"
+          ],
+          "sources": [
+            "reference/source-documents/смр.pdf"
+          ],
+          "note": "34 outer pallets contain 136 drums; do not add the two counts."
+        },
+        {
+          "graphId": "7",
+          "expected": "not_applicable",
+          "values": [],
+          "sources": [],
+          "note": "Backend-owned; not a missing documentary fact."
+        },
+        {
+          "graphId": "8",
+          "expected": "found",
+          "values": [
+            "HIMCENTR"
+          ],
+          "sources": [
+            "reference/source-documents/инвойс.pdf",
+            "reference/source-documents/смр.pdf"
+          ],
+          "note": ""
+        },
+        {
+          "graphId": "9",
+          "expected": "found",
+          "values": [
+            "HIMCENTR"
+          ],
+          "sources": [
+            "reference/source-documents/договор+с+УНК.pdf",
+            "reference/source-documents/платеж+13.10.2026.pdf"
+          ],
+          "note": ""
+        },
+        {
+          "graphId": "10",
+          "expected": "not_applicable",
+          "values": [],
+          "sources": [],
+          "note": "Backend-owned; not a missing documentary fact."
+        },
+        {
+          "graphId": "11",
+          "expected": "found",
+          "values": [
+            "CN"
+          ],
+          "sources": [
+            "reference/source-documents/договор+с+УНК.pdf",
+            "reference/source-documents/инвойс.pdf"
+          ],
+          "note": ""
+        },
+        {
+          "graphId": "12",
+          "expected": "calculated",
+          "values": [],
+          "sources": [],
+          "note": "Backend-owned; not a missing documentary fact."
+        },
+        {
+          "graphId": "13",
+          "expected": "not_applicable",
+          "values": [],
+          "sources": [],
+          "note": "Backend-owned; not a missing documentary fact."
+        },
+        {
+          "graphId": "14",
+          "expected": "found",
+          "values": [
+            "Химцентр"
+          ],
+          "sources": [
+            "reference/source-documents/брокерский договор.pdf",
+            "reference/source-documents/договор+с+УНК.pdf"
+          ],
+          "note": "Importer/client, not automatically the customs service company."
+        },
+        {
+          "graphId": "15",
+          "expected": "found",
+          "values": [
+            "CN"
+          ],
+          "sources": [
+            "reference/source-documents/инвойс.pdf",
+            "reference/source-documents/смр.pdf"
+          ],
+          "note": ""
+        },
+        {
+          "graphId": "15a",
+          "expected": "found",
+          "values": [
+            "CN"
+          ],
+          "sources": [
+            "reference/source-documents/инвойс.pdf",
+            "reference/source-documents/смр.pdf"
+          ],
+          "note": ""
+        },
+        {
+          "graphId": "16",
+          "expected": "found",
+          "values": [
+            "CN"
+          ],
+          "sources": [
+            "reference/source-documents/экспортная.pdf"
+          ],
+          "note": ""
+        },
+        {
+          "graphId": "17",
+          "expected": "profile",
+          "values": [],
+          "sources": [],
+          "note": "Backend-owned; not a missing documentary fact."
+        },
+        {
+          "graphId": "17a",
+          "expected": "profile",
+          "values": [],
+          "sources": [],
+          "note": "Backend-owned; not a missing documentary fact."
+        },
+        {
+          "graphId": "18",
+          "expected": "found",
+          "values": [
+            "944"
+          ],
+          "sources": [
+            "reference/source-documents/смр.pdf"
+          ],
+          "note": "CMR vehicle plate; do not use the CMR/invoice number."
+        },
+        {
+          "graphId": "19",
+          "expected": "manual",
+          "values": [],
+          "sources": [],
+          "note": "No reliable explicit container declaration in the primary set."
+        },
+        {
+          "graphId": "20",
+          "expected": "found",
+          "values": [
+            "CPT",
+            "Almaty"
+          ],
+          "sources": [
+            "reference/source-documents/инвойс.pdf",
+            "reference/source-documents/Приложение 25.pdf"
+          ],
+          "note": ""
+        },
+        {
+          "graphId": "21",
+          "expected": "found",
+          "values": [
+            "944"
+          ],
+          "sources": [
+            "reference/source-documents/смр.pdf"
+          ],
+          "note": ""
+        },
+        {
+          "graphId": "22",
+          "expected": "found",
+          "values": [
+            "USD"
+          ],
+          "sources": [
+            "reference/source-documents/инвойс.pdf",
+            "reference/source-documents/Приложение 25.pdf"
+          ],
+          "note": ""
+        },
+        {
+          "graphId": "23",
+          "expected": "reference",
+          "values": [],
+          "sources": [],
+          "note": "Backend-owned; not a missing documentary fact."
+        },
+        {
+          "graphId": "24",
+          "expected": "manual",
+          "values": [],
+          "sources": [],
+          "note": "Classify the commercial transaction from contract terms and the official list; no literal code in primary documents."
+        },
+        {
+          "graphId": "25",
+          "expected": "found",
+          "values": [
+            "30"
+          ],
+          "sources": [
+            "reference/source-documents/смр.pdf"
+          ],
+          "note": ""
+        },
+        {
+          "graphId": "26",
+          "expected": "found",
+          "values": [
+            "30"
+          ],
+          "sources": [
+            "reference/source-documents/смр.pdf"
+          ],
+          "note": ""
+        },
+        {
+          "graphId": "27",
+          "expected": "not_applicable",
+          "values": [],
+          "sources": [],
+          "note": "Backend-owned; not a missing documentary fact."
+        },
+        {
+          "graphId": "28",
+          "expected": "not_applicable",
+          "values": [],
+          "sources": [],
+          "note": "Backend-owned; not a missing documentary fact."
+        },
+        {
+          "graphId": "29",
+          "expected": "found",
+          "values": [
+            "57503"
+          ],
+          "sources": [
+            "reference/source-documents/смр.pdf",
+            "reference/source-documents/тд.pdf"
+          ],
+          "note": "Entry stamp, distinct from destination customs post 39855411."
+        },
+        {
+          "graphId": "30",
+          "expected": "found",
+          "values": [
+            "MKS",
+            "29"
+          ],
+          "sources": [
+            "reference/source-documents/смр.pdf"
+          ],
+          "note": "CMR box 13: storage company/address, not final commercial consignee address."
+        },
+        {
+          "graphId": "31",
+          "expected": "found",
+          "values": [
+            "ETHYL",
+            "ACETATE"
+          ],
+          "sources": [
+            "reference/source-documents/инвойс.pdf",
+            "reference/source-documents/Приложение 25.pdf",
+            "reference/source-documents/смр.pdf"
+          ],
+          "note": ""
+        },
+        {
+          "graphId": "32",
+          "expected": "calculated",
+          "values": [],
+          "sources": [],
+          "note": "Backend-owned; not a missing documentary fact."
+        },
+        {
+          "graphId": "33",
+          "expected": "reference",
+          "values": [
+            "2915310000"
+          ],
+          "sources": [
+            "reference/source-documents/инвойс.pdf"
+          ],
+          "note": "AI selects an existing catalogue entry from ETHYL ACETATE; documentary HS is 29153100."
+        },
+        {
+          "graphId": "34",
+          "expected": "found",
+          "values": [
+            "CN"
+          ],
+          "sources": [
+            "reference/source-documents/экспортная.pdf"
+          ],
+          "note": ""
+        },
+        {
+          "graphId": "35",
+          "expected": "conflict",
+          "values": [
+            "26792",
+            "27860"
+          ],
+          "sources": [
+            "reference/source-documents/смр.pdf",
+            "reference/source-documents/экспортная.pdf"
+          ],
+          "note": ""
+        },
+        {
+          "graphId": "36",
+          "expected": "profile",
+          "values": [],
+          "sources": [],
+          "note": "Backend-owned; not a missing documentary fact."
+        },
+        {
+          "graphId": "37",
+          "expected": "manual",
+          "values": [],
+          "sources": [],
+          "note": "Procedure 40 belongs to the profile; previous procedure/features need documentary or user confirmation."
+        },
+        {
+          "graphId": "38",
+          "expected": "found",
+          "values": [
+            "24480"
+          ],
+          "sources": [
+            "reference/source-documents/Приложение 25.pdf",
+            "reference/source-documents/экспортная.pdf"
+          ],
+          "note": ""
+        },
+        {
+          "graphId": "39",
+          "expected": "manual",
+          "values": [],
+          "sources": [],
+          "note": "Absence of a quota claim is not an explicit documentary answer."
+        },
+        {
+          "graphId": "40",
+          "expected": "not_applicable",
+          "values": [],
+          "sources": [],
+          "note": "Backend-owned; not a missing documentary fact."
+        },
+        {
+          "graphId": "41",
+          "expected": "reference",
+          "values": [],
+          "sources": [],
+          "note": "Backend-owned; not a missing documentary fact."
+        },
+        {
+          "graphId": "42",
+          "expected": "found",
+          "values": [
+            "37454.40"
+          ],
+          "sources": [
+            "reference/source-documents/инвойс.pdf",
+            "reference/source-documents/Приложение 25.pdf"
+          ],
+          "note": ""
+        },
+        {
+          "graphId": "43",
+          "expected": "profile",
+          "values": [],
+          "sources": [],
+          "note": "Backend-owned; not a missing documentary fact."
+        },
+        {
+          "graphId": "44",
+          "expected": "found",
+          "values": [
+            "777",
+            "AHRBXS"
+          ],
+          "sources": [
+            "reference/source-documents/договор+с+УНК.pdf",
+            "reference/source-documents/инвойс.pdf",
+            "reference/source-documents/тд.pdf"
+          ],
+          "note": "Contract/invoice records and other supporting documents; not product rows."
+        },
+        {
+          "graphId": "45",
+          "expected": "calculated",
+          "values": [],
+          "sources": [],
+          "note": "Backend-owned; not a missing documentary fact."
+        },
+        {
+          "graphId": "46",
+          "expected": "calculated",
+          "values": [],
+          "sources": [],
+          "note": "Backend-owned; not a missing documentary fact."
+        },
+        {
+          "graphId": "47",
+          "expected": "calculated",
+          "values": [],
+          "sources": [],
+          "note": "Backend-owned; not a missing documentary fact."
+        },
+        {
+          "graphId": "B",
+          "expected": "manual",
+          "values": [],
+          "sources": [],
+          "note": "Commercial payment order 393 is not proof of customs tax payment."
+        },
+        {
+          "graphId": "48",
+          "expected": "not_applicable",
+          "values": [],
+          "sources": [],
+          "note": "Backend-owned; not a missing documentary fact."
+        },
+        {
+          "graphId": "49",
+          "expected": "not_applicable",
+          "values": [],
+          "sources": [],
+          "note": "Backend-owned; not a missing documentary fact."
+        },
+        {
+          "graphId": "50",
+          "expected": "not_applicable",
+          "values": [],
+          "sources": [],
+          "note": "Backend-owned; not a missing documentary fact."
+        },
+        {
+          "graphId": "51",
+          "expected": "not_applicable",
+          "values": [],
+          "sources": [],
+          "note": "Backend-owned; not a missing documentary fact."
+        },
+        {
+          "graphId": "52",
+          "expected": "not_applicable",
+          "values": [],
+          "sources": [],
+          "note": "Backend-owned; not a missing documentary fact."
+        },
+        {
+          "graphId": "53",
+          "expected": "not_applicable",
+          "values": [],
+          "sources": [],
+          "note": "Backend-owned; not a missing documentary fact."
+        },
+        {
+          "graphId": "54",
+          "expected": "manual",
+          "values": [],
+          "sources": [],
+          "note": "Current date is automatic; authority/signatory of a new declaration is not borrowed from old contracts."
+        }
+      ]
+    },
+    "reference-fca": {
+      "inputs": [
+        "reference/source-documents/example2/2601011274.xlsx",
+        "reference/source-documents/example2/авиа.pdf",
+        "reference/source-documents/example2/инвойс за транспортировку.pdf",
+        "reference/source-documents/example2/инвойс.jpg",
+        "reference/source-documents/example2/контракт.pdf",
+        "reference/source-documents/example2/СГР.pdf",
+        "reference/source-documents/example2/упаков.jpg"
+      ],
+      "comparisonOnly": [
+        "reference/source-documents/example2/Выпуск KT&G KAZAKHSTAN  (HB Fuller inv 2601011274) Авиа.pdf"
+      ],
+      "positions": [
+        {
+          "graphId": "1",
+          "expected": "profile",
+          "values": [],
+          "sources": [],
+          "note": "Backend-owned; not a missing documentary fact."
+        },
+        {
+          "graphId": "2",
+          "expected": "found",
+          "values": [
+            "Fuller",
+            "Deutschland"
+          ],
+          "sources": [
+            "reference/source-documents/example2/авиа.pdf",
+            "reference/source-documents/example2/упаков.jpg"
+          ],
+          "note": "Shipper/exporter differs from the invoice billing seller; preserve the actual address."
+        },
+        {
+          "graphId": "3",
+          "expected": "not_applicable",
+          "values": [],
+          "sources": [],
+          "note": "Backend-owned; not a missing documentary fact."
+        },
+        {
+          "graphId": "4",
+          "expected": "not_applicable",
+          "values": [],
+          "sources": [],
+          "note": "Backend-owned; not a missing documentary fact."
+        },
+        {
+          "graphId": "5",
+          "expected": "calculated",
+          "values": [],
+          "sources": [],
+          "note": "Backend-owned; not a missing documentary fact."
+        },
+        {
+          "graphId": "6",
+          "expected": "found",
+          "values": [
+            "2"
+          ],
+          "sources": [
+            "reference/source-documents/example2/авиа.pdf",
+            "reference/source-documents/example2/упаков.jpg"
+          ],
+          "note": ""
+        },
+        {
+          "graphId": "7",
+          "expected": "not_applicable",
+          "values": [],
+          "sources": [],
+          "note": "Backend-owned; not a missing documentary fact."
+        },
+        {
+          "graphId": "8",
+          "expected": "found",
+          "values": [
+            "KT&G",
+            "71"
+          ],
+          "sources": [
+            "reference/source-documents/example2/авиа.pdf",
+            "reference/source-documents/example2/инвойс.jpg",
+            "reference/source-documents/example2/упаков.jpg"
+          ],
+          "note": "Ship To is accounting quarter 060, Kokozek 71; not Bill To 062/50A."
+        },
+        {
+          "graphId": "9",
+          "expected": "found",
+          "values": [
+            "KT&G",
+            "50A"
+          ],
+          "sources": [
+            "reference/source-documents/example2/инвойс.jpg",
+            "reference/source-documents/example2/контракт.pdf"
+          ],
+          "note": "Bill To differs from the delivery address."
+        },
+        {
+          "graphId": "10",
+          "expected": "not_applicable",
+          "values": [],
+          "sources": [],
+          "note": "Backend-owned; not a missing documentary fact."
+        },
+        {
+          "graphId": "11",
+          "expected": "found",
+          "values": [
+            "DE"
+          ],
+          "sources": [
+            "reference/source-documents/example2/инвойс.jpg",
+            "reference/source-documents/example2/контракт.pdf"
+          ],
+          "note": ""
+        },
+        {
+          "graphId": "12",
+          "expected": "calculated",
+          "values": [],
+          "sources": [],
+          "note": "Backend-owned; not a missing documentary fact."
+        },
+        {
+          "graphId": "13",
+          "expected": "not_applicable",
+          "values": [],
+          "sources": [],
+          "note": "Backend-owned; not a missing documentary fact."
+        },
+        {
+          "graphId": "14",
+          "expected": "manual",
+          "values": [],
+          "sources": [],
+          "note": "Confirm the declarant role of the importer; no power of attorney for the new declaration is supplied."
+        },
+        {
+          "graphId": "15",
+          "expected": "found",
+          "values": [
+            "DE"
+          ],
+          "sources": [
+            "reference/source-documents/example2/авиа.pdf",
+            "reference/source-documents/example2/инвойс.jpg",
+            "reference/source-documents/example2/упаков.jpg"
+          ],
+          "note": ""
+        },
+        {
+          "graphId": "15a",
+          "expected": "found",
+          "values": [
+            "DE"
+          ],
+          "sources": [
+            "reference/source-documents/example2/авиа.pdf",
+            "reference/source-documents/example2/инвойс.jpg",
+            "reference/source-documents/example2/упаков.jpg"
+          ],
+          "note": ""
+        },
+        {
+          "graphId": "16",
+          "expected": "found",
+          "values": [
+            "DE"
+          ],
+          "sources": [
+            "reference/source-documents/example2/инвойс.jpg"
+          ],
+          "note": ""
+        },
+        {
+          "graphId": "17",
+          "expected": "profile",
+          "values": [],
+          "sources": [],
+          "note": "Backend-owned; not a missing documentary fact."
+        },
+        {
+          "graphId": "17a",
+          "expected": "profile",
+          "values": [],
+          "sources": [],
+          "note": "Backend-owned; not a missing documentary fact."
+        },
+        {
+          "graphId": "18",
+          "expected": "manual",
+          "values": [],
+          "sources": [],
+          "note": "AWB flight identifiers do not establish aircraft registration; retain the factual flight separately."
+        },
+        {
+          "graphId": "19",
+          "expected": "manual",
+          "values": [],
+          "sources": [],
+          "note": "Pallets do not prove absence of a container."
+        },
+        {
+          "graphId": "20",
+          "expected": "found",
+          "values": [
+            "FCA",
+            "Nienburg"
+          ],
+          "sources": [
+            "reference/source-documents/example2/инвойс.jpg",
+            "reference/source-documents/example2/упаков.jpg"
+          ],
+          "note": ""
+        },
+        {
+          "graphId": "21",
+          "expected": "manual",
+          "values": [],
+          "sources": [],
+          "note": "Flight TK6592 is present; aircraft registration/country is not established."
+        },
+        {
+          "graphId": "22",
+          "expected": "found",
+          "values": [
+            "EUR"
+          ],
+          "sources": [
+            "reference/source-documents/example2/2601011274.xlsx",
+            "reference/source-documents/example2/инвойс.jpg"
+          ],
+          "note": ""
+        },
+        {
+          "graphId": "23",
+          "expected": "reference",
+          "values": [],
+          "sources": [],
+          "note": "Backend-owned; not a missing documentary fact."
+        },
+        {
+          "graphId": "24",
+          "expected": "manual",
+          "values": [],
+          "sources": [],
+          "note": "Select the transaction code from the contract and classifier; do not copy an old DT."
+        },
+        {
+          "graphId": "25",
+          "expected": "found",
+          "values": [
+            "40"
+          ],
+          "sources": [
+            "reference/source-documents/example2/авиа.pdf"
+          ],
+          "note": "International air leg, not Truck from the factory pre-carriage."
+        },
+        {
+          "graphId": "26",
+          "expected": "manual",
+          "values": [],
+          "sources": [],
+          "note": "Domestic Kazakhstan leg must not be inferred from invoice Truck at Nienburg."
+        },
+        {
+          "graphId": "27",
+          "expected": "not_applicable",
+          "values": [],
+          "sources": [],
+          "note": "Backend-owned; not a missing documentary fact."
+        },
+        {
+          "graphId": "28",
+          "expected": "not_applicable",
+          "values": [],
+          "sources": [],
+          "note": "Backend-owned; not a missing documentary fact."
+        },
+        {
+          "graphId": "29",
+          "expected": "manual",
+          "values": [],
+          "sources": [],
+          "note": "Airport stamp/code needs confirmation; flight destination alone is not a customs office code."
+        },
+        {
+          "graphId": "30",
+          "expected": "manual",
+          "values": [],
+          "sources": [],
+          "note": "Ship To address is not evidence of the customs storage location."
+        },
+        {
+          "graphId": "31",
+          "expected": "found",
+          "values": [
+            "2934"
+          ],
+          "sources": [
+            "reference/source-documents/example2/2601011274.xlsx",
+            "reference/source-documents/example2/инвойс.jpg",
+            "reference/source-documents/example2/упаков.jpg"
+          ],
+          "note": ""
+        },
+        {
+          "graphId": "32",
+          "expected": "calculated",
+          "values": [],
+          "sources": [],
+          "note": "Backend-owned; not a missing documentary fact."
+        },
+        {
+          "graphId": "33",
+          "expected": "found",
+          "values": [
+            "3506910000"
+          ],
+          "sources": [
+            "reference/source-documents/example2/2601011274.xlsx"
+          ],
+          "note": "XLSX G4 is the EAEU terminal code; foreign eight-digit HS 35069190 is not padded."
+        },
+        {
+          "graphId": "34",
+          "expected": "found",
+          "values": [
+            "DE"
+          ],
+          "sources": [
+            "reference/source-documents/example2/инвойс.jpg"
+          ],
+          "note": ""
+        },
+        {
+          "graphId": "35",
+          "expected": "found",
+          "values": [
+            "1248"
+          ],
+          "sources": [
+            "reference/source-documents/example2/авиа.pdf",
+            "reference/source-documents/example2/инвойс.jpg",
+            "reference/source-documents/example2/упаков.jpg"
+          ],
+          "note": ""
+        },
+        {
+          "graphId": "36",
+          "expected": "profile",
+          "values": [],
+          "sources": [],
+          "note": "Backend-owned; not a missing documentary fact."
+        },
+        {
+          "graphId": "37",
+          "expected": "manual",
+          "values": [],
+          "sources": [],
+          "note": "Procedure 40 is known; previous procedure/features are not established by silence."
+        },
+        {
+          "graphId": "38",
+          "expected": "found",
+          "values": [
+            "1200"
+          ],
+          "sources": [
+            "reference/source-documents/example2/2601011274.xlsx",
+            "reference/source-documents/example2/инвойс.jpg",
+            "reference/source-documents/example2/упаков.jpg"
+          ],
+          "note": ""
+        },
+        {
+          "graphId": "39",
+          "expected": "manual",
+          "values": [],
+          "sources": [],
+          "note": "No explicit quota applicability answer in primary documents."
+        },
+        {
+          "graphId": "40",
+          "expected": "not_applicable",
+          "values": [],
+          "sources": [],
+          "note": "Backend-owned; not a missing documentary fact."
+        },
+        {
+          "graphId": "41",
+          "expected": "reference",
+          "values": [],
+          "sources": [],
+          "note": "Backend-owned; not a missing documentary fact."
+        },
+        {
+          "graphId": "42",
+          "expected": "found",
+          "values": [
+            "2844"
+          ],
+          "sources": [
+            "reference/source-documents/example2/2601011274.xlsx",
+            "reference/source-documents/example2/инвойс.jpg"
+          ],
+          "note": ""
+        },
+        {
+          "graphId": "43",
+          "expected": "profile",
+          "values": [],
+          "sources": [],
+          "note": "Backend-owned; not a missing documentary fact."
+        },
+        {
+          "graphId": "44",
+          "expected": "found",
+          "values": [
+            "2601011274",
+            "235"
+          ],
+          "sources": [
+            "reference/source-documents/example2/авиа.pdf",
+            "reference/source-documents/example2/инвойс.jpg"
+          ],
+          "note": ""
+        },
+        {
+          "graphId": "45",
+          "expected": "calculated",
+          "values": [],
+          "sources": [],
+          "note": "Backend-owned; not a missing documentary fact."
+        },
+        {
+          "graphId": "46",
+          "expected": "calculated",
+          "values": [],
+          "sources": [],
+          "note": "Backend-owned; not a missing documentary fact."
+        },
+        {
+          "graphId": "47",
+          "expected": "calculated",
+          "values": [],
+          "sources": [],
+          "note": "Backend-owned; not a missing documentary fact."
+        },
+        {
+          "graphId": "B",
+          "expected": "manual",
+          "values": [],
+          "sources": [],
+          "note": "Freight payment is not customs tax payment."
+        },
+        {
+          "graphId": "48",
+          "expected": "not_applicable",
+          "values": [],
+          "sources": [],
+          "note": "Backend-owned; not a missing documentary fact."
+        },
+        {
+          "graphId": "49",
+          "expected": "not_applicable",
+          "values": [],
+          "sources": [],
+          "note": "Backend-owned; not a missing documentary fact."
+        },
+        {
+          "graphId": "50",
+          "expected": "not_applicable",
+          "values": [],
+          "sources": [],
+          "note": "Backend-owned; not a missing documentary fact."
+        },
+        {
+          "graphId": "51",
+          "expected": "not_applicable",
+          "values": [],
+          "sources": [],
+          "note": "Backend-owned; not a missing documentary fact."
+        },
+        {
+          "graphId": "52",
+          "expected": "not_applicable",
+          "values": [],
+          "sources": [],
+          "note": "Backend-owned; not a missing documentary fact."
+        },
+        {
+          "graphId": "53",
+          "expected": "not_applicable",
+          "values": [],
+          "sources": [],
+          "note": "Backend-owned; not a missing documentary fact."
+        },
+        {
+          "graphId": "54",
+          "expected": "manual",
+          "values": [],
+          "sources": [],
+          "note": "Current date is automatic; the seller invoice contact is not the declaration signatory."
+        }
+      ]
+    }
+  },
+  "reportedRegression": {
+    "files": [
+      "reference/source-documents/смр.pdf",
+      "reference/source-documents/тд.pdf",
+      "reference/source-documents/инвойс.pdf",
+      "reference/source-documents/договор+с+УНК.pdf"
+    ],
+    "forbiddenDocumentNumbers": [
+      "24480KGS",
+      "USD37454.40"
+    ],
+    "forbiddenDocumentNames": [
+      "ETHYL ACETATE"
+    ],
+    "requiredGraphs": [
+      "2",
+      "8",
+      "15a",
+      "20",
+      "22",
+      "31",
+      "35",
+      "42",
+      "44"
+    ],
+    "requiredFacts": [
+      "ETHYL ACETATE",
+      "37454.40",
+      "USD",
+      "CPT",
+      "777-ЕА"
+    ]
+  }
+}

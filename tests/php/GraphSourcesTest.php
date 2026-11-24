@@ -15,7 +15,37 @@ test('ranked sources retain inter-rank conflicts, deduplicate equal values and p
     $s=$merge->merge($s,typedWeightPayload($a,'27860'),[$sourceA]);same(null,$s['draft']['goods'][0]['grossMass']);same(2,count($s['candidates']));truth($s['draft']['fieldStates']['goods/goods-1/grossMass']['conflict']);
     $s=(new Customs\Domain\Draft($registry))->edit($s,'goods.grossMass','goods-1','28000');$s=$merge->merge($s,typedWeightPayload($a,'27860'),[$sourceA]);same('28000',$s['draft']['goods'][0]['grossMass']);
     $equal=['draft'=>(new Customs\Domain\Draft($registry))->empty(),'candidates'=>[],'evidence'=>[]];$equal['draft']['goods'][0]['description']='Подтверждённый товар';$equal=$merge->merge($equal,typedWeightPayload($a,'27860'),[$sourceA]);$equal=$merge->merge($equal,typedWeightPayload($b,'27860'),[typedWeightSource($b,'04131','Gross 27860 kg')]);same(1,count($equal['candidates']));same(2,count(array_values($equal['candidates'])[0]['evidenceIds']));same('27860',$equal['draft']['goods'][0]['grossMass']);
-    $bad=['draft'=>(new Customs\Domain\Draft($registry))->empty(),'candidates'=>[],'evidence'=>[]];$bad=$merge->merge($bad,typedWeightPayload($a,'27860'),[typedWeightSource($a,'03011','Gross 27860 kg')]);same([],$bad['candidates']);same(null,$bad['draft']['goods'][0]['grossMass']);same('SOURCE_ROLE_UNCONFIRMED',$bad['mappingIssues'][0]['code']);
+    $fallback=['draft'=>(new Customs\Domain\Draft($registry))->empty(),'candidates'=>[],'evidence'=>[]];$fallback['draft']['goods'][0]['description']='Known shipment item';$fallback=$merge->merge($fallback,typedWeightPayload($a,'27860'),[typedWeightSource($a,'03011','Gross 27860 kg')]);same(1,count($fallback['candidates']));same('27860',$fallback['draft']['goods'][0]['grossMass']);same(null,array_values($fallback['candidates'])[0]['rank']);same([],$fallback['mappingIssues']);
+});
+
+test('invoice and contract party values remain eligible when their entity role differs from graph labels',function():void{
+    $registry=new Customs\Domain\Registry();$merge=new Customs\AI\CandidateMerger($registry);$state=['draft'=>(new Customs\Domain\Draft($registry))->empty(),'candidates'=>[],'evidence'=>[]];
+    $id=str_repeat('d',32);$source=typedWeightSource($id,'04021','Seller: ANHUI RUIBAI NEW MATERIAL CO. LTD.; Buyer: CUSTOMS IMPORT LLP');
+    $entities=[];$candidates=[];
+    foreach(['seller'=>'ANHUI RUIBAI NEW MATERIAL CO. LTD.','buyer'=>'CUSTOMS IMPORT LLP'] as $role=>$name){
+        $key=$role;$citation=['documentId'=>$id,'page'=>1,'blockId'=>'p1-b0','sheet'=>null,'cell'=>null,'quote'=>$name];
+        $entities[]=['scope'=>'party','key'=>$key,'role'=>$role,'source'=>array_replace($citation,['quote'=>$role==='seller'?'Seller: '.$name:'Buyer: '.$name])];
+        $candidates[]=['fieldId'=>'party.name','entityKey'=>$key,'rawValue'=>$name,'unit'=>null,'source'=>$citation];
+    }
+    $state=$merge->merge($state,['entities'=>$entities,'candidates'=>$candidates,'warnings'=>[]],[$source]);
+    $parties=array_column($state['draft']['parties'],null,'role');
+    same('ANHUI RUIBAI NEW MATERIAL CO. LTD.',$parties['seller']['name']);same('CUSTOMS IMPORT LLP',$parties['buyer']['name']);
+    same([],array_values(array_filter($state['mappingIssues'],fn(array $issue):bool=>($issue['code']??'')==='SOURCE_ROLE_UNCONFIRMED')));
+});
+
+test('non-priority shipment sources are not blocked from establishing a documented item',function():void{
+    $id=str_repeat('f',32);$source=typedWeightSource($id,'09013','Transit declaration: Ethyl acetate, 27860 kg');
+    truth((new Customs\AI\SourceIndex([$source]))->supportsNewGoods($id));
+});
+
+test('uploaded document kind remains protected from a conflicting AI document-type proposal',function():void{
+    $registry=new Customs\Domain\Registry();$model=new Customs\Domain\Draft($registry);$merge=new Customs\AI\CandidateMerger($registry);$state=['draft'=>$model->empty(),'candidates'=>[],'evidence'=>[]];
+    $id=str_repeat('e',32);$source=typedWeightSource($id,'04021','Invoice INV-1');$citation=['documentId'=>$id,'page'=>1,'blockId'=>'p1-b0','sheet'=>null,'cell'=>null,'quote'=>'Invoice INV-1'];
+    $response=['entities'=>[['scope'=>'document','key'=>'invoice','role'=>null,'source'=>$citation]],'candidates'=>[['fieldId'=>'document.number','entityKey'=>'invoice','rawValue'=>'INV-1','unit'=>null,'source'=>$citation]],'warnings'=>[]];
+    $state=$merge->merge($state,$response,[$source]);$documentId=$state['draft']['documents'][0]['id'];
+    $state['draft']['documents'][0]['kind']='03011';$state['draft']['fieldStates'][Customs\Domain\Draft::address('document',$documentId,'kind')]=['status'=>'manual','candidateId'=>null,'evidenceIds'=>[],'conflict'=>false,'needsReview'=>false];
+    $state=$merge->merge($state,$response,[$source]);
+    same('03011',$state['draft']['documents'][0]['kind']);
 });
 test('contract and amendment in one PDF retain separate record numbers and a manual legal type correction',function():void {
     $registry=new Customs\Domain\Registry();$merge=new Customs\AI\CandidateMerger($registry);$s=['draft'=>(new Customs\Domain\Draft($registry))->empty(),'candidates'=>[],'evidence'=>[]];$id=str_repeat('a',32);$source=typedWeightSource($id,'03011','Contract CON-1; Appendix ADD-25');

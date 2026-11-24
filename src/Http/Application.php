@@ -24,6 +24,12 @@ final class Application
             if(!is_string($query)||mb_strlen($query)>500||$offset===false||$limit===false)throw new ApiError('CLASSIFIER_QUERY','Укажите строку поиска, offset и limit.',422);
             return (new \Customs\Domain\Classifiers())->documents($query,$offset,$limit,\Customs\Domain\DeclarationDate::today($this->store->now()));
         }
+        if($method==='GET' && $path==='/api/classifiers/tnved') {
+            $query=$_GET['q']??null;$offset=filter_var($_GET['offset']??0,FILTER_VALIDATE_INT);$limit=filter_var($_GET['limit']??20,FILTER_VALIDATE_INT);
+            if(!is_string($query)||mb_strlen(trim($query))<2||mb_strlen($query)>120||$offset===false||$offset<0||$limit===false||$limit<1||$limit>50)
+                throw new ApiError('CLASSIFIER_QUERY','Введите минимум два символа кода или наименования; limit должен быть от 1 до 50.',422);
+            return (new \Customs\Domain\TnvedCatalogue())->searchCatalog($query,$offset,$limit);
+        }
         if ($method === 'POST' && $path === '/api/session') {
             $session = $this->store->create();
             $this->sessionCookie($session['token'], $session['state']['expiresAt']);
@@ -45,6 +51,11 @@ final class Application
             $defaults=\Customs\Domain\DeclarationDate::defaults($state['draft'],$this->store->now());
             if($defaults!==$state['draft'])$state=$this->store->mutate($state['id'],$state['dataRevision'],function($s)use($defaults){$s['draft']=$defaults;return $s;});
             return $this->view($state);
+        }
+        if ($method === 'POST' && $path === '/api/rates/manual') {
+            $body=$this->body();if(!is_int($body['revision']??null)||!is_string($body['currency']??null)||!is_string($body['value']??null))throw new ApiError('RATES_REQUEST','Укажите текущую версию данных, валюту и курс.',422);
+            $service=new \Customs\Rates\ExchangeRates($this->store,$this->bank??new \Customs\Rates\NationalBankClient());
+            return $this->view($this->store->mutate($state['id'],$body['revision'],fn($current)=>$service->manual($current,$body['currency'],$body['value']),true,true));
         }
         if ($method === 'POST' && $path === '/api/rates') {
             $body=$this->body();

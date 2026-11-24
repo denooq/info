@@ -5,6 +5,7 @@ namespace Customs\Rates;
 use Customs\Domain\{DeclarationDate,Draft,Registry};
 use Customs\Http\ApiError;
 use Customs\Storage\SessionStore;
+use Brick\Math\BigDecimal;
 
 final class ExchangeRates
 {
@@ -34,6 +35,24 @@ final class ExchangeRates
                 return $this->apply($state,$table,$error,$url,$force);
             },true,true);
         }finally{flock($lock,LOCK_UN);fclose($lock);}
+    }
+
+    public function manual(array $state,string $currency,string $rawValue): array
+    {
+        $currency=strtoupper(trim($currency));$date=$state['draft']['declaration']['signatureDate']??null;
+        if(!preg_match('/^[A-Z]{3}$/D',$currency)||!in_array($currency,self::required($state['draft']),true))throw new ApiError('RATE_CURRENCY','Выберите валюту, используемую в текущем расчёте.',422);
+        if(!is_string($date)||!preg_match('/^\d{4}-\d{2}-\d{2}$/D',$date))throw new ApiError('RATE_DATE','Сначала задайте дату составления декларации.',422);
+        try{$value=(new \Customs\Domain\Normalizer())->value(['type'=>'decimal'],$rawValue,null,'');if(BigDecimal::of($value)->compareTo(BigDecimal::zero())<=0)throw new \InvalidArgumentException();}
+        catch(\Throwable){throw new ApiError('RATE_VALUE','Введите положительный курс за одну единицу валюты.',422);}
+        $draft=&$state['draft'];$model=new Draft(new Registry());$index=null;
+        foreach($draft['rates'] as $i=>$row)if(strtoupper(trim((string)($row['currency']??'')))===$currency){$index=$i;break;}
+        if($index===null){$index=count($draft['rates']);$draft['rates'][]=['id'=>'rate-'.bin2hex(random_bytes(8)),...$model->row('rate')];}
+        $row=&$draft['rates'][$index];$row=array_replace($row,['currency'=>$currency,'value'=>$value,'nominal'=>'1','date'=>$date,'source'=>'manual','confirmed'=>true]);unset($row['_nbk'],$row);
+        $id=$draft['rates'][$index]['id'];$prefix='rate/'.$id.'/';
+        foreach(['value','nominal','source','confirmed'] as $key)$draft['fieldStates'][$prefix.$key]=DeclarationDate::meta('manual');
+        $state['calculation']=$state['confirmed']=$state['artifactSet']=null;
+        if(($state['phase']??'')==='calculated')$state['phase']='reviewing';
+        return $state;
     }
 
     public function apply(array $state,?array $table,?array $error,string $url,bool $replaceManual=false): array

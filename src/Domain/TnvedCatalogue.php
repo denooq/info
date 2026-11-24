@@ -40,6 +40,30 @@ final class TnvedCatalogue
         return ['code' => $row[0], 'name' => $row[1], 'fullName' => $row[2], 'sourceUrl' => self::$data['sources'][$row[3]], 'page' => $row[4]];
     }
 
+    /** Search only terminal ten-digit entries by code prefix or literal catalog text. */
+    public function searchCatalog(string $query, int $offset = 0, int $limit = 20): array
+    {
+        $query = trim($query);
+        $normalized = self::normalize($query);
+        $codeQuery = preg_match('/^[0-9]+$/D', $normalized) === 1;
+        $offset = max(0, $offset);
+        $limit = max(1, min(50, $limit));
+        $matches = [];
+        if ($normalized !== '') foreach (self::$data['items'] as $row) {
+            if (strlen((string)$row[0]) !== 10) continue;
+            if ($codeQuery) {
+                if (!str_starts_with($row[0], $normalized)) continue;
+            } elseif (!str_contains(self::normalize($row[1]), $normalized)
+                && !str_contains(self::normalize($row[2]), $normalized)) continue;
+            $matches[] = $this->entry($row[0]);
+        }
+        return [
+            'version' => $this->version(), 'query' => $query,
+            'items' => array_slice($matches, $offset, $limit), 'total' => count($matches),
+            'offset' => $offset, 'nextOffset' => $offset + $limit < count($matches) ? $offset + $limit : null,
+        ];
+    }
+
     public static function normalize(string $value): string
     {
         return trim(preg_replace('/[^\p{L}\p{N}]+/u', ' ', str_replace('ё', 'е', mb_strtolower($value))));

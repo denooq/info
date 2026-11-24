@@ -67,7 +67,7 @@ final class MistralClient
         return $this->request('/chat/completions', [
             'model' => $this->config->get('mapping_model'), 'temperature' => 0, 'max_tokens' => 16000,
             'messages' => [['role' => 'system','content' => $system], ['role' => 'user','content' => $input]],
-            'response_format' => ['type' => 'json_schema', 'json_schema' => ['name' => 'customs_mapping_v1','strict' => true,'schema' => $schema]],
+              'response_format' => ['type' => 'json_schema', 'json_schema' => ['name' => 'customs_graph_mapping_v2','strict' => true,'schema' => $schema]],
         ]);
     }
 

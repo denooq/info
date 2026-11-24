@@ -138,4 +138,19 @@ final class GraphCodecs
         foreach(array_keys($state['draft']['graphTexts']??[]) as $address)if(str_starts_with($address,'graph/44/')&&($state['draft']['graphTexts'][$address]['error']??null)===null)$state['draft']['graphTexts'][$address]['value']=self::documentText($state['draft']['documents'],substr($address,9));
         return $state;
     }
+
+    public function documentField(array $state,string $recordId,string $fieldId,mixed $raw):array
+    {
+        $field=(new Registry())->field($fieldId);
+        if($field['scope']!=='document'||!in_array($field['key'],['number','date','name','presentationCode','validFrom','validUntil'],true)||(!is_string($raw)&&$raw!==null))throw new ApiError('DOCUMENT_RECORD_FIELD','Это поле нельзя редактировать в записи документа.',422);
+        $state=$this->set($state,$fieldId,$recordId,(string)($raw??''));
+        $model=new Draft(new Registry());$record=&$model->entity($state['draft'],'document',$recordId);
+        if(($record['kind']??null)!==null) {
+            $official=(new Classifiers())->requireDocument((string)$record['kind'],(new Classifiers())->version());
+            if(Conditions::missing($record['name']??null))$record['name']=$official['name'];
+        }
+        unset($record);
+        foreach(array_keys($state['draft']['graphTexts']??[]) as $address)if(str_starts_with($address,'graph/44/')&&($state['draft']['graphTexts'][$address]['error']??null)===null)$state['draft']['graphTexts'][$address]['value']=self::documentText($state['draft']['documents'],substr($address,9));
+        return $state;
+    }
 }

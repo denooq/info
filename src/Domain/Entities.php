@@ -25,7 +25,23 @@ final class Entities
             $field=$this->registry->field($request['fieldId']);
             if($field['scope']!=='document' || in_array($field['key'],['kind','dateRequired'],true) || !array_key_exists('value',$request))throw new ApiError('REQUIRED_DOCUMENT_FIELD','Заполните реквизит выбранного документа.',422);
             $id=null;
-            foreach($d['documents'] as $document)if($document['kind']===$kind){$id=$document['id'];break;}
+            if($action==='record'&&isset($request['recordId'])) {
+                foreach($d['documents'] as $document)if($document['id']===$request['recordId']&&$document['kind']===$kind){$id=$document['id'];break;}
+                if($id===null)throw new ApiError('DOCUMENT_RECORD_UNKNOWN','Запись документа не найдена или относится к другому виду.',422);
+            } elseif($action==='record'&&isset($request['fileId'])) {
+                $fileId=$request['fileId'];$file=$state['documents'][$fileId]??null;
+                if(!is_string($fileId)||!is_array($file)||($file['documentKind']??null)!==$kind)throw new ApiError('DOCUMENT_FILE_KIND','Выберите прикреплённый файл выбранного вида документа.',422);
+                foreach($d['documents'] as $document)if(in_array($fileId,$document['documentIds']??[],true)){$id=$document['id'];break;}
+                if($id===null) {
+                    if(count($d['documents'])>=200)throw new ApiError('ENTITY_LIMIT','Достигнут лимит строк раздела.');
+                    $id='document-'.bin2hex(random_bytes(8));$dateRequired=true;
+                    foreach(Registry::resource('catalogs')['lists']['documentKinds'] as $entry)if($entry['code']===$kind)$dateRequired=$entry['dateRequired'];
+                    $d['documents'][]=['id'=>$id,...$model->row('document'),'kind'=>$kind,'name'=>$official['name'],'dateRequired'=>$dateRequired,'documentIds'=>[$fileId],'goodsIds'=>count($d['goods'])===1?[$d['goods'][0]['id']]:[],'classifierVersion'=>$catalog->version()];
+                    foreach(['kind','dateRequired'] as $key)$d['fieldStates'][Draft::address('document',$id,$key)]=DeclarationDate::meta('profile');
+                }
+            } else {
+                foreach($d['documents'] as $document)if($document['kind']===$kind){$id=$document['id'];break;}
+            }
             if($id===null) {
                 if(count($d['documents'])>=200)throw new ApiError('ENTITY_LIMIT','Достигнут лимит строк раздела.');
                 $id='document-'.bin2hex(random_bytes(8));$dateRequired=true;
@@ -34,6 +50,7 @@ final class Entities
                 $d['documents'][]=['id'=>$id,...$model->row('document'),'kind'=>$kind,'name'=>$official['name'],'dateRequired'=>$dateRequired,'documentIds'=>$fileIds,'goodsIds'=>count($d['goods'])===1?[$d['goods'][0]['id']]:[],'classifierVersion'=>$catalog->version(),'_displayKey'=>'proposed-'.$kind];
                 foreach(['kind','dateRequired'] as $key)$d['fieldStates'][Draft::address('document',$id,$key)]=DeclarationDate::meta('profile');
             }
+            if($action==='record')return (new GraphCodecs())->documentField($state,$id,$field['id'],$request['value']);
             return $model->edit($state,$field['id'],$id,$request['value']);
         } elseif ($action === 'add') {
             if (count($d[$collection]) >= 200) throw new ApiError('ENTITY_LIMIT','Достигнут лимит строк раздела.');

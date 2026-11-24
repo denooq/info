@@ -17,7 +17,7 @@ foreach($paths as $part){
         $files[$relative]=$entry->getPathname();
     }
 }
-foreach(['README.md','composer.json','composer.lock','config/local.example.php','bin/worker.php','bin/cleanup.php','bin/check-platform.php','docs/ps-kz-xs.md','docs/sessions-and-uploads.md','docs/xsd-status.md','docs/review-and-calculation.md','docs/exchange-rates.md','docs/xml-profiles.md','docs/pdf-format.md','docs/document-ai-evaluation.md','docs/tnved-selection.md','docs/acceptance.md','docs/graphs-mvp.md','docs/graph-matrix.md','docs/classifiers.md','docs/source-roles.md','docs/acceptance-graphs.md','docs/compact-graphs.md','docs/catalogs-and-calculations.md','docs/acceptance-compact.md','docs/compact-release.md'] as $relative){
+foreach(['README.md','composer.json','composer.lock','config/local.example.php','bin/worker.php','bin/cleanup.php','bin/check-platform.php','docs/ps-kz-xs.md','docs/sessions-and-uploads.md','docs/xsd-status.md','docs/review-and-calculation.md','docs/exchange-rates.md','docs/xml-profiles.md','docs/pdf-format.md','docs/document-ai-evaluation.md','docs/tnved-selection.md','docs/acceptance.md','docs/graphs-mvp.md','docs/graph-matrix.md','docs/classifiers.md','docs/source-roles.md','docs/acceptance-graphs.md','docs/compact-graphs.md','docs/catalogs-and-calculations.md','docs/acceptance-compact.md','docs/compact-release.md','docs/autofill-acceptance.md','docs/compact-graph-review.md','docs/graph-entity-identities.md','docs/graph-mapping-contract.md','docs/graph-mapping-results.md','docs/graph-mapping-verification.md','docs/mapping-limits.md','docs/source-manifest.md'] as $relative){
     if(!is_file($root.'/'.$relative))throw new RuntimeException('Missing release documentation');
     $files[$relative]=$root.'/'.$relative;
 }

@@ -22,6 +22,28 @@ final class GraphDefaults
         $total=BigDecimal::zero();$complete=$draft['goods']!==[];
         foreach($draft['goods'] as $i=>$goods) {
             self::set($draft,'goods',$goods['id'],'ordinal',$i+1,'rule');
+            $preferenceKeys=['preferenceFee','preferenceDuty','preferenceExcise','preferenceVat'];
+            $preferenceMeta=$draft['fieldStates']['goods/'.$goods['id'].'/hasPreference']??[];
+            $hasPreferenceEvidence=($preferenceMeta['evidenceIds']??[])!==[]||in_array($preferenceMeta['status']??'', ['manual','selected','auto'], true);
+            $medical=str_starts_with((string)($goods['commodityCode']??''),'30')||preg_match('/медицин|лекарствен|фармацев|протез|\\bmedical\\b|\\bmedicin|\\bpharmaceu/ui',(string)($goods['description']??''));
+            $preferencesEmpty=($goods['hasPreference']??null)===null&&array_reduce($preferenceKeys,fn(bool $empty,string $key):bool=>$empty&&($goods[$key]??null)===null,true);
+            if($medical&&($preferenceMeta['status']??null)==='profile'&&($goods['hasPreference']??null)===false) {
+                $goodsIndex=array_search($goods['id'],array_column($draft['goods'],'id'),true);
+                if($goodsIndex!==false) {
+                    $draft['goods'][$goodsIndex]['hasPreference']=null;$draft['fieldStates']['goods/'.$goods['id'].'/hasPreference']=DeclarationDate::meta('unknown');
+                    foreach($preferenceKeys as $key)if(($draft['goods'][$goodsIndex][$key]??null)==='ОО'){$draft['goods'][$goodsIndex][$key]=null;$draft['fieldStates']['goods/'.$goods['id'].'/'.$key]=DeclarationDate::meta('unknown');}
+                    $draft['fieldStates']['goods/'.$goods['id'].'/preferenceBasis']=DeclarationDate::meta('unknown');
+                }
+            }
+            if($preferencesEmpty&&!$hasPreferenceEvidence&&!$medical) {
+                $goodsIndex=array_search($goods['id'],array_column($draft['goods'],'id'),true);
+                if($goodsIndex!==false) {
+                    $draft['goods'][$goodsIndex]['hasPreference']=false;
+                    $draft['fieldStates']['goods/'.$goods['id'].'/hasPreference']=DeclarationDate::meta('profile');
+                    foreach($preferenceKeys as $key) {$draft['goods'][$goodsIndex][$key]='ОО';$draft['fieldStates']['goods/'.$goods['id'].'/'.$key]=DeclarationDate::meta('profile');}
+                    $draft['fieldStates']['goods/'.$goods['id'].'/preferenceBasis']=DeclarationDate::meta('profile');
+                }
+            }
             $linkedQuantity=($draft['fieldStates']['goods/'.$goods['id'].'/packageQuantity']['status']??'')==='linked';
             if(count($draft['goods'])===1&&is_int($sourceCount)&&$sourceCount>0&&(($draft['goods'][0]['packageQuantity']??null)===null||$linkedQuantity)&&($draft['goods'][0]['packageIds']??[])===[$sourceId])self::set($draft,'goods',$goods['id'],'packageQuantity',$sourceCount,'linked');
             if(($goods['invoiceValue']??null)===null)$complete=false;

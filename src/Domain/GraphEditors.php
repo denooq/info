@@ -4,7 +4,7 @@ namespace Customs\Domain;
 
 final class GraphEditors
 {
-    public const VERSION = '3.0.0';
+    public const VERSION = '3.1.0';
 
     public function data(): array
     {

@@ -23,15 +23,22 @@ final class Config
             'max_runtime_bytes' => 256 * 1024 * 1024,
             'ocr_model' => 'mistral-ocr-4-1',
             'mapping_model' => 'mistral-small-2603',
+            'mapping_context_bytes' => 180000,
+            'mapping_max_windows' => 12,
+            'mapping_max_repairs' => 2,
+            'mapping_max_context_requests' => 2,
             'http_timeout' => 120,
             'job_lease_seconds' => 180,
             'job_attempts' => 3,
             'secure_cookie' => true,
         ], $overrides);
-        foreach (['session_ttl','max_files','max_file_bytes','max_session_bytes','max_pages','max_unpacked_bytes','max_runtime_bytes','http_timeout','job_lease_seconds','job_attempts'] as $key) {
+        foreach (['session_ttl','max_files','max_file_bytes','max_session_bytes','max_pages','max_unpacked_bytes','max_runtime_bytes','http_timeout','job_lease_seconds','job_attempts','mapping_context_bytes','mapping_max_windows','mapping_max_context_requests'] as $key) {
             if (!is_int($this->values[$key]) || $this->values[$key] < 1) {
                 throw new ApiError('CONFIG_INVALID', 'Неверный положительный параметр конфигурации: ' . $key, 503);
             }
+        }
+        if (!is_int($this->values['mapping_max_repairs']) || $this->values['mapping_max_repairs'] < 0 || $this->values['mapping_max_repairs'] > 2) {
+            throw new ApiError('CONFIG_INVALID', 'Лимит исправлений сопоставления должен быть от 0 до 2.', 503);
         }
         if ($this->values['job_lease_seconds'] <= $this->values['http_timeout']) {
             throw new ApiError('CONFIG_INVALID', 'Срок аренды задания должен превышать тайм-аут HTTP.', 503);

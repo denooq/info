@@ -17,6 +17,16 @@ test('graph 44 creates required records without uploaded files and preserves ide
     same([],array_values(array_filter((new ReviewValidator())->validate($s)['errors'],fn($e)=>$e['code']==='DOCUMENT_REQUIRED')));
 });
 
+test('graph 44 record edits address one of several invoices and new records stay linked to one uploaded file',function():void {
+    $s=completeDraftState(1);$first=$s['draft']['documents'][0];$second=array_replace($first,['id'=>'invoice-second','number'=>'SECOND','documentIds'=>['file-b']]);$s['draft']['documents'][0]['documentIds']=['file-a'];$s['draft']['documents'][]=$second;
+    $s['documents']=['file-a'=>['id'=>'file-a','name'=>'invoice-a.pdf','documentKind'=>'04021'],'file-b'=>['id'=>'file-b','name'=>'invoice-b.pdf','documentKind'=>'04021'],'file-c'=>['id'=>'file-c','name'=>'invoice-c.pdf','documentKind'=>'04021']];
+    $entities=new Entities(new Registry());$s=$entities->change($s,['scope'=>'document','action'=>'record','kind'=>'04021','recordId'=>$second['id'],'fieldId'=>'document.number','value'=>'SECOND-EDITED']);
+    $records=array_column($s['draft']['documents'],null,'id');same($first['number'],$records[$first['id']]['number']);same('SECOND-EDITED',$records[$second['id']]['number']);
+    $s=$entities->change($s,['scope'=>'document','action'=>'record','kind'=>'04021','fileId'=>'file-c','fieldId'=>'document.number','value'=>'THIRD']);
+    $third=array_values(array_filter($s['draft']['documents'],fn($row)=>in_array('file-c',$row['documentIds']??[],true)))[0];same('THIRD',$third['number']);same(['file-c'],$third['documentIds']);
+    errorCode('DOCUMENT_RECORD_UNKNOWN',fn()=>$entities->change($s,['scope'=>'document','action'=>'record','kind'=>'04021','recordId'=>'invoice-missing','fieldId'=>'document.number','value'=>'WRONG']));
+});
+
 test('editing graph 44 retains unchanged sources links and other legal records of the same kind',function():void {
     $s=completeDraftState(2);$invoice=$s['draft']['documents'][0];$address=Draft::address('document',$invoice['id'],'date');
     $s['draft']['fieldStates'][$address]=['status'=>'auto','candidateId'=>'candidate-date','evidenceIds'=>['source-date']];

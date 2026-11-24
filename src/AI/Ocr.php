@@ -108,15 +108,21 @@ final class Ocr
             $index = $page['index'] ?? null;
             if (!is_int($index) || !in_array($index, $expectedIndexes, true) || in_array($index, $seen, true)) throw new ApiError('OCR_PAGE_INDEX', 'OCR вернул несогласованные номера страниц.', 502);
             $seen[] = $index;
-            $blocks = [];
+            $blocks = []; $tables = [];
             foreach (preg_split('/\n\s*\n/u', (string) ($page['markdown'] ?? '')) as $paragraph) {
                 $paragraph = trim($paragraph);
                 if ($paragraph !== '') $blocks[] = ['id' => 'p' . ($index + 1) . '-b' . count($blocks), 'text' => $paragraph, 'bbox' => null];
             }
-            foreach ($page['tables'] ?? [] as $table) {
+            foreach ($page['tables'] ?? [] as $tableIndex => $table) {
                 $content = (string) ($table['content'] ?? '');
                 $plain = html_entity_decode(strip_tags(preg_replace('#</(?:td|th|tr)>#i', ' $0', $content)), ENT_QUOTES | ENT_HTML5, 'UTF-8');
-                if (trim($plain) !== '') $blocks[] = ['id' => 'p' . ($index + 1) . '-t' . count($blocks), 'text' => trim($plain), 'bbox' => null, 'tableId' => $table['id'] ?? null];
+                $tableId = (string)($table['id'] ?? 'table-' . ($tableIndex + 1));
+                $rows = $this->tableRows($content);
+                if (trim($plain) !== '') {
+                    $blockId = 'p' . ($index + 1) . '-t' . count($blocks);
+                    $blocks[] = ['id' => $blockId, 'text' => trim($plain), 'bbox' => $table['bbox'] ?? null, 'tableId' => $tableId];
+                    $tables[] = ['id' => $tableId, 'blockId' => $blockId, 'text' => trim($plain), 'bbox' => $table['bbox'] ?? null, 'language' => $table['language'] ?? $page['language'] ?? null, 'rows' => $rows];
+                }
             }
             foreach ($page['blocks'] ?? [] as $nativeIndex => $native) {
                 $text = $native['content'] ?? $native['text'] ?? null;
@@ -124,12 +130,30 @@ final class Ocr
                     $blocks[] = ['id' => 'p' . ($index + 1) . '-n' . $nativeIndex, 'text' => trim($text), 'bbox' => $native['bbox'] ?? $native['bounding_box'] ?? null, 'confidence' => $native['confidence_scores'] ?? null];
                 }
             }
-            $pages[] = ['page' => $index + 1, 'blocks' => $blocks, 'nativeBlocks' => $page['blocks'] ?? [], 'dimensions' => $page['dimensions'] ?? null, 'confidence' => $page['confidence_scores'] ?? null, 'needsReview' => $blocks === []];
+            $pages[] = ['page' => $index + 1, 'language' => $page['language'] ?? $page['languages'] ?? null, 'blocks' => $blocks, 'tables' => $tables, 'nativeBlocks' => $page['blocks'] ?? [], 'dimensions' => $page['dimensions'] ?? null, 'confidence' => $page['confidence_scores'] ?? null, 'needsReview' => $blocks === []];
         }
         sort($seen); $sortedExpected = $expectedIndexes; sort($sortedExpected);
         if ($seen !== $sortedExpected) throw new ApiError('OCR_INCOMPLETE', 'OCR пропустил страницы. Успешные части сохранены.', 502);
         usort($pages, fn(array $a, array $b): int => $a['page'] <=> $b['page']);
         return ['kind' => 'ocr','pages' => $pages,'usage' => $response['usage_info'] ?? [],'model' => $response['model'] ?? $this->config->get('ocr_model')];
+    }
+
+    private function tableRows(string $html): array
+    {
+        if (trim($html) === '' || !class_exists(\DOMDocument::class)) return [];
+        $document = new \DOMDocument('1.0', 'UTF-8');
+        if (!@$document->loadHTML('<!doctype html><html><head><meta charset="utf-8"></head><body>' . $html . '</body></html>', LIBXML_NONET | LIBXML_NOERROR | LIBXML_NOWARNING | LIBXML_COMPACT)) return [];
+        $xpath = new \DOMXPath($document);
+        $rows = [];
+        foreach ($xpath->query('//tr') ?: [] as $row) {
+            $cells = [];
+            foreach ($xpath->query('./th|./td', $row) ?: [] as $column => $cell) {
+                $text = trim(preg_replace('/[\s\x{00A0}\x{202F}]+/u', ' ', $cell->textContent) ?? '');
+                $cells[] = ['column' => $column + 1, 'kind' => strtolower($cell->nodeName) === 'th' ? 'header' : 'data', 'text' => $text];
+            }
+            if ($cells !== []) $rows[] = ['row' => count($rows) + 1, 'cells' => $cells];
+        }
+        return $rows;
     }
 
     private function writeCache(string $path, array $data): void
