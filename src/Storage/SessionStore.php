@@ -109,7 +109,7 @@ final class SessionStore
     public function publicView(array $state): array
     {
         $state = (new \Customs\Domain\StatutoryRules())->apply($state);
-        $copy = array_intersect_key($state, array_flip(['createdAt','expiresAt','dataRevision','phase','csrfToken','draft','candidates','evidence','calculation','error','registryVersion','mappingIssues','exchangeRates','migrationNotices','graphMappingResults']));
+        $copy = array_intersect_key($state, array_flip(['createdAt','expiresAt','dataRevision','phase','csrfToken','draft','candidates','evidence','calculation','error','registryVersion','mappingIssues','exchangeRates','migrationNotices','graphMappingResults','mappingWindowProgress']));
         $copy['capabilities']=['nbkRates'=>true,'graphs'=>true,'export'=>false];
         $copy['profile']='im40-kz-graphs';$copy['uploadGroups']=array_values($state['uploadGroups']??[]);
         $copy['graphProjection']=(new \Customs\Domain\GraphProjection())->project($state);

@@ -72,7 +72,7 @@ final class Application
         if ($method === 'POST' && $path === '/api/recognize') {
             $body = $this->body();
             $pipeline = new \Customs\AI\Pipeline($this->config, $this->store, new \Customs\AI\MistralClient($this->config));
-            $pipeline->start($state['id'], (bool) ($body['retry'] ?? false));
+            $pipeline->start($state['id'], (bool) ($body['retry'] ?? false), (bool) ($body['mappingOnly'] ?? false));
             return $this->view($this->store->mutate($state['id'],null,fn($s)=>$s,false,true));
         }
         if ($method === 'PATCH' && $path === '/api/draft') {

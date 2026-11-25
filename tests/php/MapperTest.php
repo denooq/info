@@ -22,24 +22,59 @@ test('missing graph results receive no more than two repair calls', function ():
     truth(in_array('incomplete', array_column($result['mapping']['results'], 'status'), true));
 });
 
-test('bounded windows mark absence as incomplete when source coverage was truncated', function (): void {
+test('mapping windows are measured from the complete serialized request and preserve every source', function (): void {
     $source = ['documentId' => str_repeat('d', 32), 'name' => 'bundle.pdf', 'contentHash' => 'hash-d', 'pages' => [['page' => 1, 'blocks' => []]], 'sheets' => []];
     for ($i = 0; $i < 30; $i++) $source['pages'][0]['blocks'][] = ['id' => 'p1-b' . $i, 'text' => str_repeat('Text ' . $i . ' ', 700)];
     $manifest = (new SourceManifest())->build([$source], 'session-window');
-    $calls = 0;
+    $calls = []; $limit = 180000;
     $client = new MistralClient(new Config(['mistral_api_key' => 'test-placeholder']), function (string $url, array $body) use (&$calls): array {
-        $calls++; $input = json_decode($body['messages'][1]['content'], true, 256, JSON_THROW_ON_ERROR);
-        $response = emptyGraphMapping();
-        $response['results'][] = ['graphId' => '15', 'itemKey' => null, 'status' => 'not_found', 'values' => [], 'positionValue' => null, 'searchedSourceIds' => $input['searchWindow']['sourceIds'], 'reason' => 'checked this window'];
-        return graphMappingResponse($response);
+        $bytes = strlen(json_encode($body, JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR));
+        $input = json_decode($body['messages'][1]['content'], true, 256, JSON_THROW_ON_ERROR);
+        $calls[] = ['bytes' => $bytes, 'sourceIds' => $input['searchWindow']['sourceIds']];
+        return graphMappingResponse(emptyGraphMapping());
     });
     $mapper = new Mapper($client);
-    $plan = $mapper->plan($manifest, 180000, 1);
-    same(1, count($plan)); truth(!$plan[0]['completeBundle']); truth($plan[0]['omittedSourceCount'] > 0);
-    $result = $mapper->request($manifest, [], ['window' => $plan[0], 'maxContextBytes' => 180000, 'maxRepairs' => 0]);
-    same(1, $calls);
-    $graph15 = array_values(array_filter($result['mapping']['results'], fn(array $row): bool => $row['graphId'] === '15'))[0];
-    same('incomplete', $graph15['status']);
+    $plan = $mapper->plan($manifest, $limit, 12);
+    truth(count($plan) > 1);
+    same(true, $plan[0]['completeBundle']);
+    $expected = [];
+    foreach ($plan as $window) {
+        truth($window['requestBytes'] <= $limit);
+        $expected = [...$expected, ...$window['sourceIds']];
+        $result = $mapper->request($manifest, [], ['window' => $window, 'maxContextBytes' => $limit, 'maxRepairs' => 0]);
+        same($window['requestBytes'], $result['inputBytes']);
+    }
+    same(30, count(array_unique($expected)));
+    same(count($plan), count($calls));
+    foreach ($calls as $call) truth($call['bytes'] <= $limit, 'the exact Mistral request body must fit the configured byte limit');
+    same($expected, array_merge(...array_column($calls, 'sourceIds')));
+});
+
+test('an indivisible mapping source over the complete request limit fails with safe byte diagnostics', function (): void {
+    $manifest = (new SourceManifest())->build([['documentId' => str_repeat('7', 32), 'name' => 'large.pdf', 'contentHash' => 'hash-large', 'pages' => [['page' => 1, 'blocks' => [['id' => 'p1-b0', 'text' => str_repeat('A', 220000)]]]], 'sheets' => []]], 'session-large-source');
+    $mapper = new Mapper(new MistralClient(new Config(['mistral_api_key' => 'test-placeholder']), fn() => throw new RuntimeException('Planning must not call Mistral.')));
+    try {
+        $mapper->plan($manifest, 180000, 12);
+        throw new RuntimeException('Expected the indivisible OCR block to exceed the configured limit.');
+    } catch (Customs\Http\ApiError $error) {
+        same('MAPPING_CONTEXT_LIMIT', $error->errorCode);
+        truth($error->details['measuredBytes'] > $error->details['limitBytes']);
+        same(180000, $error->details['limitBytes']);
+    }
+});
+
+test('the configured mapping window cap refuses the bundle instead of omitting source units', function (): void {
+    $source = ['documentId' => str_repeat('8', 32), 'name' => 'oversized-bundle.pdf', 'contentHash' => 'hash-oversized', 'pages' => [['page' => 1, 'blocks' => []]], 'sheets' => []];
+    for ($i = 0; $i < 10; $i++) $source['pages'][0]['blocks'][] = ['id' => 'p1-b' . $i, 'text' => str_repeat('Unit ' . $i . ' ', 3000)];
+    $manifest = (new SourceManifest())->build([$source], 'session-window-limit');
+    $mapper = new Mapper(new MistralClient(new Config(['mistral_api_key' => 'test-placeholder']), fn() => throw new RuntimeException('Planning must not call Mistral.')));
+    try {
+        $mapper->plan($manifest, 180000, 2);
+        throw new RuntimeException('Expected the configured window cap to reject the complete plan.');
+    } catch (Customs\Http\ApiError $error) {
+        same('MAPPING_WINDOW_LIMIT', $error->errorCode);
+        truth($error->details['requiredWindows'] > $error->details['limitWindows']);
+    }
 });
 
 function emptyGraphMapping(): array

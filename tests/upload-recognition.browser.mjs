@@ -28,7 +28,7 @@ test('manual batch shows file progress, survives refresh, waits for mapping and 
     await stage(page,'mapping');await poll(page);await expect(page.locator('.notice.progress')).toContainText('2 из 2');await expect(page.locator('.notice.progress')).toContainText('Заполняем графы декларации');
     await expect(page.getByRole('heading',{name:'Проверьте данные декларации',exact:true})).toHaveCount(0);
     const expiry=await page.evaluate(async()=>(await(await fetch('/api/session')).json()).expiresAt);
-    await stage(page,'success');await poll(page);await page.getByRole('heading',{name:'Проверьте данные декларации',exact:true}).waitFor();await expect(page.locator('.graphs-grid > .graph-card')).toHaveCount(54);
+    await stage(page,'success');await poll(page);await page.getByRole('heading',{name:'Проверьте данные декларации',exact:true}).waitFor();await expect(page.locator('.graphs-grid > .graph-card:not(.graph-child-card)')).toHaveCount(54);
     assert.equal(await page.evaluate(async()=>(await(await fetch('/api/session')).json()).expiresAt),expiry);
     await page.getByRole('button',{name:'К документам',exact:true}).click();await expect(page.getByRole('heading',{name:'Подготовьте декларацию ИМ 40',exact:true})).toBeVisible();assert.equal(starts,1);
     await page.getByRole('button',{name:'Распознать документы',exact:true}).click();await page.getByRole('heading',{name:'Проверьте данные декларации',exact:true}).waitFor();assert.equal(starts,2);

@@ -12,34 +12,34 @@ test('empty and unmatched goods and legacy source metadata do not crash review',
     await page.getByRole('button',{name:'Добавить товар',exact:true}).click();
     const selector=page.getByRole('combobox',{name:'Товар для граф 31–47'});await expect(selector.locator('option')).toHaveCount(2);
     const id=await selector.locator('option').last().getAttribute('value');await selector.selectOption(id);
-    await expect(page.locator('#graph-33 input')).toHaveValue('');await expect(page.locator('#graph-33')).toContainText('Укажите описание товара');
+    const code=page.locator(`[data-address="goods/${id}/commodityCode"] input`);await expect(code).toHaveValue('');await expect(page.locator('#graph-33')).toContainText('Укажите описание товара');
     const description=page.locator('#graph-31 textarea');await description.fill('неттакоготовара xyz123');await description.blur();
-    await expect(page.locator('#graph-33')).toContainText('Код по этому наименованию не найден');await expect(page.locator('.graphs-grid > .graph-card')).toHaveCount(54);
-    await page.reload();await selector.selectOption(id);await expect(description).toHaveValue('неттакоготовара xyz123');
+    await expect(page.locator('#graph-33')).toContainText('Код по этому наименованию не найден');await expect(page.locator('.graphs-grid > .graph-card:not(.graph-child-card)')).toHaveCount(54);
+    await page.reload();await selector.selectOption(id);await expect(code).toHaveValue('');await expect(description).toHaveValue('неттакоготовара xyz123');
     // Older sessions can carry TN VED lookup information without a list of citations.
     for(const evidenceIds of [undefined,null]) {
       await page.route('**/api/session',async route=>{const response=await route.fetch();const s=await response.json();s.capabilities.nbkRates=false;for(const meta of Object.values(s.draft.fieldStates))meta.evidenceIds=evidenceIds;await route.fulfill({response,json:s});},{times:1});
-      await page.reload();await selector.selectOption(id);await expect(page.locator('#graph-33 input')).toHaveValue('');await expect(description).toHaveValue('неттакоготовара xyz123');
+      await page.reload();await selector.selectOption(id);await expect(code).toHaveValue('');await expect(description).toHaveValue('неттакоготовара xyz123');
     }
     assert.deepEqual(errors,[]);
   }finally{await browser.close();await server.stop();}
 });
 
-test('every graph has identical framed dimensions at desktop mobile and enlarged zoom',async()=>{
+test('every graph uses one column and content-sized frames at desktop mobile and enlarged zoom',async()=>{
   const server=await graphServer();const browser=await chromium.launch({channel:'msedge',headless:true,timeout:10000});
   try{
     const page=await browser.newPage({baseURL:server.base,viewport:{width:1440,height:960}});await seed(page);
-    async function geometry(columns){const result=await page.locator('.graphs-grid').evaluate(el=>({columns:getComputedStyle(el).gridTemplateColumns.split(' ').length,boxes:[...el.querySelectorAll(':scope > .graph-card')].map(e=>{const r=e.getBoundingClientRect();return [r.width,r.height];})}));assert.equal(result.columns,columns);assert.equal(result.boxes.length,54);assert.ok(Math.max(...result.boxes.map(b=>b[0]))-Math.min(...result.boxes.map(b=>b[0]))<1);assert.ok(Math.max(...result.boxes.map(b=>b[1]))-Math.min(...result.boxes.map(b=>b[1]))<1);}
-    await geometry(2);await expect(page.locator('#graph-1 > legend')).toHaveText('Графа 1');
+    async function geometry(){const result=await page.locator('.graphs-grid').evaluate(el=>({columns:getComputedStyle(el).gridTemplateColumns.split(' ').length,boxes:[...el.querySelectorAll(':scope > .graph-card')].map(e=>{const r=e.getBoundingClientRect();return [r.x,r.y,r.width,r.height];})}));assert.equal(result.columns,1);assert.equal(result.boxes.length,56);assert.ok(Math.max(...result.boxes.map(b=>b[2]))-Math.min(...result.boxes.map(b=>b[2]))<1);for(let i=1;i<result.boxes.length;i++)assert.ok(result.boxes[i][1]>=result.boxes[i-1][1]+result.boxes[i-1][3]-1);}
+    await geometry();await expect(page.locator('#graph-1 > legend')).toHaveText('Графа 1');
     await page.evaluate(async()=>{const s=await(await fetch('/api/session')).json();await fetch('/fixture/candidates',{method:'POST',headers:{'Content-Type':'application/json','X-CSRF-Token':s.csrfToken},body:JSON.stringify({count:1})});});await page.reload();
     await expect(page.locator('#graph-35 .candidate')).toHaveCount(0);await expect(page.locator('#graph-35 input')).toHaveValue('27860');
     await page.evaluate(async()=>{const s=await(await fetch('/api/session')).json();await fetch('/fixture/candidates',{method:'POST',headers:{'Content-Type':'application/json','X-CSRF-Token':s.csrfToken},body:JSON.stringify({count:2})});});await page.reload();
     const choice=page.getByRole('button',{name:'27860 кг',exact:true});await choice.focus();await expect(page.locator('.floating-source')).toBeVisible();
-    const popup=await page.locator('.floating-source').boundingBox();assert.ok(popup.x>=0&&popup.x+popup.width<=1440);await choice.click();await expect(page.locator('#graph-35 input')).toHaveValue('27860');await geometry(2);
-    await page.setViewportSize({width:1366,height:900});await geometry(2);
-    await page.locator('#graph-2').evaluate(el=>{const title=el.querySelector('h2');title.textContent='Очень длинное название графы '.repeat(15);const content=el.querySelector('.graph-editor-scroll');const p=document.createElement('p');p.textContent='Длинный текст и ошибка '.repeat(100);content.append(p);});await geometry(2);
-    await page.setViewportSize({width:390,height:844});await geometry(1);assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
-    await page.evaluate(()=>document.documentElement.style.zoom='2');await geometry(1);assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
+    const popup=await page.locator('.floating-source').boundingBox();assert.ok(popup.x>=0&&popup.x+popup.width<=1440);await choice.click();await expect(page.locator('#graph-35 input')).toHaveValue('27860');await geometry();
+    await page.setViewportSize({width:1366,height:900});await geometry();
+    await page.locator('#graph-2').evaluate(el=>{const title=el.querySelector('h2');title.textContent='Очень длинное название графы '.repeat(15);const content=el.querySelector('.graph-editor-scroll');const p=document.createElement('p');p.textContent='Длинный текст и ошибка '.repeat(100);content.append(p);});await geometry();
+    await page.setViewportSize({width:390,height:844});await geometry();assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
+    await page.evaluate(()=>document.documentElement.style.zoom='2');await geometry();assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
     await page.keyboard.press('Tab');assert.ok(await page.evaluate(()=>document.activeElement!==document.body));
   }finally{await browser.close();await server.stop();}
 });
@@ -48,16 +48,16 @@ test('compact review uses one descriptive editor and controlled operands with a 
   const server=await graphServer();const browser=await chromium.launch({channel:'msedge',headless:true,timeout:10000});
   try{
     const page=await browser.newPage({baseURL:server.base,viewport:{width:1440,height:960}});await seed(page,5);
-    await expect(page.locator('.graphs-grid > .graph-card')).toHaveCount(54);await expect(page.locator('[data-graph-id]')).toHaveCount(57);
+    await expect(page.locator('.graphs-grid > .graph-card:not(.graph-child-card)')).toHaveCount(54);await expect(page.locator('.graphs-grid > .graph-child-card')).toHaveCount(2);await expect(page.locator('[data-graph-id]')).toHaveCount(57);
     await expect(page.locator('#graph-2 textarea')).toHaveCount(1);await expect(page.locator('#graph-2 input, #graph-2 select')).toHaveCount(0);
     await expect(page.locator('#graph-1 input')).toHaveAttribute('readonly','');await expect(page.locator('#graph-1 input')).toHaveValue(/ИМ.*40/);
     await expect(page.locator('#graph-22 [data-address="declaration/_/invoiceCurrency"] input')).toBeVisible();
-    await expect(page.locator('#graph-23 [data-address$="/value"] input')).toBeVisible();await expect(page.locator('#graph-23 [data-address$="/nominal"] input')).toBeVisible();
+    await expect(page.locator('#graph-23 input[aria-label="Курс USD к KZT"]')).toBeVisible();await expect(page.locator('#graph-23').getByText('Кратность',{exact:true})).toHaveCount(0);
     await expect(page.locator('#graph-54 [data-address="declaration/_/signatureDate"] input')).toBeVisible();await expect(page.locator('#graph-54 textarea')).toHaveCount(1);
     const sender=page.locator('#graph-2 textarea');await sender.fill('Ручной отправитель и полный адрес');await sender.blur();await page.reload();await expect(page.locator('#graph-2 textarea')).toHaveValue('Ручной отправитель и полный адрес');
     await page.getByRole('combobox',{name:'Товар для граф 31–47'}).selectOption('goods-2');const net=page.locator('#graph-38 input');await net.fill('24000');await net.blur();await expect(net).toHaveValue('24000');
     await page.getByRole('combobox',{name:'Товар для граф 31–47'}).selectOption('goods-1');await expect(page.locator('#graph-38 input')).toHaveValue('24480');
-    const code=page.locator('#graph-33 input');await code.fill('3702319100');await code.blur();
+    const code=page.locator('[data-address="goods/goods-1/commodityCode"] input');await code.fill('3702319100');await code.blur();
     await expect(page.locator('#graph-41 [data-address$="/additionalQuantity"] input')).toBeVisible();await expect(page.locator('#graph-41 [data-address$="/secondaryAdditionalQuantity"] input')).toBeVisible();
     await expect(page.locator('#graph-41 [data-address$="/secondaryAdditionalUnit"] input')).toHaveValue('006');
     await code.fill('2915310000');await code.blur();await expect(page.locator('#graph-41 [data-address$="/additionalQuantity"] input')).toHaveCount(0);

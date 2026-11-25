@@ -13,12 +13,14 @@ import {TariffInfo} from './TariffInfo';
 import {GoodsGrouping} from './GoodsGrouping';
 import type {CompactGraphValue,Entity,FieldChange,Graph,Registry,Session} from './types';
 
-type Props={session:Session;registry:Registry;busy:boolean;onChange:(c:FieldChange)=>Promise<void>;onEntity:(b:Record<string,unknown>)=>Promise<void>;onBack:()=>void;onCalculate:()=>void;onValidate:()=>void;onRates:()=>void;onManualRate:(currency:string,value:string)=>Promise<void>;ratesLoading:boolean;ratesError:string;errors:string[]};
+type Props={session:Session;registry:Registry;busy:boolean;onChange:(c:FieldChange)=>Promise<void>;onEntity:(b:Record<string,unknown>)=>Promise<void>;onBack:()=>void;onCalculate:()=>void;onValidate:()=>void;onRates:()=>void;onManualRate:(currency:string,value:string)=>Promise<void>;onRetryMapping:()=>void;ratesLoading:boolean;ratesError:string;errors:string[]};
 export function ReviewPage(props:Props) {
   const {session:original,registry,busy}=props;const [goodsId,setGoodsId]=useState(original.draft.goods[0]?.id??'');const [error,setError]=useState('');
   const activeGoods=original.draft.goods.find(g=>g.id===goodsId)??original.draft.goods[0];
   useEffect(()=>{const focus=(event:Event)=>setGoodsId((event as CustomEvent<string>).detail);window.addEventListener('customs-focus-good',focus);return()=>window.removeEventListener('customs-focus-good',focus);},[]);
   const validation=original.reviewValidation??original.validation;const session={...original,validation};
+  const mappingError=session.error?.code.startsWith('MAPPING_')?session.error:null;
+  const mappingRunning=session.phase==='recognizing'&&session.jobs.some(job=>job.kind==='mapping'&&['queued','running'].includes(job.status));
   async function entity(body:Record<string,unknown>){setError('');try{await props.onEntity(body);}catch(e){setError((e as Error).message);}}
   function rowFor(input:CompactGraphValue['inputs'][number]):Record<string,unknown>|undefined {
     const field=registry.fields.fields.find(f=>f.id===input.fieldId);if(!field)return;
@@ -80,7 +82,9 @@ export function ReviewPage(props:Props) {
     </GraphCard>;
   }
   return <div className="review-page"><div className="page-intro"><h1>Проверьте данные декларации</h1><p>Заполните обязательные графы и выберите значения при расхождениях.</p></div>
-    {(error||props.errors.length>0||session.error)&&<div className="notice error" role="alert">{error||props.errors.join(' ')||session.error?.message}</div>}
+    {(error||props.errors.length>0||!!session.error&&!mappingError)&&<div className="notice error" role="alert">{error||props.errors.join(' ')||session.error?.message}</div>}
+    {mappingError&&<div className="notice error mapping-failure" role="alert"><div><strong>Сопоставление документов не завершилось.</strong> {mappingError.message}<p>Распознанный текст сохранён; повторная загрузка не нужна.</p>{mappingError.details?.measuredBytes!==undefined&&mappingError.details.limitBytes!==undefined&&<p>Размер запроса: {mappingError.details.measuredBytes.toLocaleString('ru-RU')} байт; лимит: {mappingError.details.limitBytes.toLocaleString('ru-RU')} байт.</p>}{mappingError.details?.requiredWindows!==undefined&&mappingError.details.limitWindows!==undefined&&<p>Нужно окон: {mappingError.details.requiredWindows}; доступно: {mappingError.details.limitWindows}.</p>}</div>{mappingError.code!=='MAPPING_OCR_CACHE_REQUIRED'&&<button className="secondary" disabled={busy||mappingRunning} onClick={props.onRetryMapping}>Повторить сопоставление</button>}</div>}
+    {mappingRunning&&<div className="notice mapping-progress" role="status">Сопоставляем распознанные документы… Обработано окон: {session.mappingWindowProgress?.completed??0}.</div>}
     {session.migrationNotices?.map(notice=><details className="notice compact-migration" key={notice.id}><summary>{notice.message}</summary>{notice.changes.map(c=><p key={c.address}>{c.address}: {String(c.previous??'—')} → {String(c.current??'не определено')}</p>)}</details>)}
     {session.documents.some(d=>d.status==='error')&&<p className="notice">Часть документов не распознана. Заполните оставшиеся графы вручную или повторите эти файлы на странице документов.</p>}
     <div className="goods-switcher"><label>Товар <select aria-label="Товар для граф 31–47" value={activeGoods?.id??''} onChange={e=>setGoodsId(e.target.value)}>{session.draft.goods.map((g,i)=><option key={g.id} value={g.id}>{i+1}. {String(g.description??'Без названия').slice(0,100)}</option>)}</select></label><button className="secondary" disabled={busy} onClick={()=>void entity({scope:'goods',action:'add'})}>Добавить товар</button><button className="text-button" disabled={busy||!activeGoods||session.draft.goods.length<2} onClick={()=>void entity({scope:'goods',action:'remove',id:activeGoods?.id})}>Удалить товар</button></div>

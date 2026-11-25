@@ -64,11 +64,22 @@ final class MistralClient
 
     public function structured(string $system, string $input, array $schema): array
     {
-        return $this->request('/chat/completions', [
+        return $this->request('/chat/completions', $this->structuredPayload($system, $input, $schema));
+    }
+
+    /** Build the exact JSON body used for a structured mapping request. */
+    public function structuredPayload(string $system, string $input, array $schema): array
+    {
+        return [
             'model' => $this->config->get('mapping_model'), 'temperature' => 0, 'max_tokens' => 16000,
             'messages' => [['role' => 'system','content' => $system], ['role' => 'user','content' => $input]],
-              'response_format' => ['type' => 'json_schema', 'json_schema' => ['name' => 'customs_graph_mapping_v2','strict' => true,'schema' => $schema]],
-        ]);
+            'response_format' => ['type' => 'json_schema', 'json_schema' => ['name' => 'customs_graph_mapping_v2','strict' => true,'schema' => $schema]],
+        ];
+    }
+
+    public function structuredPayloadBytes(string $system, string $input, array $schema): int
+    {
+        return strlen(json_encode($this->structuredPayload($system, $input, $schema), JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR));
     }
 
     private function request(string $endpoint, array $payload): array

@@ -88,11 +88,28 @@ try {
         $cache = json_decode(file_get_contents($path), true, 256, JSON_THROW_ON_ERROR);
         $part=$cache['result']['usage'] ?? $cache['usage'] ?? [];
         $usage['ocrPages']+=(int)($part['pages_processed']??0);
-        $usage['mappingPromptTokens']+=(int)($part['prompt_tokens']??0);
-        $usage['mappingCompletionTokens']+=(int)($part['completion_tokens']??0);
     }
+    $usage['mappingPromptTokens'] = (int)($state['graphMappingUsage']['prompt_tokens'] ?? 0);
+    $usage['mappingCompletionTokens'] = (int)($state['graphMappingUsage']['completion_tokens'] ?? 0);
     $allRecognized = count(array_filter($state['documents'], fn(array $doc): bool => $doc['status'] === 'recognized')) === count($state['documents']);
-    $report = ['fixture' => $caseId,'complete' => $probe ? $allRecognized : $state['phase'] === 'reviewing','inputFiles' => count($state['documents']),'candidates' => count($state['candidates']),'mappingIssues' => array_count_values(array_column($state['mappingIssues'] ?? [], 'code')),'coverage' => $probe ? [] : $coverage,'usage' => $usage,'peakBytes' => memory_get_peak_usage(true),'elapsedSeconds' => time() - $started];
+    $report = [
+        'fixture' => $caseId,
+        'complete' => $probe ? $allRecognized : $state['phase'] === 'reviewing' && ($state['graphMappingRunComplete'] ?? false) === true && ($state['error'] ?? null) === null,
+        'inputFiles' => count($state['documents']), 'candidates' => count($state['candidates']),
+        'mapping' => [
+            'runComplete' => (bool)($state['graphMappingRunComplete'] ?? false), 'calls' => (int)($state['graphMappingCalls'] ?? 0),
+            'inputBytes' => (int)($state['graphMappingInputBytes'] ?? 0), 'failures' => array_values($state['graphMappingFailures'] ?? []),
+            'error' => isset($state['error']) ? array_intersect_key($state['error'], array_flip(['code','details'])) : null,
+        ],
+        'versions' => [
+            'ocrModel' => $config->get('ocr_model'), 'mappingModel' => $config->get('mapping_model'),
+            'mappingPlan' => Customs\AI\Pipeline::MAPPING_PLAN_VERSION,
+            'mappingPrompt' => $state['graphMappingPromptVersion'] ?? Customs\AI\Mapper::PROMPT_VERSION,
+            'registry' => $state['registryVersion'],
+        ],
+        'mappingIssues' => array_count_values(array_column($state['mappingIssues'] ?? [], 'code')),
+        'coverage' => $probe ? [] : $coverage, 'usage' => $usage, 'peakBytes' => memory_get_peak_usage(true), 'elapsedSeconds' => time() - $started,
+    ];
     echo json_encode(['report' => $report], JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR) . PHP_EOL;
     exit($report['complete'] ? 0 : 1);
 } catch (Customs\Http\ApiError $error) {

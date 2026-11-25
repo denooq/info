@@ -18,7 +18,9 @@ export type Session = {
   documents: { id: string; name: string; mime: string; size: number; pages: number; status: string; groupId?:string|null;documentKind?:string|null;classifierVersion?:string|null;error?: { code: string; message: string } | null }[];
   jobs: { id: string; kind: string; documentId?: string; status: string; error?: { code: string; message: string } | null }[];
   candidates: Record<string, Candidate>; evidence: Record<string, Evidence>; mappingIssues?: { message: string }[];
-  error: { code: string; message: string } | null; ready: boolean; calculation: unknown;
+  error: { code: string; message: string; details?: { measuredBytes?: number; limitBytes?: number; requiredWindows?: number; limitWindows?: number } } | null;
+  mappingWindowProgress?: { completed: number; lastWindow?: { index?: number; count?: number } | null; contextRequestsServed?: number; calls?: number; repairs?: number; inputBytes?: number };
+  ready: boolean; calculation: unknown;
   validation: { valid: boolean; count: number; errors: { address: string; code: string; message: string;graphId?:string }[] };
   limits: { session_ttl: number; max_files: number; max_file_bytes: number; max_session_bytes: number; max_pages: number };
 };

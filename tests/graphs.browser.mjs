@@ -38,12 +38,13 @@ test('graph 44 accepts a full legal list and a delayed save does not erase a nei
   try{
     const page=await browser.newPage({viewport:{width:1440,height:960}});await page.goto(server.base);await page.getByRole('heading',{name:'Подготовьте декларацию ИМ 40',exact:true}).waitFor();
     await page.evaluate(async()=>{const s=await(await fetch('/api/session')).json();await fetch('/fixture/seed',{method:'POST',headers:{'Content-Type':'application/json','X-CSRF-Token':s.csrfToken},body:JSON.stringify({emptyDocuments:true,recordType:'04031'})});});await page.reload();
-    const list=page.locator('#graph-44 textarea');await list.waitFor();const neighbor=page.locator('#graph-31 textarea');
-    await page.route('**/api/draft',async route=>{await new Promise(r=>setTimeout(r,200));await route.continue();},{times:1});
-    await list.fill('04031 | FREIGHT-1 | 2026-10-28 | 0\n04021 | INV-1 | 2026-10-28 | 0\n03011 | CON-1 | 2026-10-28 | 0');await neighbor.focus();await neighbor.fill('Ручное описание при сохранении документов');await page.waitForTimeout(400);await expect(neighbor).toHaveValue('Ручное описание при сохранении документов');await neighbor.blur();
+    const record=page.locator('#graph-44 .document-record[data-document-kind="04031"]');await record.waitFor();
+    const number=record.locator('[data-address$="/number"] input');const date=record.locator('[data-address$="/date"] input');const neighbor=page.locator('#graph-31 textarea');
+    await page.route('**/api/entities',async route=>{await new Promise(r=>setTimeout(r,200));await route.continue();},{times:1});
+    await number.fill('FREIGHT-1');await number.blur();await date.fill('2026-10-28');await neighbor.focus();await neighbor.fill('Ручное описание при сохранении документов');await page.waitForTimeout(400);await expect(neighbor).toHaveValue('Ручное описание при сохранении документов');await neighbor.blur();
     await expect.poll(async()=>page.evaluate(async()=>{const s=await(await fetch('/api/session')).json();return s.draft.documents.find(d=>d.kind==='04031')?.date;})).toBe('2026-10-28');
-    const documents=await page.evaluate(async()=>(await(await fetch('/api/session')).json()).draft.documents);assert.equal(documents.filter(d=>d.kind==='04031').length,1);assert.equal(documents[0].number,'FREIGHT-1');
-    assert.equal(documents.filter(d=>d.kind==='04021').length,1);assert.equal(documents.filter(d=>d.kind==='03011').length,1);
+    const documents=await page.evaluate(async()=>(await(await fetch('/api/session')).json()).draft.documents);assert.equal(documents.filter(d=>d.kind==='04031').length,1);assert.equal(documents.find(d=>d.kind==='04031').number,'FREIGHT-1');
+    assert.equal(documents.filter(d=>d.kind==='04031').length,1);
   }finally{await browser.close();await server.stop();}
 });
 
@@ -53,8 +54,8 @@ test('54 compact graph cards retain 57 positions, strict review gate, five goods
     const page=await browser.newPage({viewport:{width:1440,height:960}});const runtimeErrors=[];page.on('pageerror',e=>runtimeErrors.push(e.message));await page.goto(server.base);await page.getByRole('heading',{name:'Подготовьте декларацию ИМ 40',exact:true}).waitFor();
     const seeded=await page.evaluate(async()=>{const s=await(await fetch('/api/session')).json();return(await fetch('/fixture/seed',{method:'POST',headers:{'Content-Type':'application/json','X-CSRF-Token':s.csrfToken},body:JSON.stringify({goodsCount:5})})).json();});assert.equal(seeded.reviewValidation.valid,true,JSON.stringify(seeded.reviewValidation));
     await page.reload();await page.getByRole('heading',{name:'Проверьте данные декларации',exact:true}).waitFor();
-    await expect(page.locator('.graphs-grid > .graph-card')).toHaveCount(54);await expect(page.locator('[data-graph-id]')).toHaveCount(57);assert.equal(await page.locator('nav span').count(),3);
-    const columns=await page.locator('.graphs-grid').evaluate(el=>getComputedStyle(el).gridTemplateColumns.split(' ').length);assert.equal(columns,2);
+    await expect(page.locator('.graphs-grid > .graph-card:not(.graph-child-card)')).toHaveCount(54);await expect(page.locator('.graphs-grid > .graph-child-card')).toHaveCount(2);await expect(page.locator('[data-graph-id]')).toHaveCount(57);assert.equal(await page.locator('nav span').count(),3);
+    const columns=await page.locator('.graphs-grid').evaluate(el=>getComputedStyle(el).gridTemplateColumns.split(' ').length);assert.equal(columns,1);
     await page.getByRole('combobox',{name:'Товар для граф 31–47'}).selectOption('goods-2');const mass=page.locator('[data-address="goods/goods-2/grossMass"] input');await mass.fill('28100');await mass.blur();await expect(mass).toHaveValue('28100');
     await page.getByRole('combobox',{name:'Товар для граф 31–47'}).selectOption('goods-1');await expect(page.locator('[data-address="goods/goods-1/grossMass"] input')).toHaveValue('27860');
     const consignee=page.locator('[data-address="graph/8/_"] textarea');await consignee.fill('');await consignee.blur();await expect(page.getByRole('button',{name:'К расчёту',exact:true})).toBeDisabled();

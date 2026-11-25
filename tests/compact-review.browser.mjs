@@ -5,7 +5,7 @@ import { execFileSync } from 'node:child_process';
 import { readFile } from 'node:fs/promises';
 import { resolve, sep } from 'node:path';
 
-test('compact review has two desktop columns, single values without choice buttons, sources and mobile reflow', async () => {
+test('compact review uses one desktop column, single values without choice buttons, sources and mobile reflow', async () => {
   const fixture = JSON.parse(process.env.COMPACT_REVIEW_STATE_PATH
     ? await readFile(process.env.COMPACT_REVIEW_STATE_PATH, 'utf8')
     : execFileSync('.local-tools/php/php.exe', ['tests/support/create-review-session.php'], { encoding: 'utf8' }));
@@ -88,9 +88,9 @@ test('compact review has two desktop columns, single values without choice butto
     const layout = await page.locator('.graphs-grid').evaluate(grid => {
       const first = grid.children[0].getBoundingClientRect(); const second = grid.children[1].getBoundingClientRect();
       const input = grid.querySelector('#graph-1 input');
-      return { columns: getComputedStyle(grid).gridTemplateColumns.split(' ').length, firstTop: first.top, secondTop: second.top, secondLeft: second.left, firstRight: first.right, height: input.getBoundingClientRect().height, font: getComputedStyle(input).fontSize };
+      return { columns: getComputedStyle(grid).gridTemplateColumns.split(' ').length, firstTop: first.top, secondTop: second.top, firstLeft: first.left, secondLeft: second.left, height: input.getBoundingClientRect().height, font: getComputedStyle(input).fontSize };
     });
-    assert.equal(layout.columns, 2); assert.equal(layout.firstTop, layout.secondTop); assert.ok(layout.secondLeft > layout.firstRight);
+    assert.equal(layout.columns, 1); assert.ok(layout.secondTop > layout.firstTop); assert.ok(Math.abs(layout.secondLeft - layout.firstLeft) < 1);
     assert.ok(layout.height <= 27); assert.equal(layout.font, '12px');
     assert.equal(await page.locator('.validation-summary').count(), 0);
     assert.equal(await page.locator('.review-page details.notice').count(), 0);

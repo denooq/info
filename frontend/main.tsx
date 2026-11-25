@@ -125,6 +125,12 @@ function App() {
     try {await mutate(active=>request<Session>('/api/recognize',{method:'POST',body:JSON.stringify({retry:true})},active.csrfToken));}
     catch(error){recognitionTarget.current=null;setAwaitingRecognition(false);setErrors([(error as Error).message]);}
   }
+  async function retryMapping() {
+    if(blocking.current>0||!current.current||recognitionProgress(current.current).active)return;
+    setErrors([]);setPage('review');recognitionTarget.current=recognitionKey(current.current);setAwaitingRecognition(true);
+    try {await mutate(active=>request<Session>('/api/recognize',{method:'POST',body:JSON.stringify({retry:true,mappingOnly:true})},active.csrfToken));}
+    catch(error){recognitionTarget.current=null;setAwaitingRecognition(false);setErrors([(error as Error).message]);}
+  }
   async function change(change:FieldChange) {
     setErrors([]);
     // Blur saves are queued without disabling the button the user is clicking.
@@ -164,7 +170,7 @@ function App() {
     {fatal?<div className="notice error" role="alert"><p>{fatal}</p><button className="primary" onClick={()=>{void initialize();void request<Registry>('/api/registry').then(setRegistry).catch(e=>setFatal(e.message));}}>Повторить подключение</button></div>
       :!session||!registry?<p className="loading" role="status">Подготавливаем временную сессию…</p>
       :page==='calculation'||(page===null&&['calculation','calculated'].includes(session.phase))?<CalculationPage session={session} registry={registry} busy={busy} errors={errors} onChange={change} onEntity={entity} onRecalculate={()=>void calculate()} onPropose={propose} onBack={()=>setPage('review')} onRates={()=>void refreshRates(true)} ratesLoading={ratesLoading} ratesError={ratesError}/>
-      :page!=='upload'&&(session.phase==='reviewing'||page==='review')?<ReviewPage session={session} registry={registry} busy={busy} onChange={change} onEntity={entity} onBack={()=>setPage('upload')} onCalculate={()=>void enterCalculation()} onValidate={()=>void validate()} onRates={()=>void refreshRates(true)} onManualRate={manualRate} ratesLoading={ratesLoading} ratesError={ratesError} errors={errors}/>
+      :page!=='upload'&&(session.phase==='reviewing'||page==='review')?<ReviewPage session={session} registry={registry} busy={busy} onChange={change} onEntity={entity} onBack={()=>setPage('upload')} onCalculate={()=>void enterCalculation()} onValidate={()=>void validate()} onRates={()=>void refreshRates(true)} onManualRate={manualRate} onRetryMapping={()=>void retryMapping()} ratesLoading={ratesLoading} ratesError={ratesError} errors={errors}/>
       :<><UploadPage session={session} busy={busy} recognizing={awaitingRecognition} errors={errors} uploadFailures={uploadFailures} onUpload={(files,groupId)=>void upload(files,groupId)} onGroup={group} onAssign={assign} onRemove={id=>void remove(id)} onRecognize={()=>void recognize()}/>{!awaitingRecognition&&['reviewing','calculated','calculation'].includes(session.phase)&&<button className="primary" onClick={()=>setPage('review')}>К проверке данных</button>}</>}
   </main>;
 }

@@ -17,57 +17,93 @@ final class Mapper
         $this->contract = new GraphMappingContract();
     }
 
-    /** Build deterministic source windows; all windows retain the same graph registry. */
-    public function plan(array $manifest, int $maxContextBytes, int $maxWindows): array
+    /** Build source windows against the exact serialized Mistral request body. */
+    public function plan(array $manifest, int $maxContextBytes, int $maxWindows, array $knownGoods = [], array $options = []): array
     {
         $this->assertManifest($manifest);
-        [$units] = $this->sourceUnits($manifest['sources']);
+        [$allUnits, $idMap] = $this->sourceUnits($manifest['sources']);
+        if ($allUnits === []) return [];
+        if ($maxContextBytes < 1 || $maxWindows < 1) throw new \InvalidArgumentException('Mapping limits must be positive.');
+
+        $allIds = array_values(array_keys($idMap));
+        $requestedIds = isset($options['sourceIds']) && is_array($options['sourceIds'])
+            ? array_values(array_unique(array_filter($options['sourceIds'], 'is_string')))
+            : null;
+        $wanted = $requestedIds === null ? null : array_fill_keys($requestedIds, true);
+        $units = $wanted === null ? $allUnits : array_values(array_filter($allUnits, static function (array $unit) use ($wanted): bool {
+            if (isset($wanted[$unit['sourceId']])) return true;
+            foreach ($unit['cells'] ?? [] as $cell) if (isset($wanted[$cell['sourceId']])) return true;
+            return false;
+        }));
         if ($units === []) return [];
-        $fixed = [
-            'mappingVersion' => $this->contract->data()['schemaVersion'],
-            'sourceManifestVersion' => SourceManifest::VERSION,
-            'registry' => $this->contract->data(),
-            'sources' => [], 'knownGoods' => [], 'searchWindow' => [], 'contextRequests' => [],
-        ];
-        $budget = $maxContextBytes - strlen(json_encode($fixed, JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR)) - 1200;
-        if ($budget < 1024) throw new ApiError('MAPPING_CONTEXT_LIMIT', 'Лимит контекста меньше реестра граф и схемы.', 503);
 
-        $rawWindows = []; $current = []; $bytes = 0;
-        foreach ($units as $unit) {
-            $length = strlen(json_encode($unit, JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR)) + 1;
-            if ($length > $budget) throw new ApiError('MAPPING_SOURCE_UNIT_LIMIT', 'Один OCR-блок слишком велик для безопасного сопоставления.', 413);
-            if ($bytes + $length > $budget && $current !== []) { $rawWindows[] = $current; $current = []; $bytes = 0; }
-            $current[] = $unit; $bytes += $length;
-        }
-        if ($current !== []) $rawWindows[] = $current;
+        $system = $this->prompt();
+        $schema = $this->contract->responseSchema();
+        $measure = function (array $candidateUnits, array $window) use ($knownGoods, $options, $system, $schema): int {
+            $context = $this->context($candidateUnits, $knownGoods, $options, $window);
+            $input = json_encode($context, JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
+            return $this->client->structuredPayloadBytes($system, $input, $schema);
+        };
 
-        $allIds = [];
-        foreach ($units as $unit) {
-            $allIds[] = $unit['sourceId'];
-            foreach ($unit['cells'] ?? [] as $cell) $allIds[] = $cell['sourceId'];
-        }
-        $allIds = array_values(array_unique($allIds));
-        $withinLimit = count($rawWindows) <= $maxWindows;
-        $rawWindows = array_slice($rawWindows, 0, $maxWindows);
-        $included = [];
-        foreach ($rawWindows as $rawWindow) foreach ($rawWindow as $unit) {
-            $included[] = $unit['sourceId'];
-            foreach ($unit['cells'] ?? [] as $cell) $included[] = $cell['sourceId'];
-        }
-        $included = array_values(array_unique($included));
-        $count = count($rawWindows); $plan = [];
-        foreach ($rawWindows as $index => $rawWindow) {
+        $sourceIds = static function (array $candidateUnits): array {
             $ids = [];
-            foreach ($rawWindow as $unit) {
+            foreach ($candidateUnits as $unit) {
                 $ids[] = $unit['sourceId'];
                 foreach ($unit['cells'] ?? [] as $cell) $ids[] = $cell['sourceId'];
             }
-            $ids = array_values(array_unique($ids));
-            $plan[] = [
+            return array_values(array_unique($ids));
+        };
+        $windowFor = static function (array $candidateUnits, int $index, int $count, array $allIds, bool $wholeRun) use ($sourceIds): array {
+            $ids = $sourceIds($candidateUnits);
+            return [
                 'index' => $index, 'count' => $count, 'sourceIds' => $ids, 'allSourceIds' => $allIds,
-                'completeBundle' => $withinLimit, 'wholeBundleInWindow' => $withinLimit && count($ids) === count($allIds),
-                'omittedSourceCount' => count(array_diff($allIds, $included)),
+                'completeBundle' => $wholeRun, 'wholeBundleInWindow' => $wholeRun && count(array_diff($allIds, $ids)) === 0,
+                'omittedSourceCount' => count(array_diff($allIds, $ids)),
             ];
+        };
+
+        // Use the configured maximum index/count while packing. Their serialized widths
+        // are at least as large as the final values, so final-window verification is safe.
+        $wholeRun = $wanted === null || count(array_intersect($allIds, $requestedIds ?? [])) === count($allIds);
+        $current = []; $groups = [];
+        foreach ($units as $unit) {
+            $candidate = [...$current, $unit];
+            $window = $windowFor($candidate, $maxWindows - 1, $maxWindows, $allIds, $wholeRun);
+            $bytes = $measure($candidate, $window);
+            if ($bytes <= $maxContextBytes) { $current = $candidate; continue; }
+
+            if ($current !== []) {
+                $groups[] = $current;
+                $current = [];
+            }
+            $single = [$unit];
+            $singleWindow = $windowFor($single, $maxWindows - 1, $maxWindows, $allIds, $wholeRun);
+            $singleBytes = $measure($single, $singleWindow);
+            if ($singleBytes > $maxContextBytes) {
+                throw new ApiError('MAPPING_CONTEXT_LIMIT', 'Один неделимый блок источника превышает безопасный лимит контекста.', 413, [
+                    'measuredBytes' => $singleBytes, 'limitBytes' => $maxContextBytes,
+                ]);
+            }
+            $current = $single;
+        }
+        if ($current !== []) $groups[] = $current;
+
+        if (count($groups) > $maxWindows) {
+            throw new ApiError('MAPPING_WINDOW_LIMIT', 'Для полного комплекта требуется больше окон сопоставления, чем разрешено настройками.', 413, [
+                'requiredWindows' => count($groups), 'limitWindows' => $maxWindows,
+            ]);
+        }
+
+        $count = count($groups); $plan = [];
+        foreach ($groups as $index => $group) {
+            $window = $windowFor($group, $index, $count, $allIds, $wholeRun);
+            $bytes = $measure($group, $window);
+            if ($bytes > $maxContextBytes) {
+                throw new ApiError('MAPPING_CONTEXT_LIMIT', 'Полный запрос сопоставления превышает безопасный лимит контекста.', 413, [
+                    'measuredBytes' => $bytes, 'limitBytes' => $maxContextBytes,
+                ]);
+            }
+            $plan[] = [...$window, 'requestBytes' => $bytes, 'maxContextBytes' => $maxContextBytes];
         }
         return $plan;
     }
@@ -87,19 +123,9 @@ final class Mapper
         }));
         if ($units === []) throw new ApiError('MAPPING_WINDOW_EMPTY', 'Окно сопоставления не содержит доступных источников.', 422);
 
-        $context = [
-            'mappingVersion' => $this->contract->data()['schemaVersion'],
-            'sourceManifestVersion' => SourceManifest::VERSION,
-            'registry' => $this->contract->data(),
-            'sources' => $units,
-            'knownGoods' => array_values($knownGoods),
-            'knownDocumentRecords' => array_values($options['knownDocumentRecords'] ?? []),
-            'searchWindow' => $window,
-            'contextRequests' => array_values($options['contextRequests'] ?? []),
-        ];
+        $context = $this->context($units, $knownGoods, $options, $window);
         $maxContextBytes = (int)($options['maxContextBytes'] ?? 180000);
-        $prompt = file_get_contents(dirname(__DIR__, 2) . '/resources/prompts/graph-mapping.v2.txt');
-        if (!is_string($prompt) || $prompt === '') throw new \LogicException('Graph mapping prompt is missing.');
+        $prompt = $this->prompt();
         $schema = $this->contract->responseSchema();
         $maxRepairs = max(0, min(2, (int)($options['maxRepairs'] ?? 2)));
         $repairRequest = null; $usage = []; $calls = 0; $totalInputBytes = 0; $mapping = null; $failure = null;
@@ -108,8 +134,11 @@ final class Mapper
             $requestContext = $context;
             if ($repairRequest !== null) $requestContext['repairRequest'] = $repairRequest;
             $input = json_encode($requestContext, JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
-            if (strlen($input) > $maxContextBytes) throw new ApiError('MAPPING_CONTEXT_LIMIT', 'Окно документов превышает безопасный лимит контекста.', 413);
-            $totalInputBytes += strlen($input);
+            $requestBytes = $this->client->structuredPayloadBytes($prompt, $input, $schema);
+            if ($requestBytes > $maxContextBytes) throw new ApiError('MAPPING_CONTEXT_LIMIT', 'Полный запрос сопоставления превышает безопасный лимит контекста.', 413, [
+                'measuredBytes' => $requestBytes, 'limitBytes' => $maxContextBytes,
+            ]);
+            $totalInputBytes += $requestBytes;
             $response = $this->client->structured($prompt, $input, $schema);
             $calls++;
             foreach ($response['usage'] ?? [] as $key => $value) if (is_numeric($value)) $usage[$key] = ($usage[$key] ?? 0) + $value;
@@ -160,6 +189,29 @@ final class Mapper
             'failureCode' => $failure, 'promptVersion' => self::PROMPT_VERSION,
             'inputBytes' => $totalInputBytes, 'window' => $window,
         ];
+    }
+
+    private function context(array $units, array $knownGoods, array $options, array $window, ?array $repairRequest = null): array
+    {
+        $context = [
+            'mappingVersion' => $this->contract->data()['schemaVersion'],
+            'sourceManifestVersion' => SourceManifest::VERSION,
+            'registry' => $this->contract->data(),
+            'sources' => $units,
+            'knownGoods' => array_values($knownGoods),
+            'knownDocumentRecords' => array_values($options['knownDocumentRecords'] ?? []),
+            'searchWindow' => array_intersect_key($window, array_flip(['index','count','sourceIds','completeBundle','wholeBundleInWindow','omittedSourceCount'])),
+            'contextRequests' => array_values($options['contextRequests'] ?? []),
+        ];
+        if ($repairRequest !== null) $context['repairRequest'] = $repairRequest;
+        return $context;
+    }
+
+    private function prompt(): string
+    {
+        $prompt = file_get_contents(dirname(__DIR__, 2) . '/resources/prompts/graph-mapping.v2.txt');
+        if (!is_string($prompt) || $prompt === '') throw new \LogicException('Graph mapping prompt is missing.');
+        return $prompt;
     }
 
     private function assertManifest(array $manifest): void

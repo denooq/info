@@ -163,6 +163,9 @@ final class Queue
         } catch (\Throwable $error) {
             if ($error instanceof ApiError && in_array($error->errorCode, ['SESSION_EXPIRED', 'SESSION_REQUIRED'], true)) return;
             $safe = $error instanceof ApiError ? ['code' => $error->errorCode, 'message' => $error->getMessage()] : ['code' => 'JOB_FAILED','message' => 'Не удалось завершить этап обработки.'];
+            if ($error instanceof ApiError && in_array($error->errorCode, ['MAPPING_CONTEXT_LIMIT','MAPPING_WINDOW_LIMIT'], true)) {
+                $safe['details'] = array_intersect_key($error->details, array_flip(['measuredBytes','limitBytes','requiredWindows','limitWindows']));
+            }
             try {
                 $this->store->mutate($sessionId, null, function (array $current) use ($claimed, $safe, $error): array {
                     $job = $current['jobs'][$claimed['id']] ?? null;

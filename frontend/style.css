@@ -160,7 +160,7 @@ input[type=checkbox] { accent-color: #245cf2; width: 16px; height: 16px; flex-sh
 .upload-group .file-name { font-size: 12px; }
 .upload-group .file-meta { font-size: 11px; }
 .untyped-files { margin: 18px 0; }
-.graphs-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 12px; align-items: start; }
+.graphs-grid { display: grid; grid-template-columns: minmax(0,1fr); gap: 8px; align-items: start; }
 .graph-card { min-width: 0; border: 1px solid #e6e6e6; padding: 12px; }
 .graph-card > h2, .graph-child > h2 { font-size: 14px; line-height: 1.35; margin: 0 0 3px; }
 .graph-number { display: block; font-size: 10px; color: #777; margin-bottom: 9px; font-weight: 700; }
@@ -218,6 +218,8 @@ input[type=checkbox] { accent-color: #245cf2; width: 16px; height: 16px; flex-sh
 }
 
 .graphs-grid { align-items: start; }
+.mapping-failure,.mapping-progress { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 8px 0; padding: 10px 12px; font-size: 12px; }
+.mapping-failure p { margin: 4px 0 0; }
 .compact-graph-card { height: auto; min-height: 0; min-inline-size: 0; margin: 0; padding: 2px 12px; overflow: visible; }
 .compact-graph-card > legend { padding: 0 5px; color: #777; font-size: 11px; line-height: 10px; font-weight: 700; }
 .compact-graph-card.graph-inactive { min-height: 40px; }
